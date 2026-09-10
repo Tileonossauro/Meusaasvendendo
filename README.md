@@ -11,24 +11,27 @@ O scanner e o motor; o **Navigator** e o produto.
 
 ## Estado atual
 
-**Bootstrap.** O motor existe e e testado; a interface ainda nao.
-O primeiro projeto analisado pelo Readiness OS e o proprio Readiness OS.
+**Marco 1 entregue.** O motor existe, e testado, e o Self-Build Dashboard esta
+no ar em `/build`. O primeiro projeto analisado pelo Readiness OS e o proprio
+Readiness OS.
 
 ```bash
 npm install
+npm run dev      # abre a interface — o dashboard fica em /build
 npm run gates    # typecheck + validacao do framework + testes
-npm run report   # estado atual do proprio projeto
+npm run report   # estado atual do proprio projeto, no terminal
 ```
 
-## Os tres scores
+## Os quatro numeros (que nao se misturam)
 
-| Score | Pergunta |
-| --- | --- |
-| MVP | O produto executa sua promessa principal? |
-| Production | E seguro colocar usuarios reais e dinheiro aqui? |
-| AI Build Readiness | Agentes de IA conseguem continuar este projeto com seguranca? |
+| Numero | O que mede | Tem porcentagem? |
+| --- | --- | --- |
+| **Build Progress** | Quanto do plano de construcao ja foi construido | Sempre |
+| **MVP Readiness** | O produto cumpre a promessa principal? | So quando medido |
+| **Production Readiness** | E seguro colocar usuarios e dinheiro aqui? | So quando medido |
+| **AI Build Readiness** | Agentes de IA conseguem continuar este projeto? | So quando medido |
 
-Sao independentes. A diferenca entre eles carrega informacao.
+Os tres Readiness Scores sao independentes: a diferenca entre eles carrega informacao.
 
 Enquanto a verificacao automatica nao cobrir o suficiente, os scores aparecem como
 **"Bootstrap / ainda nao medido"**. Transparencia vale mais que dashboard bonita.

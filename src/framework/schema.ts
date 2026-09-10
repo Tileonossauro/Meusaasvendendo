@@ -78,24 +78,47 @@ export const requirementSchema = z.object({
   id: z.string().regex(/^[a-z0-9]+(?:[-.][a-z0-9]+)*$/, "id deve ser kebab com namespace por ponto"),
   category: categoryIdSchema,
   name: z.string().min(3),
-  /** Linguagem de leigo. Aparece por padrao na interface. */
-  simple: z.string().min(10),
-  /** Linguagem tecnica. So aparece em "ver detalhes tecnicos". */
-  technical: z.string().min(10),
-  why: z.string().min(10),
+  /**
+   * Linguagem de leigo, ESCRITA A MAO e versionada junto do requisito.
+   * Aparece por padrao na interface. Nunca dependemos de uma chamada de IA
+   * para traduzir o requisito em tempo de exibicao.
+   */
+  simpleExplanation: z.string().min(10),
+  /** Linguagem tecnica. So aparece atras de "ver detalhes tecnicos". */
+  technicalExplanation: z.string().min(10),
+  whyItMatters: z.string().min(10),
   weights: weightsSchema,
   applicability: applicabilitySchema,
   detection: z.array(detectionSignalSchema).min(1),
   dependsOn: z.array(z.string()).default([]),
   definitionOfDone: z.array(z.string().min(5)).min(1),
-  impact: z.string().min(10),
+  impactSummary: z.string().min(10),
   severity: severitySchema,
   owner: ownerSchema,
-  aiExecutable: z.boolean(),
+  /** A IA consegue executar este requisito sozinha? */
+  aiCanHandle: z.boolean(),
+  /**
+   * O fundador precisa agir? Derivado de `owner`, mas persistido de proposito:
+   * a interface le o campo direto, sem recalcular regra de negocio na tela.
+   * `refineRequirement` garante que os dois nunca divirjam.
+   */
+  userActionRequired: z.boolean(),
   recommendedAction: z.string().min(5),
   verification: z.string().min(5),
   /** true = enquanto nao estiver completed, o produto nao pode receber usuarios reais. */
   launchBlocking: z.boolean(),
+}).superRefine((requirement, ctx) => {
+  // Guarda contra divergencia silenciosa entre `owner` e `userActionRequired`.
+  const ownerNeedsFounder = requirement.owner !== "ai";
+  if (requirement.userActionRequired !== ownerNeedsFounder) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["userActionRequired"],
+      message:
+        `Requisito "${requirement.id}": userActionRequired=${requirement.userActionRequired} ` +
+        `contradiz owner="${requirement.owner}".`,
+    });
+  }
 });
 export type Requirement = z.infer<typeof requirementSchema>;
 

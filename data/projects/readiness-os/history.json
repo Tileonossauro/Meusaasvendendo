@@ -1,0 +1,103 @@
+{
+  "projectId": "readiness-os",
+  "events": [
+    {
+      "id": "evt-0001",
+      "type": "milestone_completed",
+      "at": "2026-09-10T05:14:00.000Z",
+      "title": "Bootstrap concluido: o motor do Readiness OS existe",
+      "detail": "Framework de 44 requisitos, grafo de dependências, cálculo dos três scores e Navigator, com 20 testes passando.",
+      "milestoneId": "m0-bootstrap",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0002",
+      "type": "requirement_completed",
+      "at": "2026-09-10T05:14:00.000Z",
+      "title": "Framework passou a ser validado automaticamente",
+      "detail": "Se alguém escrever um requisito errado, o sistema avisa antes de aceitar.",
+      "requirementId": "ai.framework-validation",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0003",
+      "type": "requirement_completed",
+      "at": "2026-09-10T05:14:00.000Z",
+      "title": "Verificações automáticas passaram a rodar com um comando",
+      "detail": "npm run gates confere tipos, framework e testes antes de qualquer mudança ser aceita.",
+      "requirementId": "ai.quality-gates-runnable",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0004",
+      "type": "founder_decision",
+      "at": "2026-09-10T05:40:00.000Z",
+      "title": "Leonardo decidiu: cobrança do Readiness OS fica desligada por enquanto",
+      "detail": "Os 6 requisitos de cobrança ficam fora da conta até o produto decidir cobrar.",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0005",
+      "type": "founder_decision",
+      "at": "2026-09-10T05:40:00.000Z",
+      "title": "Leonardo decidiu: scanner local do próprio repositório vem antes do GitHub App",
+      "detail": "Provar o motor sem risco de segurança antes de analisar repositório de terceiros.",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0006",
+      "type": "founder_decision",
+      "at": "2026-09-10T05:45:00.000Z",
+      "title": "Marco 1 aprovado: construir o dashboard /build",
+      "detail": "Com as orientações do Tech Lead incorporadas antes da construção.",
+      "milestoneId": "m1-dashboard",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0007",
+      "type": "requirement_changed",
+      "at": "2026-09-10T05:50:00.000Z",
+      "title": "Requisitos passaram a carregar a explicação para leigo dentro deles",
+      "detail": "A linguagem simples e escrita a mão e versionada junto do requisito, sem depender de IA para traduzir na hora de exibir.",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0008",
+      "type": "requirement_changed",
+      "at": "2026-09-10T05:52:00.000Z",
+      "title": "Build Progress passou a ser separado dos três Readiness Scores",
+      "detail": "Progresso do plano de construção e prontidão do produto viraram números distintos, para nenhum ser confundido com o outro.",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0009",
+      "type": "requirement_changed",
+      "at": "2026-09-10T05:55:00.000Z",
+      "title": "O Navigator passou a pesar a relevância do que desbloqueia",
+      "detail": "Antes contava quantos requisitos eram destravados; agora também considera o peso deles. Destravar dois itens críticos vale mais que cinco triviais.",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0010",
+      "type": "milestone_completed",
+      "at": "2026-09-10T05:58:00.000Z",
+      "title": "Marco 1 concluído: o dashboard /build existe",
+      "detail": "Você já consegue abrir a página no navegador e entender o estado do projeto sem ler código nem terminal.",
+      "milestoneId": "m1-dashboard",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0011",
+      "type": "score_changed",
+      "at": "2026-09-10T05:58:01.000Z",
+      "title": "Build Progress subiu de 38% para 50%",
+      "detail": "O segundo dos quatro marcos foi concluído. Os Readiness Scores seguem em 'ainda não medido' — só o scanner muda isso.",
+      "frameworkVersion": "0.1.0",
+      "scoreChange": {
+        "dimension": "buildProgress",
+        "from": 38,
+        "to": 50
+      }
+    }
+  ]
+}

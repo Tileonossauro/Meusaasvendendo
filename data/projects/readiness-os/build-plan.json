@@ -1,0 +1,34 @@
+{
+  "projectId": "readiness-os",
+  "planVersion": "1.0.0",
+  "milestones": [
+    {
+      "id": "m0-bootstrap",
+      "name": "Bootstrap: framework e motores",
+      "outcome": "O framework de 44 requisitos, o grafo de dependências, o cálculo dos scores e o Navigator existem e são testados.",
+      "status": "done",
+      "weight": 5
+    },
+    {
+      "id": "m1-dashboard",
+      "name": "Self-Build Dashboard em /build",
+      "outcome": "Você abre /build no navegador e entende o estado do projeto sem ler código nem terminal.",
+      "status": "done",
+      "weight": 5
+    },
+    {
+      "id": "m2-loop-fechado",
+      "name": "Fechar o loop: executar, reverificar, ver mudar",
+      "outcome": "Executamos a ação recomendada, o estado é reverificado e o progresso sobe na sua frente.",
+      "status": "planned",
+      "weight": 4
+    },
+    {
+      "id": "m3-scanner-local",
+      "name": "Primeiro scanner deterministico (nosso próprio repo)",
+      "outcome": "Os Readiness Scores saem de 'ainda não medido' para medidos por evidência real.",
+      "status": "planned",
+      "weight": 6
+    }
+  ]
+}

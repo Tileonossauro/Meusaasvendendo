@@ -22,15 +22,34 @@ explicito ("esperando por X") — nunca e recomendado.
 ## A formula
 
 ```
-prioridade =  pontos_de_severidade
-            + 30   se bloqueia lancamento
-            + 6    por requisito destravado (transitivo, ainda em aberto)
-            + 4    por tarefa de IA destravada
-            + 1,5  × (peso_mvp + peso_production + peso_aiBuild)
-            + 15   se e decisao de fundador/integracao que destrava algo
+prioridade =  pontos_de_severidade                       (severidade)
+            + 30    se o proprio requisito bloqueia lancamento
+            + 6     × requisitos destravados              (quantidade)
+            + 0,5   × peso somado dos destravados         (relevancia)
+            + 8     × bloqueadores de lancamento destravados
+            + 4     × tarefas de IA destravadas
+            + 1,5   × peso somado do proprio requisito    (peso do requisito)
+            + 15    se exige acao do fundador E destrava algo  (responsavel)
 ```
 
 Pontos de severidade: `blocker` 40, `high` 25, `medium` 12, `low` 5.
+
+Peso somado = `weights.mvp + weights.production + weights.aiBuild`.
+
+### Os seis fatores exigidos, e onde cada um entra
+
+| Fator | Onde entra na formula |
+| --- | --- |
+| Severidade | `pontos_de_severidade` |
+| Bloqueio de lancamento | `+30` proprio, `+8` por bloqueador destravado |
+| Peso do requisito | `1,5 × peso somado do proprio` |
+| Quantidade de destravados | `6 × numero de destravados` |
+| **Relevancia** dos destravados | `0,5 × peso somado dos destravados` |
+| Responsavel | `+15` quando `userActionRequired` e destrava algo |
+| Estado das dependencias | **filtro de elegibilidade**, antes da pontuacao |
+
+Quantidade e relevancia sao fatores separados de proposito: destravar dois
+requisitos criticos deve valer mais que destravar cinco triviais.
 
 Empate e desfeito pelo `id`, em ordem alfabetica: mesmo estado ⇒ mesma
 recomendacao, sempre.
@@ -46,6 +65,9 @@ recomendacao, sempre.
   IA vale mais do que uma tarefa isolada.
 - **Gargalo do fundador** — decisao que depende de voce nao pode ser delegada e
   costuma travar tudo abaixo; por isso ganha bonus explicito.
+- **Estado das dependencias** — nao entra como pontuacao, e sim como porta: um
+  requisito com dependencia em aberto nunca e recomendado, por maior que fosse
+  sua pontuacao. Recomendar algo que nao pode comecar seria pior que nao recomendar.
 
 ## Saida
 

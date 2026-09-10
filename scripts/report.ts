@@ -35,7 +35,7 @@ console.log("\nPROXIMO PASSO RECOMENDADO");
 if (navigator.nextBestAction) {
   const { requirement, unlocks, unlockedAiTasks, reason, priority } = navigator.nextBestAction;
   console.log(`  ${requirement.name}`);
-  console.log(`  ${requirement.simple}`);
+  console.log(`  ${requirement.simpleExplanation}`);
   console.log(`  Responsavel: ${requirement.owner} · Destrava: ${unlocks.length} (${unlockedAiTasks} para a IA) · Prioridade: ${priority}`);
   console.log(`  Por que: ${reason}`);
 } else {
@@ -43,5 +43,5 @@ if (navigator.nextBestAction) {
 }
 
 const founder = navigator.candidates.filter((c) => c.requirement.owner === "founder" || c.requirement.owner === "founder_and_ai");
-const ai = navigator.candidates.filter((c) => c.requirement.aiExecutable);
+const ai = navigator.candidates.filter((c) => c.requirement.aiCanHandle);
 console.log(`\nDEPENDE DE VOCE: ${founder.length}   ·   IA PODE FAZER: ${ai.length}   ·   BLOQUEADOS: ${navigator.blocked.length}\n`);

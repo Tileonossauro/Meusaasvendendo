@@ -36,12 +36,28 @@ Uma tarefa so esta concluida quando **todas** as condicoes valem:
 ## Como adicionar um requisito
 
 1. Adicione o objeto em `src/framework/framework.v0.json` com **todos** os campos
-   do schema, incluindo `simple`, `why`, `definitionOfDone` e `detection`.
+   do schema, incluindo `simpleExplanation`, `technicalExplanation`,
+   `whyItMatters`, `impactSummary`, `userActionRequired`, `aiCanHandle`,
+   `definitionOfDone` e `detection`.
+   A linguagem de leigo e escrita a mao, em portugues correto e acentuado.
+   Nunca deixe para uma chamada de IA traduzir o requisito na hora de exibir.
 2. `detection` precisa ser mecanico: o que procurar e por que aquele sinal
    sozinho pode enganar (`not_sufficient_alone`).
 3. Ligue as dependencias em `dependsOn` usando ids existentes.
 4. Rode `npm run validate:framework`.
 5. Atualize `docs/FRAMEWORK.md` com o novo total por categoria.
+
+## Como registrar progresso
+
+Todo avanco relevante vira evento em `data/projects/<projectId>/history.json`,
+com um dos seis tipos: `requirement_completed`, `requirement_changed`,
+`founder_decision`, `dependency_unblocked`, `score_changed`, `milestone_completed`.
+
+Todo evento carrega o `frameworkVersion` que o produziu. Sem isso nao da para
+comparar resultados entre versoes do framework.
+
+O titulo do evento e o que Leonardo le em "Recentemente concluido": escreva em
+linguagem de leigo, nao em jargao de commit.
 
 ## Como alterar o framework ou os pesos
 

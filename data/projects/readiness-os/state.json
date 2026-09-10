@@ -113,7 +113,7 @@
         {
           "source": "file",
           "locator": ".gitignore",
-          "note": ".env ignorado; .env.example ainda nao necessario (sem segredos no slice 1)."
+          "note": ".env ignorado; .env.example ainda não necessário (sem segredos no slice 1)."
         }
       ],
       "verifiedBy": "manual_bootstrap",

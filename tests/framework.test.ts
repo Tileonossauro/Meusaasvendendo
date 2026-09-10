@@ -37,6 +37,36 @@ describe("framework v0", () => {
     }
   });
 
+  it("todo requisito carrega a linguagem de leigo escrita a mao, sem depender de IA", () => {
+    for (const r of framework.requirements) {
+      expect(r.simpleExplanation.length).toBeGreaterThan(10);
+      expect(r.technicalExplanation.length).toBeGreaterThan(10);
+      expect(r.whyItMatters.length).toBeGreaterThan(10);
+      expect(r.impactSummary.length).toBeGreaterThan(10);
+      expect(typeof r.userActionRequired).toBe("boolean");
+      expect(typeof r.aiCanHandle).toBe("boolean");
+      // A explicacao simples nao pode ser copia da tecnica.
+      expect(r.simpleExplanation).not.toBe(r.technicalExplanation);
+    }
+  });
+
+  it("userActionRequired nunca contradiz o owner", () => {
+    for (const r of framework.requirements) {
+      expect(r.userActionRequired).toBe(r.owner !== "ai");
+    }
+  });
+
+  it("rejeita requisito cujo userActionRequired contradiz o owner", () => {
+    const broken = structuredClone(framework);
+    broken.requirements[0]!.owner = "ai";
+    broken.requirements[0]!.userActionRequired = true;
+    expect(() => frameworkSchema.parse(broken)).toThrow();
+  });
+
+  it("declara a versao do framework, para toda analise poder registra-la", () => {
+    expect(framework.frameworkVersion).toMatch(/^\d+\.\d+\.\d+$/);
+  });
+
   it("rejeita ciclo de dependencias", () => {
     const cyclic = structuredClone(framework);
     cyclic.requirements[0]!.dependsOn = [cyclic.requirements[1]!.id];

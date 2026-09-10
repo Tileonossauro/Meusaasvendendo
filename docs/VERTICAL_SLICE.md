@@ -16,10 +16,15 @@ Nossa primeira vitoria nao e login nem cobranca. E o **loop fechado**:
 
 Quando isso funcionar ponta a ponta, temos o primeiro vertical slice.
 
-## Estado apos o bootstrap (esta entrega)
+## Estado apos o Marco 1 (dashboard entregue)
 
-Passos 1, 2, 4 e 6 (manual) ja funcionam via `npm run report`.
-Faltam 3, 8 e 9 — ou seja, a interface.
+Passos 1, 2, 3, 4 e 6 funcionam. O passo 8 (score muda) ja funciona para o
+**Build Progress** — mudou de 38% para 50% quando o Marco 1 foi concluido, e o
+dashboard mostrou a mudanca. Para os Readiness Scores, o passo 8 depende do
+scanner: hoje eles seguem, corretamente, em "Bootstrap / ainda nao medido".
+
+Falta o passo 5 sobre um requisito real do framework e a reverificacao
+automatica (passo 6 sem intervencao manual) — o Marco 2.
 
 ## Escopo do Slice 1
 

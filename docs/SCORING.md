@@ -82,6 +82,36 @@ Por dimensao: `score`, `rawScore`, `cappedByLaunchBlockers`, `measured`,
 detalhamento por requisito (peso, status, confianca, credito aplicado e se houve
 rebaixamento por confianca). Isso permite responder **por que** um score mudou.
 
+
+## Build Progress NAO e Readiness
+
+Sao quatro numeros distintos, e a interface e obrigada a mostra-los separados:
+
+| Numero | O que mede | Tem porcentagem? |
+| --- | --- | --- |
+| **Build Progress** | Quanto do nosso PLANO DE CONSTRUCAO ja foi construido | Sempre |
+| **MVP Readiness** | O produto cumpre a promessa principal? | So quando medido |
+| **Production Readiness** | E seguro colocar usuarios e dinheiro aqui? | So quando medido |
+| **AI Build Readiness** | Agentes de IA conseguem continuar este projeto? | So quando medido |
+
+Build Progress vem de `src/progress/build-progress.ts`, calculado sobre os marcos
+declarados em `data/projects/<projectId>/build-plan.json` (concluido = 1,
+em andamento = 0,5, planejado = 0, ponderado por marco). Ele pode ter
+porcentagem justamente porque **nao afirma nada sobre o produto** — afirma
+apenas quanto do nosso proprio plano executamos.
+
+Os tres Readiness Scores so exibem numero quando `measured` for verdadeiro.
+Enquanto nao for, a interface mostra **"Bootstrap / ainda nao medido"**. Essa
+regra vive no modelo de dados (`ReadinessCard.percent` vem `null`), nao na tela:
+assim a interface nao tem como esquecer de aplica-la, e existe teste garantindo.
+
+## Versao do framework em toda analise
+
+Todo resultado carrega o `frameworkVersion` que o produziu — em `ScoreReport`,
+no estado do projeto e em cada evento do historico. Sem isso nao da para comparar
+resultados entre versoes do framework, nem explicar por que um score mudou apos
+uma mudanca de regra.
+
 ## Calibracao
 
 Os pesos e limiares desta versao sao **hipoteses**, nao verdade cientifica.

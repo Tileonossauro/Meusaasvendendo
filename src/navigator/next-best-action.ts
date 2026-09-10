@@ -21,8 +21,15 @@ const SEVERITY_POINTS: Record<Severity, number> = {
 export const NBA_WEIGHTS = {
   severity: 1,
   launchBlocking: 30,
-  /** Por requisito destravado (direta ou indiretamente). */
+  /** Por requisito destravado (direta ou indiretamente) — a QUANTIDADE. */
   perUnlockedRequirement: 6,
+  /**
+   * Multiplicador sobre o peso somado dos requisitos destravados — a RELEVANCIA.
+   * Destravar dois requisitos criticos vale mais que destravar cinco triviais.
+   */
+  unlockedWeight: 0.5,
+  /** Bonus por bloqueador de lancamento destravado. */
+  perUnlockedLaunchBlocker: 8,
   /** Multiplicador aplicado ao peso somado do proprio requisito. */
   ownWeight: 1.5,
   /** Bonus quando destrava tarefas que a IA consegue executar sozinha. */
@@ -37,6 +44,9 @@ export interface ActionCandidate {
   /** Requisitos aplicaveis ainda nao concluidos que este destrava (transitivo). */
   unlocks: string[];
   unlockedAiTasks: number;
+  /** Peso somado dos requisitos destravados: a relevancia, nao so a contagem. */
+  unlockedWeight: number;
+  unlockedLaunchBlockers: number;
   /** Explicacao ja em linguagem simples — o produto e "simple first". */
   reason: string;
   breakdown: Record<string, number>;
@@ -92,17 +102,24 @@ export function computeNextBestAction(
     }
 
     const unlocks = (graph.transitiveDependents.get(requirement.id) ?? []).filter(isOpen);
-    const unlockedAiTasks = unlocks.filter((id) => byId.get(id)?.aiExecutable === true).length;
+    const unlockedRequirements = unlocks.map((id) => byId.get(id)!);
+    const unlockedAiTasks = unlockedRequirements.filter((r) => r.aiCanHandle).length;
+    const unlockedLaunchBlockers = unlockedRequirements.filter((r) => r.launchBlocking).length;
+    const unlockedWeight = unlockedRequirements.reduce(
+      (sum, r) => sum + r.weights.mvp + r.weights.production + r.weights.aiBuild,
+      0,
+    );
 
     const ownWeight =
       requirement.weights.mvp + requirement.weights.production + requirement.weights.aiBuild;
-    const founderIsBottleneck =
-      (requirement.owner === "founder" || requirement.owner === "integration") && unlocks.length > 0;
+    const founderIsBottleneck = requirement.userActionRequired && unlocks.length > 0;
 
     const breakdown = {
       severity: SEVERITY_POINTS[requirement.severity] * NBA_WEIGHTS.severity,
       launchBlocking: requirement.launchBlocking ? NBA_WEIGHTS.launchBlocking : 0,
       unlocks: unlocks.length * NBA_WEIGHTS.perUnlockedRequirement,
+      unlockedWeight: unlockedWeight * NBA_WEIGHTS.unlockedWeight,
+      unlockedLaunchBlockers: unlockedLaunchBlockers * NBA_WEIGHTS.perUnlockedLaunchBlocker,
       unlockedAiTasks: unlockedAiTasks * NBA_WEIGHTS.perUnlockedAiTask,
       ownWeight: ownWeight * NBA_WEIGHTS.ownWeight,
       founderBottleneck: founderIsBottleneck ? NBA_WEIGHTS.founderBottleneck : 0,
@@ -115,6 +132,8 @@ export function computeNextBestAction(
       priority,
       unlocks,
       unlockedAiTasks,
+      unlockedWeight,
+      unlockedLaunchBlockers,
       reason: buildReason(requirement, unlocks.length, unlockedAiTasks),
       breakdown,
     });
