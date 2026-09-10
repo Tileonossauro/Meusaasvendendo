@@ -1,0 +1,48 @@
+{
+  "projectId": "readiness-os",
+  "planVersion": "1.0.0",
+  "milestones": [
+    {
+      "id": "m0-bootstrap",
+      "name": "Bootstrap: framework e motores",
+      "outcome": "O framework de 44 requisitos, o grafo de dependências, o cálculo dos scores e o Navigator existem e são testados.",
+      "status": "done",
+      "weight": 5
+    },
+    {
+      "id": "m1-dashboard",
+      "name": "Self-Build Dashboard em /build",
+      "outcome": "Você abre /build no navegador e entende o estado do projeto sem ler código nem terminal.",
+      "status": "done",
+      "weight": 5
+    },
+    {
+      "id": "m2-loop-fechado",
+      "name": "Fechar o loop: executar, reverificar, ver mudar",
+      "outcome": "Executamos a ação recomendada, o estado foi reverificado com evidência e o progresso mudou na sua frente.",
+      "status": "done",
+      "weight": 4
+    },
+    {
+      "id": "m3-scanner-local",
+      "name": "Primeiro scanner deterministico (nosso próprio repo)",
+      "outcome": "O sistema analisa o próprio repositório e substitui estado declarado por evidência que ele mesmo produziu.",
+      "status": "done",
+      "weight": 6
+    },
+    {
+      "id": "m4-suficiencia",
+      "name": "Pagar a DT-001: modelo de suficiência de evidência",
+      "outcome": "O sistema passa a saber quando NÃO deve publicar um número, dimensão por dimensão, com o motivo escrito na tela.",
+      "status": "done",
+      "weight": 6
+    },
+    {
+      "id": "m5-cobrir-criticos",
+      "name": "Seguir o Navigator, ciclo a ciclo",
+      "outcome": "Cada volta do loop é executada e registrada — inclusive quando o resultado correto é não construir nada.",
+      "status": "in_progress",
+      "weight": 6
+    }
+  ]
+}

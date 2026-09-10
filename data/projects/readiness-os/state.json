@@ -1,0 +1,636 @@
+{
+  "projectId": "readiness-os",
+  "projectName": "Readiness OS",
+  "frameworkVersion": "0.2.0",
+  "signals": [
+    "analyzes_external_content",
+    "owns_a_framework"
+  ],
+  "states": [
+    {
+      "requirementId": "product.promise-defined",
+      "status": "completed",
+      "confidence": 0.85,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "docs/PRODUCT.md:3",
+          "note": "Secao de promessa preenchida (168 caracteres)."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "docs/PRODUCT.md:3 contem a secao exigida com conteudo real."
+    },
+    {
+      "requirementId": "product.target-user-defined",
+      "status": "completed",
+      "confidence": 0.85,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "docs/PRODUCT.md:8",
+          "note": "Secao de publico-alvo preenchida (547 caracteres)."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "docs/PRODUCT.md:8 contem a secao exigida com conteudo real."
+    },
+    {
+      "requirementId": "product.core-flow-defined",
+      "status": "completed",
+      "confidence": 0.85,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "docs/PRODUCT.md:55",
+          "note": "Fluxo principal descrito passo a passo (490 caracteres)."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "docs/PRODUCT.md:55 contem a secao exigida com conteudo real."
+    },
+    {
+      "requirementId": "product.constitution",
+      "status": "completed",
+      "confidence": 0.85,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "docs/CONSTITUTION.md:39",
+          "note": "Constitution com escopo e fora de escopo explicitos (256 caracteres)."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "docs/CONSTITUTION.md:39 contem a secao exigida com conteudo real."
+    },
+    {
+      "requirementId": "foundation.repo-structure",
+      "status": "completed",
+      "confidence": 0.85,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": ".",
+          "note": "Diretorios de topo com responsabilidade unica: src, app, docs, tests, scripts, data"
+        },
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "CLAUDE.md:37",
+          "note": "Estrutura documentada no CLAUDE.md."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "Diretorios de topo presentes e estrutura documentada no CLAUDE.md."
+    },
+    {
+      "requirementId": "foundation.typecheck-gate",
+      "status": "completed",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "package.json:11",
+          "note": "Script \"typecheck\" declarado: tsc --noEmit"
+        },
+        {
+          "source": "command",
+          "provenance": "command_execution",
+          "locator": "npm run typecheck",
+          "note": "Executado nesta varredura, exit code 0."
+        }
+      ],
+      "provenance": "command_execution",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "\"npm run typecheck\" executou e retornou exit code 0."
+    },
+    {
+      "requirementId": "foundation.test-gate",
+      "status": "completed",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "package.json:12",
+          "note": "Script \"test\" declarado: vitest run"
+        },
+        {
+          "source": "command",
+          "provenance": "command_execution",
+          "locator": "npm run test",
+          "note": "Executado nesta varredura, exit code 0."
+        }
+      ],
+      "provenance": "command_execution",
+      "collectionMethod": "deterministic",
+      "detectionOutcome": "confirmed_present",
+      "updatedAt": "2026-09-10T11:20:38.816Z",
+      "note": "\"npm run test\" executou e retornou exit code 0."
+    },
+    {
+      "requirementId": "foundation.env-example",
+      "status": "partial",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": ".gitignore:5",
+          "note": ".env esta ignorado pelo git."
+        },
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": ".env.example",
+          "note": "Arquivo .env.example nao existe."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": ".env esta ignorado, mas .env.example nao existe — a Definition of Done exige a lista de variaveis."
+    },
+    {
+      "requirementId": "data.persistence-chosen",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "decision_record",
+          "locator": "docs/adr/0004-estado-em-arquivo.md:5",
+          "note": "Decisão formal registrada em \"ADR 0004 — Estado em arquivo antes de banco de dados\" (status: aceito)."
+        }
+      ],
+      "provenance": "decision_record",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:20:08.085Z",
+      "note": "ADR 0004 decide este requisito."
+    },
+    {
+      "requirementId": "data.schema-defined",
+      "status": "partial",
+      "confidence": 0.75,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "src/framework/schema.ts:123",
+          "note": "Schema declarado com validacao (2 arquivo(s) de schema)."
+        },
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "src",
+          "note": "Schemas usados para validar entrada (.parse)."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "Schemas versionados e usados para validacao. NAO e possivel provar estaticamente que cobrem todas as entidades do fluxo principal — por isso partial, nao completed."
+    },
+    {
+      "requirementId": "data.migrations",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "auth.method-decided",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "auth.login-works",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "auth.session-protection",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "auth.authorization-checks",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "core.primary-flow-implemented",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "core.primary-flow-tested",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "core.error-and-empty-states",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.pricing-decided",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.gateway-configured",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.checkout-implemented",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.webhook-idempotency",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.entitlements",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.cancellation-flow",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "security.no-secrets-in-repo",
+      "status": "partial",
+      "confidence": 0.8,
+      "evidence": [
+        {
+          "source": "command",
+          "provenance": "command_execution",
+          "locator": "varredura de padroes de segredo em src/, app/, scripts/, data/",
+          "note": "31 arquivos varridos, nenhum padrao conhecido encontrado."
+        },
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": ".gitignore:5",
+          "note": ".env ignorado pelo git."
+        }
+      ],
+      "provenance": "specialized_tool",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "Nenhum padrao conhecido de segredo nos arquivos versionados. O HISTORICO do git nao foi varrido e a DoD exige isso — por isso partial, nao completed."
+    },
+    {
+      "requirementId": "security.input-validation",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "security.rate-limiting",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "security.untrusted-content-boundary",
+      "status": "uncertain",
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "source": "command",
+          "provenance": "command_execution",
+          "locator": "busca por teste de prompt injection em tests/",
+          "note": "8 arquivos de teste varridos; nenhum com nome referente a fronteira de confianca."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "detectionOutcome": "not_detected",
+      "updatedAt": "2026-09-10T11:14:44.311Z",
+      "note": "Nenhum teste com nome referente a fronteira de confianca. NAO e ausencia conclusiva: a protecao pode existir com outro nome ou em outra forma que este scanner nao reconhece."
+    },
+    {
+      "requirementId": "security.least-privilege-access",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "reliability.error-tracking",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "reliability.health-check",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "deploy.hosting-decided",
+      "status": "partial",
+      "confidence": 0.7,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "decision_record",
+          "locator": "docs/adr/0001-stack.md:5",
+          "note": "Decisão parcial em \"ADR 0001 — Stack inicial\": Alvo de deploy escolhido (Vercel); limites do provedor ainda não anotados."
+        }
+      ],
+      "provenance": "decision_record",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:20:08.085Z",
+      "note": "ADR 0001 decide este requisito em parte."
+    },
+    {
+      "requirementId": "deploy.ci-pipeline",
+      "status": "partial",
+      "confidence": 0.85,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": ".github/workflows/quality-gates.yml:6",
+          "note": "Workflow roda em pull request e executa: typecheck, test, validate:framework."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "Workflow existe e executa 3 gate(s). NAO e possivel verificar localmente se a falha BLOQUEIA o merge (depende da configuracao de branch protection no GitHub) — por isso partial."
+    },
+    {
+      "requirementId": "deploy.production-deploy-works",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "deploy.env-secrets-management",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "legal.terms-and-privacy",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "legal.data-retention-policy",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "launch.landing-page",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "launch.first-real-user-test",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "ai.claude-md",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "CLAUDE.md:112",
+          "note": "Estrutura, comandos e proibicoes documentados."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "CLAUDE.md contem estrutura, comandos e lista de proibicoes."
+    },
+    {
+      "requirementId": "ai.agents-md",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "AGENTS.md:12",
+          "note": "Definition of Done definida (551 caracteres)."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "AGENTS.md define Definition of Done com conteudo real."
+    },
+    {
+      "requirementId": "ai.quality-gates-runnable",
+      "status": "completed",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "package.json:15",
+          "note": "Script \"gates\" declarado: npm run typecheck && npm run validate:framework && npm test"
+        },
+        {
+          "source": "command",
+          "provenance": "command_execution",
+          "locator": "npm run gates",
+          "note": "Executado nesta varredura, exit code 0."
+        }
+      ],
+      "provenance": "command_execution",
+      "collectionMethod": "deterministic",
+      "detectionOutcome": "confirmed_present",
+      "updatedAt": "2026-09-10T11:20:38.816Z",
+      "note": "\"npm run gates\" executou e retornou exit code 0."
+    },
+    {
+      "requirementId": "ai.decision-log",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "docs/adr/0001-stack.md:26",
+          "note": "6 de 6 ADRs com contexto, decisao e alternativas."
+        }
+      ],
+      "provenance": "static_analysis",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "6 ADR(s) seguem o template completo."
+    },
+    {
+      "requirementId": "ai.framework-validation",
+      "status": "completed",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "source": "file",
+          "provenance": "static_analysis",
+          "locator": "package.json:14",
+          "note": "Script \"validate:framework\" declarado: tsx scripts/validate-framework.ts"
+        },
+        {
+          "source": "command",
+          "provenance": "command_execution",
+          "locator": "npm run validate:framework",
+          "note": "Executado nesta varredura, exit code 0."
+        }
+      ],
+      "provenance": "command_execution",
+      "collectionMethod": "deterministic",
+      "updatedAt": "2026-09-10T10:36:24.150Z",
+      "note": "\"npm run validate:framework\" executou e retornou exit code 0."
+    }
+  ],
+  "updatedAt": "2026-09-10T11:20:38.816Z"
+}
