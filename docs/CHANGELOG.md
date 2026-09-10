@@ -2,6 +2,38 @@
 
 Mudancas relevantes de produto, framework e scoring.
 
+## [0.5.0] — 2026-09-10 — Marco 4: suficiencia de medicao (DT-001 paga)
+
+### Seguranca (P0 arquitetural)
+
+- **ADR 0007** — repositorio de terceiro NUNCA tem comandos executados no host.
+  `scanRepository()` recebe `trust: "self" | "external"` e lanca
+  `UntrustedExecutionError` se pedirem execucao para repositorio externo, com
+  guarda dupla (entrada e no ponto exato da execucao) e teste de regressao.
+  Leitura estatica de repositorio externo continua permitida.
+- **DT-002** registrada: sandbox descartavel e pre-requisito do scanner externo.
+- Comentario de fronteira no topo do scanner e regra 15 no `CLAUDE.md`.
+
+### DT-001 PAGA
+
+`measured` deixou de depender de contagem de requisitos e passou a depender de
+**suficiencia por dimensao** (`src/scoring/sufficiency.ts`):
+
+- **Forca da observacao** por requisito = proveniencia × adequacao ao `kind` ×
+  confianca. Diz o quanto SABEMOS, nao se esta pronto.
+- **Excecao deliberada:** status `missing` observado vale adequacao 1 — provar
+  ausencia nao exige executar nada.
+- **Tres portas por dimensao:** cobertura ponderada ≥ 70%; nenhum critico
+  daquela dimensao com forca < 0,60; nenhum requisito de peso ≥ 7 com forca 0.
+- **Criticidade relativa a dimensao:** alto risco E peso ≥ 5 naquela dimensao.
+- **Sem porta global:** cada dimensao prova a propria suficiencia.
+
+### Resultado honesto
+
+Nenhuma dimensao passou. Cobertura ponderada: MVP 41%, Production 46%,
+AI Build 64% (limiar 70%). AI Build e a mais proxima e nao tem critico em falta —
+so um ponto cego de peso alto. Os limiares **nao** foram ajustados.
+
 ## [0.4.0] — 2026-09-10 — Marco 3: scanner deterministico local
 
 ### Adicionado

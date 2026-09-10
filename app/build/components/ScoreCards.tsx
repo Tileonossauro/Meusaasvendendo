@@ -74,63 +74,77 @@ export function ReadinessCards({ cards }: { cards: ReadinessCard[] }) {
           </div>
 
           {card.percent === null && (
-            <div className="mt-3 space-y-2 text-xs leading-relaxed text-slate-500">
-              {/* O motivo exibido precisa ser o motivo REAL do bloqueio. */}
-              {card.independentCoverage === 0 ? (
-                <p>
-                  Nenhum requisito foi verificado por um scanner independente ainda. Mostrar
-                  um número aqui seria inventar prontidão.
-                </p>
-              ) : card.independentCoverage < 0.6 ? (
-                <p>
-                  Só {Math.round(card.independentCoverage * 100)}% dos requisitos foram
-                  verificados por scanner independente — precisamos de 60% para o número
-                  significar prontidão de verdade.
-                </p>
+            <div className="mt-3 space-y-3 text-xs leading-relaxed text-slate-500">
+              {/* O motivo exibido e sempre o motivo REAL do bloqueio. */}
+              {card.blockingReasons.length > 0 ? (
+                <ul className="space-y-1">
+                  {card.blockingReasons.map((reason) => (
+                    <li key={reason} className="flex gap-2">
+                      <span className="text-slate-600">·</span>
+                      <span>{reason}</span>
+                    </li>
+                  ))}
+                </ul>
               ) : (
-                <p>
-                  A cobertura já passou de 60%, mas{" "}
-                  <strong className="font-semibold text-slate-400">
-                    {card.criticalWithoutIndependentEvidence.length} requisito(s) crítico(s)
-                  </strong>{" "}
-                  ainda não foram verificados. São justamente os que decidem se dá para
-                  receber usuários reais — sem eles, o número enganaria.
-                </p>
+                <p>Ainda não observamos o suficiente para publicar este número.</p>
               )}
 
-              {/* As duas coberturas sao coisas diferentes e aparecem separadas. */}
-              <dl className="grid grid-cols-2 gap-2 border-t border-ink-line pt-2">
-                <div>
-                  <dt className="text-[10px] uppercase tracking-wide text-slate-600">
-                    por evidência
-                  </dt>
-                  <dd className="tabular-nums text-slate-400">
-                    {Math.round(card.evidenceCoverage * 100)}%
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-[10px] uppercase tracking-wide text-slate-600">
-                    por scanner independente
-                  </dt>
-                  <dd className="tabular-nums text-slate-400">
-                    {Math.round(card.independentCoverage * 100)}%
-                  </dd>
-                </div>
-              </dl>
-
-              {card.criticalWithoutIndependentEvidence.length > 0 && (
-                <p className="text-slate-600">
-                  Faltam:{" "}
-                  {card.criticalWithoutIndependentEvidence
-                    .map((id) => id.split(".")[1] ?? id)
-                    .join(", ")}
+              <div className="border-t border-ink-line pt-2">
+                <p className="text-[10px] uppercase tracking-wide text-slate-600">
+                  quanto do que importa aqui já observamos
                 </p>
+                <div className="mt-1.5 flex items-center gap-2">
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-ink-line">
+                    <div
+                      className="h-full rounded-full bg-slate-500"
+                      style={{ width: `${Math.round(card.weightedCoverage * 100)}%` }}
+                    />
+                  </div>
+                  <span className="tabular-nums text-slate-400">
+                    {Math.round(card.weightedCoverage * 100)}%
+                  </span>
+                  <span className="text-slate-600">de 70%</span>
+                </div>
+              </div>
+
+              {card.criticalGaps.length > 0 && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wide text-slate-600">
+                    itens decisivos ainda sem evidência
+                  </p>
+                  <ul className="mt-1 space-y-0.5">
+                    {card.criticalGaps.map((gap) => (
+                      <li key={gap.requirementId} className="text-slate-400">
+                        {gap.requirementName}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {card.blindSpots.length > 0 && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wide text-slate-600">
+                    pontos cegos de peso alto
+                  </p>
+                  <ul className="mt-1 space-y-0.5">
+                    {card.blindSpots.map((gap) => (
+                      <li key={gap.requirementId} className="text-slate-400">
+                        {gap.requirementName}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </div>
           )}
 
           <Disclosure label="Ver detalhes técnicos">
-            <TechRow label="measured" value={String(card.measured)} />
+            <TechRow label="measured (= suficiência)" value={String(card.measured)} />
+            <TechRow
+              label="weightedCoverage"
+              value={`${Math.round(card.weightedCoverage * 100)}% (limiar 70%) — cobertura ponderada pelo peso`}
+            />
             <TechRow
               label="evidenceCoverage"
               value={`${Math.round(card.evidenceCoverage * 100)}% — inclui ADR, não libera o score`}

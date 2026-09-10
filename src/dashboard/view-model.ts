@@ -37,12 +37,22 @@ export interface ReadinessCard {
    */
   percent: number | null;
   measured: boolean;
-  /** Cobertura por evidencia de qualquer origem (inclui ADR). */
+  /** COBERTURA: quanto da superficie foi observada, de qualquer origem (inclui ADR). */
   evidenceCoverage: number;
-  /** Cobertura por scanner independente. E esta que libera o score. */
+  /** COBERTURA: fracao observada por scanner independente. */
   independentCoverage: number;
-  /** Requisitos criticos sem verificacao independente. */
+  /** Requisitos criticos sem verificacao independente. Informativo. */
   criticalWithoutIndependentEvidence: string[];
+  /** COBERTURA PONDERADA pelo peso do requisito nesta dimensao. */
+  weightedCoverage: number;
+  /** SUFICIENCIA: observamos o bastante para publicar este score? Define `measured`. */
+  sufficient: boolean;
+  /** Motivos do bloqueio, em linguagem de leigo. Vazio quando suficiente. */
+  blockingReasons: string[];
+  /** Itens decisivos DESTA dimensao ainda mal observados. */
+  criticalGaps: { requirementId: string; requirementName: string; weight: number; strength: number }[];
+  /** Itens de peso alto sobre os quais nao sabemos nada. */
+  blindSpots: { requirementId: string; requirementName: string; weight: number; strength: number }[];
   applicableCount: number;
   /** Calculo provisorio, exposto so em "detalhes tecnicos". Nunca como prontidao. */
   provisionalPercent: number;
@@ -173,6 +183,21 @@ export function buildDashboardViewModel(projectId = "readiness-os"): DashboardVi
       evidenceCoverage: d.evidenceCoverage,
       independentCoverage: d.independentCoverage,
       criticalWithoutIndependentEvidence: d.criticalWithoutIndependentEvidence,
+      weightedCoverage: d.sufficiency.weightedCoverage,
+      sufficient: d.sufficiency.sufficient,
+      blockingReasons: d.sufficiency.reasons,
+      criticalGaps: d.sufficiency.criticalGaps.map((g) => ({
+        requirementId: g.requirementId,
+        requirementName: g.requirementName,
+        weight: g.weight,
+        strength: g.strength,
+      })),
+      blindSpots: d.sufficiency.blindSpots.map((g) => ({
+        requirementId: g.requirementId,
+        requirementName: g.requirementName,
+        weight: g.weight,
+        strength: g.strength,
+      })),
       applicableCount: d.applicableCount,
       provisionalPercent: d.score,
       cappedByLaunchBlockers: d.cappedByLaunchBlockers,

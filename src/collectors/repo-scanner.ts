@@ -18,7 +18,36 @@ import type { StateProposal } from "./types.js";
  * `uncertain` — nunca um "pronto" otimista.
  *
  * Sem LLM: apenas leitura de arquivos e execucao de comandos.
+ *
+ * ---------------------------------------------------------------------------
+ * FRONTEIRA DE SEGURANCA — LEIA ANTES DE REUSAR ESTE MODULO
+ * ---------------------------------------------------------------------------
+ * Este scanner EXECUTA comandos do projeto analisado (`npm run ...`) no HOST.
+ * Isso e seguro hoje por um unico motivo: o unico projeto analisado e o proprio
+ * Readiness OS, que e codigo confiavel e nosso.
+ *
+ * Um `package.json` de terceiro pode conter QUALQUER comando. Executa-lo aqui
+ * daria a um repositorio desconhecido execucao arbitraria de codigo na nossa
+ * maquina, com nossas variaveis de ambiente e nossa rede.
+ *
+ * REGRA ARQUITETURAL OBRIGATORIA (ADR 0007): repositorio de terceiro NUNCA tem
+ * seus comandos executados no host. Antes do scanner externo existir, a
+ * execucao precisa acontecer em ambiente isolado e descartavel, sem segredos
+ * internos, com limite de recursos, timeout e politica de rede.
+ *
+ * O parametro `trust` abaixo existe para impedir que alguem reuse este executor
+ * para um repositorio externo por engano.
+ * ---------------------------------------------------------------------------
  */
+
+/**
+ * Nivel de confianca do repositorio analisado.
+ * - `self`: o proprio Readiness OS. Unico caso em que comandos podem rodar no host.
+ * - `external`: repositorio de terceiro. Execucao de comando PROIBIDA ate existir sandbox.
+ */
+export type RepoTrust = "self" | "external";
+
+export class UntrustedExecutionError extends Error {}
 
 export interface ScanOptions {
   root?: string;
@@ -27,11 +56,14 @@ export interface ScanOptions {
    * Desligado nos testes automatizados para nao haver recursao.
    */
   runCommands?: boolean;
+  /** Padrao `self`. Ver a fronteira de seguranca acima. */
+  trust?: RepoTrust;
 }
 
 interface Ctx {
   root: string;
   runCommands: boolean;
+  trust: RepoTrust;
 }
 
 // ---------------------------------------------------------------- utilidades
@@ -80,8 +112,20 @@ interface CommandResult {
 }
 
 function runNpmScript(ctx: Ctx, script: string): CommandResult {
+  // Sem execucao nao ha risco: leitura estatica de repositorio externo continua
+  // permitida, e o requisito vira `uncertain` por nao ter sido executado.
   if (!ctx.runCommands) {
     return { ok: false, skipped: true, detail: "execucao desligada nesta chamada" };
+  }
+
+  // Guarda de ultima instancia, no ponto exato onde o comando rodaria.
+  // A checagem principal esta em scanRepository(); esta existe para que nenhum
+  // caminho futuro chegue a execucao contornando a fronteira.
+  if (ctx.trust !== "self") {
+    throw new UntrustedExecutionError(
+      "Execucao de comando bloqueada: repositorio nao confiavel. " +
+        "Comandos de terceiros exigem sandbox descartavel (ADR 0007).",
+    );
   }
   try {
     execFileSync("npm", ["run", script], {
@@ -696,9 +740,23 @@ const CHECKS: Check[] = [
 
 /** Roda todas as verificacoes. Ordem estavel: mesma entrada, mesma saida. */
 export function scanRepository(options: ScanOptions = {}): StateProposal[] {
+  const trust = options.trust ?? "self";
+  const runCommands = options.runCommands ?? false;
+
+  // FRONTEIRA DE SEGURANCA: repositorio externo nunca tem comando executado
+  // no host. Falha alto e cedo, em vez de degradar silenciosamente.
+  if (runCommands && trust !== "self") {
+    throw new UntrustedExecutionError(
+      "runCommands so e permitido com trust: \"self\". Repositorio de terceiro exige " +
+        "ambiente isolado e descartavel, sem segredos internos, com limite de recursos, " +
+        "timeout e politica de rede. Ver ADR 0007 e docs/BACKLOG.md.",
+    );
+  }
+
   const ctx: Ctx = {
     root: options.root ?? process.cwd(),
-    runCommands: options.runCommands ?? false,
+    runCommands,
+    trust,
   };
 
   const proposals: StateProposal[] = [];

@@ -145,3 +145,68 @@ describe("scanner: ausencia confirmada tambem e evidencia", () => {
     expect(p.evidence[0]!.locator).toContain("tests/");
   });
 });
+
+describe("REGRESSAO DE SEGURANCA: comandos de terceiro nunca rodam no host", () => {
+  it("recusa executar comandos quando o repositorio nao e confiavel", async () => {
+    const { UntrustedExecutionError } = await import("../src/collectors/repo-scanner.js");
+    expect(() => scanRepository({ runCommands: true, trust: "external" })).toThrow(
+      UntrustedExecutionError,
+    );
+  });
+
+  it("a mensagem aponta a regra arquitetural, para o proximo agente entender", () => {
+    expect(() => scanRepository({ runCommands: true, trust: "external" })).toThrow(/ADR 0007/);
+  });
+
+  it("leitura estatica de repositorio externo continua permitida", () => {
+    expect(() => scanRepository({ runCommands: false, trust: "external" })).not.toThrow();
+  });
+
+  it("o padrao e trust self, para nao quebrar o dogfooding", () => {
+    expect(() => scanRepository({ runCommands: false })).not.toThrow();
+  });
+});
+
+describe("REGRESSAO: os sete casos de falso positivo", () => {
+  it("existencia de pacote != funcionalidade", () => {
+    // Nenhuma proposta se apoia apenas em dependencia declarada.
+    for (const p of proposals) {
+      expect(p.reason).not.toMatch(/dependencia .*(instalada|presente).*(portanto|logo)/i);
+    }
+  });
+
+  it("existencia de arquivo != funcionamento", () => {
+    const gates = ["foundation.typecheck-gate", "foundation.test-gate", "ai.quality-gates-runnable"];
+    for (const id of gates) {
+      const p = byId.get(id)!;
+      if (p.status === "completed") expect(p.provenance).toBe("command_execution");
+    }
+  });
+
+  it("teste generico passando != fluxo critico coberto", () => {
+    // O scanner nao se pronuncia sobre core.primary-flow-tested so porque os
+    // testes passam. Ele nao sabe o que os testes cobrem.
+    expect(byId.get("core.primary-flow-tested")).toBeUndefined();
+  });
+
+  it("ADR != implementacao", () => {
+    for (const p of proposals) {
+      expect(p.provenance).not.toBe("decision_record");
+    }
+  });
+
+  it("analise estatica != runtime", () => {
+    const p = byId.get("deploy.production-deploy-works");
+    expect(p).toBeUndefined(); // exige runtime; o scanner se cala
+  });
+
+  it("ausencia de segredo nos arquivos != ausencia no historico", () => {
+    const p = byId.get("security.no-secrets-in-repo")!;
+    expect(p.status).toBe("partial");
+  });
+
+  it("CI existente != branch realmente protegida", () => {
+    const p = byId.get("deploy.ci-pipeline")!;
+    expect(p.status).toBe("partial");
+  });
+});

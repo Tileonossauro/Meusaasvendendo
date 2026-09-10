@@ -63,31 +63,92 @@ O teto vale **apenas para Production**. O MVP Score mede se o produto cumpre a
 promessa, nao se e seguro — misturar os dois destruiria a informacao contida na
 diferenca entre eles.
 
-### 7. Medido ou nao medido — duas coberturas, nao uma
+### 7. Medido ou nao medido — cobertura NAO e suficiencia
 
-**Proveniencia** (de onde vem a verdade) e **metodo de coleta** (como foi obtida)
-sao eixos independentes. Ler um ADR deterministicamente prova
-"existe uma decisao formal registrada" — nao prova "a implementacao existe e
-funciona".
+Sao duas perguntas diferentes, que antes eram respondidas pelo mesmo numero:
 
-| Cobertura | Conta o que | Libera o score? |
+| Pergunta | Nome | Responde |
 | --- | --- | --- |
-| `evidenceCoverage` | qualquer evidencia, inclusive `decision_record` | **Nao** |
-| `independentCoverage` | `static_analysis`, `command_execution`, `specialized_tool`, `runtime_probe` | **Sim** |
+| Quanto conseguimos observar? | **cobertura** | tamanho da superficie vista |
+| Observamos o bastante para publicar? | **suficiencia** | se o numero pode sair |
 
-Uma dimensao so e `measured: true` quando **as duas portas** estao abertas:
+Contar requisitos respondia mal as duas — era a DT-001. Quem libera o score
+agora e a **suficiencia**, calculada em `src/scoring/sufficiency.ts`.
 
-1. `independentCoverage >= 0,6` (`MEASURED_COVERAGE_THRESHOLD`); **e**
-2. `criticalWithoutIndependentEvidence` vazio — nenhum requisito que bloqueia
-   lancamento ou de severidade `blocker` sem verificacao independente.
+#### Em linguagem de fundador
 
-A segunda porta e **mitigacao parcial da DT-001**: impede que muitos requisitos
-triviais verificados facam um score parecer medido enquanto os criticos seguem
-sem evidencia. A DT-001 continua **aberta** — falta ponderar a cobertura por peso,
-metodo e confianca.
+Antes de mostrar uma nota, o sistema se pergunta tres coisas:
 
-Enquanto qualquer porta estiver fechada, a interface exibe
-**"Bootstrap / ainda nao medido"**.
+1. **"Olhei a maior parte do que importa nesta pergunta?"**
+   Nao e "olhei muitos itens" — e "olhei os itens que pesam". Precisa de 70%.
+2. **"Os itens decisivos desta pergunta estao bem olhados?"**
+   Se algo que decide seguranca ou lancamento so tem evidencia fraca, o numero
+   nao sai.
+3. **"Existe algo importante sobre o qual eu nao sei absolutamente nada?"**
+   Um unico ponto cego de peso alto ja impede a publicacao.
+
+Se qualquer resposta for "nao", aparece **"Bootstrap / ainda nao medido"** —
+com o motivo escrito na tela.
+
+**Cada uma das tres perguntas do produto e avaliada separadamente.** E esperado
+e desejavel que "os agentes conseguem continuar este projeto?" seja publicavel
+antes de "e seguro colocar dinheiro aqui?".
+
+#### Formula tecnica
+
+**Forca da observacao** de um requisito (0 a 1) — o quanto SABEMOS sobre ele,
+nao se ele esta pronto:
+
+```
+forca = forca_da_proveniencia × adequacao_ao_tipo × confianca
+```
+
+`forca_da_proveniencia`:
+
+| Proveniencia | Valor |
+| --- | --- |
+| `human_declared` | 0 |
+| `decision_record` | 0,5 |
+| `llm_inference` | 0,6 |
+| `static_analysis` | 0,8 |
+| `specialized_tool` | 0,9 |
+| `command_execution` | 1 |
+| `runtime_probe` | 1 |
+
+`adequacao_ao_tipo` (`KIND_FIT`) cruza a proveniencia com o `kind` do requisito.
+Ler um arquivo prova que um documento existe; nao prova que um codigo funciona.
+Um ADR vale 1 para `decision` e **0** para `implementation`.
+
+**Excecao deliberada:** quando o status observado e `missing`, a adequacao vale 1.
+Provar que algo NAO existe nao exige executar nada — e uma observacao forte.
+
+**Por dimensao**, com as tres portas:
+
+```
+cobertura_ponderada = Σ(peso × forca) / Σ(peso)          → precisa ≥ 0,70
+
+criticos_da_dimensao = requisitos com (launchBlocking OU severidade blocker)
+                       E peso ≥ 5 NESTA dimensao          → todos com forca ≥ 0,60
+
+pontos_cegos = requisitos com peso ≥ 7 e forca = 0        → precisa ser vazio
+
+suficiente = as tres portas abertas
+```
+
+Criticidade e **relativa a dimensao**: `core.primary-flow-implemented` pesa 10
+no MVP (critico) e 2 no AI Build (nao critico). Um requisito nao trava uma
+dimensao em que ele quase nao pesa.
+
+#### Limiares sao hipoteses
+
+`SUFFICIENCY_MODEL_VERSION = "1.0.0"`, `SUFFICIENCY_CALIBRATED = false`.
+Versionados, testados e calibraveis. Ver `docs/CALIBRATION.md`.
+
+#### As coberturas continuam existindo
+
+`evidenceCoverage` e `independentCoverage` seguem no relatorio como medida de
+superficie observada, uteis para acompanhar progresso. **Elas nao liberam mais
+o score** — quem faz isso e a suficiencia.
 
 Transparencia vale mais que dashboard bonita.
 

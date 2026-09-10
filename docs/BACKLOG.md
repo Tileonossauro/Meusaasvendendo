@@ -49,42 +49,59 @@ Marco de validacao: o fundador adicionar um **segundo** projeto real.
 
 ### DT-001 — `measuredCoverage` conta requisitos, nao relevancia
 
-**Status:** aceita conscientemente · registrada em 2026-09-10 · dona: revisao do Marco do scanner
+**Status:** ✅ **PAGA** em 2026-09-10 (Marco 4) · substituida pelo modelo de
+suficiencia em `src/scoring/sufficiency.ts`.
 
-**O problema.** Hoje `measuredCoverage` (em `src/scoring/score.ts`) e uma contagem
-simples: requisitos verificados automaticamente dividido por requisitos aplicaveis.
-Quando passa de 60%, a dimensao e considerada MEDIDA e passa a exibir porcentagem.
+**O problema era:** `measuredCoverage` era uma contagem simples. 60% de
+requisitos triviais fariam um Production Score parecer medido enquanto os
+requisitos criticos seguiam sem evidencia.
 
-**Por que isso e perigoso.** 60% de requisitos triviais verificados fariam um
-Production Score parecer medido enquanto os requisitos criticos — os que de fato
-decidem se e seguro receber usuarios e dinheiro — seguem com pouca ou nenhuma
-evidencia. O numero ficaria tecnicamente correto e praticamente mentiroso.
-E exatamente o tipo de falso positivo que este produto existe para evitar.
+**Deixou de ser teorico** quando o Marco 3 levou a cobertura a 65% — acima do
+limiar — com tres criticos ainda cegos.
 
-**O que precisa ser revisado antes de liberar scores para clientes:**
+**Como foi paga.** `measured` deixou de depender de contagem e passou a depender
+de **suficiencia por dimensao**, com tres portas obrigatorias:
 
-- **Peso dos requisitos cobertos** — cobertura deveria ser ponderada pelo peso na
-  dimensao, nao pela contagem.
-- **Criticidade** — requisito `launchBlocking` ou `blocker` sem evidencia deveria
-  impedir a dimensao de ser considerada medida, independentemente do percentual.
-- **Metodo de verificacao** — `deterministic` e `tool` merecem mais peso de
-  cobertura que `llm`.
-- **Confianca/evidencia** — requisito verificado com confianca baixa nao deveria
-  contar como cobertura cheia.
+1. cobertura **ponderada pelo peso** ≥ 70%;
+2. nenhum critico **daquela dimensao** com forca de observacao < 0,60;
+3. nenhum requisito de peso ≥ 7 com forca zero.
 
-**Mitigacao parcial ja aplicada (2026-09-10).** Uma segunda porta foi adicionada
-ao `measured`: nenhuma dimensao e considerada medida enquanto existir requisito
-critico (bloqueia lancamento ou severidade `blocker`) sem verificacao
-independente. Isso ja provou seu valor: apos o Marco 3 a cobertura chegou a 65%,
-acima do limiar, e os scores corretamente **nao** foram liberados, porque 3
-requisitos criticos seguem sem evidencia. **A DT-001 continua aberta** — falta a
-ponderacao por peso, metodo de verificacao e confianca.
+A forca de observacao combina os quatro fatores que faltavam: **proveniencia**,
+**tipo do requisito**, **confianca** e **peso**. Criticidade passou a ser
+relativa a dimensao. Nao existe porta global: cada dimensao prova a propria
+suficiencia.
 
-**Enquanto nao for resolvida.** O limiar de 60% segue valendo, e as tres dimensoes
-seguem em "Bootstrap / ainda nao medido". A cobertura independente ja e de 65% —
-acima do limiar —, entao a partir de agora e apenas a porta dos criticos que
-sustenta a honestidade do numero. Pagar a divida virou prioridade real.
+**O que ficou em aberto para calibracao** (nao e divida, e hipotese declarada):
+as tabelas `PROVENANCE_STRENGTH` e `KIND_FIT` e os quatro limiares sao
+julgamento de engenharia, versionados com `SUFFICIENCY_CALIBRATED = false`.
+Ver `docs/CALIBRATION.md`.
 
-**Nao resolver junto com o scanner sem revisar.** O scanner vai elevar a cobertura
-rapidamente; se o criterio nao for revisado antes, o primeiro score "medido" pode
-ser justamente o menos confiavel.
+### DT-002 — Sandbox obrigatoria antes do scanner de repositorio externo
+
+**Status:** aberta · registrada em 2026-09-10 · **bloqueia** o scanner externo
+
+O scanner atual executa `npm run ...` do projeto analisado **no host**. Isso e
+seguro hoje porque o unico projeto analisado e o proprio Readiness OS.
+
+Um `package.json` de terceiro pode declarar qualquer comando. Executa-lo no host
+daria a um repositorio desconhecido execucao arbitraria de codigo, com as nossas
+variaveis de ambiente e a nossa rede. E o caminho de ataque mais obvio contra
+este produto.
+
+**Regra arquitetural ja em vigor (ADR 0007):** repositorio de terceiro NUNCA tem
+comando executado no host. `scanRepository()` lanca `UntrustedExecutionError` se
+alguem pedir `runCommands` com `trust: "external"`, com guarda dupla e teste de
+regressao.
+
+**O que a sandbox precisa ter antes do scanner externo existir:**
+
+- container ou microVM descartavel, destruida ao fim da analise;
+- nenhum segredo interno visivel no ambiente;
+- limite de CPU, memoria e disco;
+- timeout obrigatorio por comando;
+- rede desligada por padrao, excecoes justificadas e registradas;
+- sistema de arquivos somente leitura fora do diretorio da analise.
+
+**Enquanto nao existir:** scanner externo roda apenas leitura estatica. Requisito
+que so poderia ser provado executando fica `uncertain` — nunca `completed` por
+inferencia.

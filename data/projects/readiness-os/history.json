@@ -346,6 +346,31 @@
         "from": 0,
         "to": 65
       }
+    },
+    {
+      "id": "evt-0045",
+      "type": "requirement_changed",
+      "at": "2026-09-10T13:00:00.000Z",
+      "title": "Passamos a distinguir 'quanto observamos' de 'observamos o bastante'",
+      "detail": "Antes, 60% dos requisitos verificados liberava uma nota. Agora o sistema pesa o que observou, exige evidência boa nos itens decisivos de cada pergunta e recusa publicar se houver ponto cego importante. Cada uma das três perguntas prova isso sozinha.",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0046",
+      "type": "founder_decision",
+      "at": "2026-09-10T13:05:00.000Z",
+      "title": "Regra de segurança: nunca executar comandos de projeto de terceiro na nossa máquina",
+      "detail": "Analisar o projeto de outra pessoa executando os comandos dela seria entregar nossa máquina a um desconhecido. Ficou proibido por arquitetura até existir ambiente isolado e descartável.",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0047",
+      "type": "milestone_completed",
+      "at": "2026-09-10T13:10:00.000Z",
+      "title": "Marco 4 concluído: a régua ficou confiável",
+      "detail": "Nenhuma das três perguntas passou nos novos critérios — e isso é o resultado correto. A régua agora diz exatamente o que falta observar em cada uma.",
+      "milestoneId": "m4-suficiencia",
+      "frameworkVersion": "0.2.0"
     }
   ]
 }

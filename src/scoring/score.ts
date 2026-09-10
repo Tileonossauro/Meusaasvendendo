@@ -1,3 +1,4 @@
+import { evaluateSufficiency, type SufficiencyInput, type SufficiencyResult } from "./sufficiency.js";
 import {
   isIndependentlyVerified,
   type Framework,
@@ -26,12 +27,11 @@ export const DIMENSIONS: Dimension[] = ["mvp", "production", "aiBuild"];
 export const CONFIDENCE_THRESHOLD = 0.7;
 
 /**
- * Fracao minima de requisitos aplicaveis com VERIFICACAO INDEPENDENTE para que a
- * dimensao seja considerada MEDIDA. Abaixo disso o score sai como
- * "bootstrap / ainda nao medido" — nunca inventamos numero.
+ * @deprecated Substituido pelo modelo de suficiencia (`src/scoring/sufficiency.ts`).
  *
- * Independente = o sistema observou o projeto por conta propria. Ler um ADR nao
- * conta: prova que a decisao foi registrada, nao que a implementacao existe.
+ * Contar requisitos verificados era a DT-001: 60% de requisitos triviais podia
+ * liberar um score enquanto os criticos seguiam cegos. Mantido apenas como
+ * referencia historica; `measured` NAO depende mais deste numero.
  */
 export const MEASURED_COVERAGE_THRESHOLD = 0.6;
 
@@ -78,12 +78,16 @@ export interface DimensionScore {
    */
   independentCoverage: number;
   /**
-   * Requisitos criticos (bloqueiam lancamento ou severidade blocker) sem
-   * verificacao independente. Enquanto houver algum, a dimensao nao e medida —
-   * mitigacao parcial da DT-001, para que muitos requisitos triviais nao facam
-   * um score parecer medido enquanto os criticos seguem sem evidencia.
+   * Requisitos criticos sem verificacao independente. Informativo — quem decide
+   * se o score pode ser publicado e `sufficiency`.
    */
   criticalWithoutIndependentEvidence: string[];
+  /**
+   * SUFICIENCIA DE MEDICAO: observamos material suficiente para publicar este
+   * score? Avaliada por dimensao, de forma independente. E ela que define
+   * `measured`. Ver docs/SCORING.md e src/scoring/sufficiency.ts.
+   */
+  sufficiency: SufficiencyResult;
   applicableCount: number;
   totalWeight: number;
   openLaunchBlockers: string[];
@@ -140,6 +144,7 @@ export function computeDimensionScore(
   let independentlyVerified = 0;
   let applicableCount = 0;
   const criticalWithoutIndependentEvidence: string[] = [];
+  const sufficiencyInputs: SufficiencyInput[] = [];
 
   // Ordem estavel: o relatorio precisa ser diff-friendly.
   const requirements = [...framework.requirements].sort((a, b) => a.id.localeCompare(b.id));
@@ -178,6 +183,8 @@ export function computeDimensionScore(
       openLaunchBlockers.push(requirement.id);
     }
 
+    sufficiencyInputs.push({ requirement, state, weight });
+
     details.push({
       requirementId: requirement.id,
       weight,
@@ -197,11 +204,11 @@ export function computeDimensionScore(
   const evidenceCoverage = applicableCount === 0 ? 0 : withEvidence / applicableCount;
   const independentCoverage = applicableCount === 0 ? 0 : independentlyVerified / applicableCount;
 
-  // Duas portas, ambas obrigatorias: cobertura suficiente E nenhum requisito
-  // critico sem evidencia independente.
-  const measured =
-    independentCoverage >= MEASURED_COVERAGE_THRESHOLD &&
-    criticalWithoutIndependentEvidence.length === 0;
+  // COBERTURA responde "quanto observamos". SUFICIENCIA responde "observamos o
+  // bastante para publicar". Sao perguntas diferentes: quem libera o score e a
+  // segunda, avaliada por dimensao, independentemente das outras.
+  const sufficiency = evaluateSufficiency(dimension, sufficiencyInputs);
+  const measured = sufficiency.sufficient;
 
   return {
     dimension,
@@ -212,6 +219,7 @@ export function computeDimensionScore(
     evidenceCoverage: Math.round(evidenceCoverage * 100) / 100,
     independentCoverage: Math.round(independentCoverage * 100) / 100,
     criticalWithoutIndependentEvidence,
+    sufficiency,
     applicableCount,
     totalWeight,
     openLaunchBlockers,

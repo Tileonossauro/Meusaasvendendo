@@ -91,6 +91,15 @@ tests/            espelham src/
 13. **Dependencia presente != funcionalidade pronta.** O scanner nunca marca
     `completed` por existir pacote, arquivo ou nome parecido. O que nao for
     provavel vira `partial` com o motivo, ou `uncertain`.
+14. **Cobertura != suficiencia.** Cobertura e quanto observamos; suficiencia e se
+    observamos o bastante para publicar. Quem libera o score e a suficiencia
+    (`src/scoring/sufficiency.ts`), avaliada POR DIMENSAO. Nao existe porta
+    global: e desejavel que AI Build seja publicavel antes de Production.
+15. **NUNCA execute comandos de repositorio de terceiro no host.** O executor
+    atual (`runNpmScript`) so e seguro para o proprio Readiness OS
+    (`trust: "self"`). Repositorio externo exige sandbox descartavel, sem
+    segredos, com limite de recursos, timeout e politica de rede — ADR 0007 e
+    DT-002. Nao reuse o executor sem isso.
 
 ## Scoring
 
@@ -132,3 +141,6 @@ tela mais bonita.
 - Copiar codigo ou texto de projeto de referencia sem checar a licenca
   (ver `docs/RESEARCH.md`).
 - Construir qualquer item listado em `docs/BACKLOG.md` como "nao agora".
+- Executar comandos de um repositorio que nao seja o proprio Readiness OS.
+- Ajustar limiar de suficiencia para fazer um score aparecer. O marco e provar a
+  regua, nao produzir uma porcentagem bonita.
