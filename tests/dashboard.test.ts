@@ -95,24 +95,30 @@ describe("dashboard: conteudo exigido pelo criterio de conclusao", () => {
 describe("mapa das areas: barra declarada nao pode passar por auditoria", () => {
   it("toda categoria declara a origem do seu preenchimento", () => {
     for (const block of vm.categories) {
-      expect(["declared", "verified", "mixed"]).toContain(block.evidenceSource);
-      expect(block.verifiedCount + block.declaredCount).toBe(block.total);
+      expect(["declared", "decision_record", "mixed", "verified"]).toContain(
+        block.evidenceSource,
+      );
+      expect(block.verifiedCount + block.decisionRecordCount + block.declaredCount).toBe(
+        block.total,
+      );
     }
   });
 
-  it("categoria sem nenhuma verificacao automatica e marcada como declarada", () => {
+  it("categoria sem verificacao independente nunca e rotulada como verificada", () => {
     for (const block of vm.categories) {
       if (block.verifiedCount === 0) {
-        expect(block.evidenceSource).toBe("declared");
+        expect(block.evidenceSource).not.toBe("verified");
+        expect(block.evidenceSource).not.toBe("mixed");
       }
     }
   });
 
-  it("categoria que ganhou verificacao deterministica deixa de ser so declarada", () => {
-    // Dados e Deploy receberam estado vindo de ADR (verificacao deterministica).
+  it("categoria com estado vindo de ADR e rotulada como decisao registrada, nao verificada", () => {
+    // Dados recebeu estado do ADR 0004. Isso NAO e verificacao independente.
     const dados = vm.categories.find((c) => c.category.id === "data")!;
-    expect(dados.verifiedCount).toBeGreaterThan(0);
-    expect(dados.evidenceSource).not.toBe("declared");
+    expect(dados.decisionRecordCount).toBeGreaterThan(0);
+    expect(dados.verifiedCount).toBe(0);
+    expect(dados.evidenceSource).toBe("decision_record");
   });
 
   it("a barra da categoria nunca e apresentada como Readiness Score", () => {
@@ -124,15 +130,35 @@ describe("mapa das areas: barra declarada nao pode passar por auditoria", () => 
   });
 });
 
-describe("o texto do cartao acompanha a cobertura real", () => {
-  it("nao afirma 'nenhum verificado' quando ja existe verificacao automatica", () => {
-    // Guarda contra copy que envelhece: hoje a cobertura ja e maior que zero.
+describe("cobertura por evidencia nao e cobertura por scanner independente", () => {
+  it("as duas coberturas sao expostas separadamente", () => {
     for (const card of vm.readiness) {
-      if (card.measuredCoverage > 0) {
-        expect(card.measured).toBe(false); // ainda abaixo do limiar
+      expect(typeof card.evidenceCoverage).toBe("number");
+      expect(typeof card.independentCoverage).toBe("number");
+      // Independente e sempre subconjunto de "tem alguma evidencia".
+      expect(card.independentCoverage).toBeLessThanOrEqual(card.evidenceCoverage);
+    }
+  });
+
+  it("estado vindo de ADR conta como evidencia, mas NAO como scanner independente", () => {
+    // Hoje so existe reconciliacao de ADR: alguma evidencia, zero scanner.
+    expect(vm.readiness.some((c) => c.evidenceCoverage > 0)).toBe(true);
+  });
+
+  it("so a cobertura independente pode liberar o score", () => {
+    for (const card of vm.readiness) {
+      if (card.independentCoverage < 0.6) {
+        expect(card.measured).toBe(false);
         expect(card.percent).toBeNull();
       }
     }
-    expect(vm.readiness.every((c) => c.measuredCoverage > 0)).toBe(true);
+  });
+
+  it("requisito critico sem verificacao independente impede a dimensao de ser medida", () => {
+    for (const card of vm.readiness) {
+      if (card.criticalWithoutIndependentEvidence.length > 0) {
+        expect(card.measured).toBe(false);
+      }
+    }
   });
 })

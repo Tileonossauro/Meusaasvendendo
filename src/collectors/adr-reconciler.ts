@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import type { Evidence, Framework, RequirementState } from "../framework/schema.js";
+import { isIndependentlyVerified, type Evidence, type Framework, type RequirementState } from "../framework/schema.js";
 
 /**
  * RECONCILIACAO DE DECISOES — primeiro coletor deterministico do projeto.
@@ -43,7 +43,13 @@ export interface StateProposal {
   status: "completed" | "partial";
   confidence: number;
   evidence: Evidence[];
-  verifiedBy: "deterministic";
+  /**
+   * SEMPRE `decision_record`. Um ADR e declaracao humana lida por maquina:
+   * prova que a decisao foi registrada, nunca que a implementacao existe.
+   */
+  provenance: "decision_record";
+  /** A LEITURA foi deterministica — eixo independente da proveniencia. */
+  collectionMethod: "deterministic";
   reason: string;
 }
 
@@ -152,7 +158,6 @@ export function reconcileDecisions(
   framework: Framework,
   documents: AdrDocument[] = loadAdrDocuments(),
 ): StateProposal[] {
-  const known = new Set(framework.requirements.map((r) => r.id));
   const proposals: StateProposal[] = [];
 
   for (const doc of documents) {
@@ -164,9 +169,21 @@ export function reconcileDecisions(
     ];
 
     for (const entry of entries) {
-      if (!known.has(entry.id)) {
+      const requirement = framework.requirements.find((r) => r.id === entry.id);
+      if (!requirement) {
         throw new ReconcilerError(
           `${doc.file}: declara decidir "${entry.id}", que nao existe no framework.`,
+        );
+      }
+
+      // GUARDA ESTRUTURAL: um ADR so pode satisfazer requisito cuja Definition
+      // of Done E uma decisao documentada. Declarar num ADR que o rate limiting
+      // esta pronto jamais pode valer o mesmo que um scanner detecta-lo.
+      if (requirement.kind !== "decision") {
+        throw new ReconcilerError(
+          `${doc.file}: declara decidir "${entry.id}", que e do tipo "${requirement.kind}". ` +
+            `Um registro de decisao so satisfaz requisitos do tipo "decision" — ` +
+            `requisitos de implementacao ou operacao exigem verificacao independente.`,
         );
       }
 
@@ -174,6 +191,7 @@ export function reconcileDecisions(
       const evidence: Evidence[] = [
         {
           source: "file",
+          provenance: "decision_record",
           locator,
           note:
             entry.status === "completed"
@@ -189,7 +207,8 @@ export function reconcileDecisions(
         // registrada, nao que ela foi implementada.
         confidence: entry.status === "completed" ? 0.9 : 0.7,
         evidence,
-        verifiedBy: "deterministic",
+        provenance: "decision_record",
+        collectionMethod: "deterministic",
         reason:
           entry.status === "completed"
             ? `ADR ${doc.frontMatter.adr} decide este requisito.`
@@ -208,9 +227,12 @@ export function proposalChangesState(
   current: RequirementState | undefined,
 ): boolean {
   if (!current) return true;
+  // Estado ja verificado de forma INDEPENDENTE nao e rebaixado por um ADR:
+  // o scanner tem mais autoridade que uma declaracao.
+  if (isIndependentlyVerified(current.provenance)) return false;
   return (
     current.status !== proposal.status ||
-    current.verifiedBy !== proposal.verifiedBy ||
+    current.provenance !== proposal.provenance ||
     current.evidence.length === 0
   );
 }

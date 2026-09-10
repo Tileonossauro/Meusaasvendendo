@@ -31,7 +31,8 @@ describe("scoring deterministico", () => {
 
   it("e reproduzivel: mesmo estado, mesmo score", () => {
     const state = stateWith([
-      { requirementId: "ai.claude-md", status: "completed", confidence: 1, evidence: [], verifiedBy: "deterministic", updatedAt: "x" },
+      { requirementId: "ai.claude-md", status: "completed", confidence: 1, evidence: [], provenance: "static_analysis",
+          collectionMethod: "deterministic", updatedAt: "x" },
     ]);
     const a = computeScoreReport(framework, state, "t");
     const b = computeScoreReport(framework, state, "t");
@@ -46,10 +47,12 @@ describe("scoring deterministico", () => {
 
   it("confianca abaixo do limiar rebaixa completed para meio credito", () => {
     const low = stateWith([
-      { requirementId: "ai.claude-md", status: "completed", confidence: CONFIDENCE_THRESHOLD - 0.1, evidence: [], verifiedBy: "llm", updatedAt: "x" },
+      { requirementId: "ai.claude-md", status: "completed", confidence: CONFIDENCE_THRESHOLD - 0.1, evidence: [], provenance: "llm_inference",
+        collectionMethod: "llm", updatedAt: "x" },
     ]);
     const high = stateWith([
-      { requirementId: "ai.claude-md", status: "completed", confidence: 1, evidence: [], verifiedBy: "llm", updatedAt: "x" },
+      { requirementId: "ai.claude-md", status: "completed", confidence: 1, evidence: [], provenance: "llm_inference",
+        collectionMethod: "llm", updatedAt: "x" },
     ]);
     const lowDetail = computeDimensionScore(framework, low, "aiBuild").details.find((d) => d.requirementId === "ai.claude-md");
     const highDetail = computeDimensionScore(framework, high, "aiBuild").details.find((d) => d.requirementId === "ai.claude-md");
@@ -70,7 +73,8 @@ describe("scoring deterministico", () => {
       status: "completed" as const,
       confidence: 1,
       evidence: [],
-      verifiedBy: "deterministic" as const,
+      provenance: "static_analysis" as const,
+      collectionMethod: "deterministic" as const,
       updatedAt: "x",
     }));
     const blockerId = framework.requirements.find((r) => r.launchBlocking && r.weights.production > 0 && r.applicability.always)?.id;
@@ -88,11 +92,12 @@ describe("scoring deterministico", () => {
       status: "completed" as const,
       confidence: 1,
       evidence: [],
-      verifiedBy: "manual_bootstrap" as const,
+      provenance: "human_declared" as const,
+      collectionMethod: "manual" as const,
       updatedAt: "x",
     }));
     const scored = computeDimensionScore(framework, stateWith(manual), "mvp");
     expect(scored.measured).toBe(false);
-    expect(scored.measuredCoverage).toBe(0);
+    expect(scored.independentCoverage).toBe(0);
   });
 });

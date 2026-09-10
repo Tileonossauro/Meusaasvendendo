@@ -2,6 +2,34 @@
 
 Mudancas relevantes de produto, framework e scoring.
 
+## [0.2.0] — 2026-09-10 — Proveniencia da evidencia (framework v0.2.0)
+
+### Corrigido (P0 arquitetural)
+
+Coleta deterministica estava sendo confundida com verificacao independente.
+Estado vindo de ADR recebia `verifiedBy: "deterministic"` e contava como
+"cobertura verificada automaticamente" — mesma moeda de um scanner detectando
+codigo real.
+
+- **Dois eixos independentes** no lugar de `verifiedBy`:
+  `provenance` (de onde vem a verdade: `human_declared`, `decision_record`,
+  `static_analysis`, `command_execution`, `specialized_tool`, `llm_inference`,
+  `runtime_probe`) e `collectionMethod` (`manual`, `deterministic`, `llm`).
+- **`kind` no requisito** (`decision` / `artifact` / `implementation` /
+  `operational`) descrevendo o que a Definition of Done realmente exige.
+- **Guarda estrutural:** o reconciliador RECUSA um ADR que declare decidir
+  requisito que nao seja `kind: "decision"`. Um ADR afirmando que
+  `security.rate-limiting` esta pronto derruba os quality gates.
+- **Duas coberturas:** `evidenceCoverage` (inclui ADR) e `independentCoverage`
+  (so scanner). **Somente a independente libera o score**, e ela segue em 0%.
+- **Segunda porta para `measured`:** nenhum requisito critico pode estar sem
+  verificacao independente. Mitigacao parcial da DT-001, que continua **aberta**.
+- Historico deixou de dizer "verificado automaticamente sem intervencao manual"
+  e passou a dizer "decisao reconciliada automaticamente a partir de um ADR
+  aceito", explicitando que a ligacao foi declarada por uma pessoa.
+- Mapa das areas ganhou o selo `decisão registrada`, distinto de
+  `verificado por scanner`.
+
 ## [0.3.0] — 2026-09-10 — Marco 2: o loop fechou com evidencia real
 
 ### Corrigido (P0 — inconsistencia encontrada pelo dogfooding)

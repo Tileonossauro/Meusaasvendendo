@@ -1,9 +1,10 @@
-import type {
-  Framework,
-  ProjectState,
-  Requirement,
-  RequirementState,
-  RequirementStatus,
+import {
+  isIndependentlyVerified,
+  type Framework,
+  type ProjectState,
+  type Requirement,
+  type RequirementState,
+  type RequirementStatus,
 } from "../framework/schema.js";
 
 /**
@@ -25,9 +26,12 @@ export const DIMENSIONS: Dimension[] = ["mvp", "production", "aiBuild"];
 export const CONFIDENCE_THRESHOLD = 0.7;
 
 /**
- * Fracao minima de requisitos aplicaveis com verificacao automatica para que a
+ * Fracao minima de requisitos aplicaveis com VERIFICACAO INDEPENDENTE para que a
  * dimensao seja considerada MEDIDA. Abaixo disso o score sai como
  * "bootstrap / ainda nao medido" — nunca inventamos numero.
+ *
+ * Independente = o sistema observou o projeto por conta propria. Ler um ADR nao
+ * conta: prova que a decisao foi registrada, nao que a implementacao existe.
  */
 export const MEASURED_COVERAGE_THRESHOLD = 0.6;
 
@@ -63,8 +67,23 @@ export interface DimensionScore {
   cappedByLaunchBlockers: boolean;
   /** false => exibir "Bootstrap / ainda nao medido" em vez do numero. */
   measured: boolean;
-  /** Fracao dos requisitos aplicaveis com verificacao automatica. */
-  measuredCoverage: number;
+  /**
+   * Fracao dos aplicaveis com QUALQUER evidencia registrada — inclui ADR.
+   * Util para acompanhar progresso, NAO suficiente para liberar o score.
+   */
+  evidenceCoverage: number;
+  /**
+   * Fracao dos aplicaveis verificados por SCANNER INDEPENDENTE (leitura de
+   * codigo, execucao de comando, ferramenta dedicada). E esta que libera o score.
+   */
+  independentCoverage: number;
+  /**
+   * Requisitos criticos (bloqueiam lancamento ou severidade blocker) sem
+   * verificacao independente. Enquanto houver algum, a dimensao nao e medida —
+   * mitigacao parcial da DT-001, para que muitos requisitos triviais nao facam
+   * um score parecer medido enquanto os criticos seguem sem evidencia.
+   */
+  criticalWithoutIndependentEvidence: string[];
   applicableCount: number;
   totalWeight: number;
   openLaunchBlockers: string[];
@@ -93,9 +112,17 @@ function creditFor(state: RequirementState): { credit: number; downgraded: boole
   return { credit: base, downgraded: false };
 }
 
-/** Verificacao automatica: `manual_bootstrap` e `ask_user` nao contam como medicao. */
-function isAutomaticallyVerified(state: RequirementState): boolean {
-  return state.verifiedBy === "deterministic" || state.verifiedBy === "tool" || state.verifiedBy === "llm";
+/** Qualquer evidencia registrada — inclusive declaracao lida de um ADR. */
+function hasAnyEvidence(state: RequirementState): boolean {
+  return state.provenance !== "human_declared" && state.evidence.length > 0;
+}
+
+/**
+ * Verificacao independente: o sistema observou o projeto por conta propria.
+ * `human_declared` e `decision_record` NAO contam.
+ */
+function hasIndependentEvidence(state: RequirementState): boolean {
+  return isIndependentlyVerified(state.provenance) && state.evidence.length > 0;
 }
 
 export function computeDimensionScore(
@@ -109,8 +136,10 @@ export function computeDimensionScore(
 
   let weightedSum = 0;
   let totalWeight = 0;
-  let automaticallyVerified = 0;
+  let withEvidence = 0;
+  let independentlyVerified = 0;
   let applicableCount = 0;
+  const criticalWithoutIndependentEvidence: string[] = [];
 
   // Ordem estavel: o relatorio precisa ser diff-friendly.
   const requirements = [...framework.requirements].sort((a, b) => a.id.localeCompare(b.id));
@@ -127,7 +156,8 @@ export function computeDimensionScore(
       status: "missing",
       confidence: 1,
       evidence: [],
-      verifiedBy: "manual_bootstrap",
+      provenance: "human_declared",
+      collectionMethod: "manual",
       updatedAt: projectState.updatedAt,
     };
 
@@ -137,7 +167,12 @@ export function computeDimensionScore(
     const { credit, downgraded } = creditFor(effective);
     weightedSum += weight * credit;
     totalWeight += weight;
-    if (isAutomaticallyVerified(effective)) automaticallyVerified += 1;
+    if (hasAnyEvidence(effective)) withEvidence += 1;
+    if (hasIndependentEvidence(effective)) {
+      independentlyVerified += 1;
+    } else if (requirement.launchBlocking || requirement.severity === "blocker") {
+      criticalWithoutIndependentEvidence.push(requirement.id);
+    }
 
     if (requirement.launchBlocking && effective.status !== "completed") {
       openLaunchBlockers.push(requirement.id);
@@ -159,15 +194,24 @@ export function computeDimensionScore(
   const shouldCap = dimension === "production" && openLaunchBlockers.length > 0;
   const score = shouldCap ? Math.min(rawScore, LAUNCH_BLOCKED_CAP) : rawScore;
 
-  const measuredCoverage = applicableCount === 0 ? 0 : automaticallyVerified / applicableCount;
+  const evidenceCoverage = applicableCount === 0 ? 0 : withEvidence / applicableCount;
+  const independentCoverage = applicableCount === 0 ? 0 : independentlyVerified / applicableCount;
+
+  // Duas portas, ambas obrigatorias: cobertura suficiente E nenhum requisito
+  // critico sem evidencia independente.
+  const measured =
+    independentCoverage >= MEASURED_COVERAGE_THRESHOLD &&
+    criticalWithoutIndependentEvidence.length === 0;
 
   return {
     dimension,
     score,
     rawScore,
     cappedByLaunchBlockers: shouldCap && score < rawScore,
-    measured: measuredCoverage >= MEASURED_COVERAGE_THRESHOLD,
-    measuredCoverage: Math.round(measuredCoverage * 100) / 100,
+    measured,
+    evidenceCoverage: Math.round(evidenceCoverage * 100) / 100,
+    independentCoverage: Math.round(independentCoverage * 100) / 100,
+    criticalWithoutIndependentEvidence,
     applicableCount,
     totalWeight,
     openLaunchBlockers,

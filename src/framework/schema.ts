@@ -50,6 +50,76 @@ export type Severity = z.infer<typeof severitySchema>;
 export const detectionMethodSchema = z.enum(["deterministic", "tool", "llm", "ask_user"]);
 export type DetectionMethod = z.infer<typeof detectionMethodSchema>;
 
+/**
+ * PROVENIENCIA — de onde vem a VERDADE da evidencia.
+ *
+ * Nao confundir com o metodo de coleta (abaixo): sao eixos independentes.
+ * Ler um ADR deterministicamente prova "existe uma decisao formal registrada".
+ * NAO prova "a implementacao existe e funciona". Um ADR declarando que o rate
+ * limiting esta pronto jamais pode valer o mesmo que um scanner detectando
+ * rate limiting real no codigo.
+ *
+ * Ordenado do menos para o mais independente.
+ */
+export const provenanceSchema = z.enum([
+  /** Alguem digitou. Nenhuma verificacao. */
+  "human_declared",
+  /** Registro de decisao (ADR) — declaracao humana lida por maquina. */
+  "decision_record",
+  /** Leitura do proprio codigo/arquivos do projeto. */
+  "static_analysis",
+  /** Um comando foi executado e o resultado observado. */
+  "command_execution",
+  /** Ferramenta dedicada (scanner de segredos, auditoria de dependencias). */
+  "specialized_tool",
+  /** Um modelo interpretou evidencia. Sempre acompanhado de localizador. */
+  "llm_inference",
+  /** Observacao do sistema rodando. Ainda nao implementado. */
+  "runtime_probe",
+]);
+export type Provenance = z.infer<typeof provenanceSchema>;
+
+/** COMO a evidencia foi coletada. Eixo independente da proveniencia. */
+export const collectionMethodSchema = z.enum(["manual", "deterministic", "llm"]);
+export type CollectionMethod = z.infer<typeof collectionMethodSchema>;
+
+/**
+ * Proveniencias que constituem VERIFICACAO INDEPENDENTE: o sistema observou o
+ * projeto por conta propria, em vez de acreditar em algo que alguem declarou.
+ *
+ * `decision_record` NAO esta aqui de proposito — e declaracao humana, ainda que
+ * lida deterministicamente.
+ */
+export const INDEPENDENT_PROVENANCES: Provenance[] = [
+  "static_analysis",
+  "command_execution",
+  "specialized_tool",
+  "runtime_probe",
+];
+
+export function isIndependentlyVerified(provenance: Provenance): boolean {
+  return INDEPENDENT_PROVENANCES.includes(provenance);
+}
+
+/**
+ * NATUREZA do requisito — o que a Definition of Done realmente exige.
+ *
+ * Existe para impedir, estruturalmente, que uma declaracao satisfaca um
+ * requisito de implementacao. Um ADR pode satisfazer `decision`; nunca
+ * `implementation` nem `operational`.
+ */
+export const requirementKindSchema = z.enum([
+  /** A DoD e uma decisao tomada e registrada. */
+  "decision",
+  /** A DoD e um documento ou arquivo existir com conteudo real. */
+  "artifact",
+  /** A DoD e codigo que existe e funciona. */
+  "implementation",
+  /** A DoD depende de servico externo ou do sistema no ar. */
+  "operational",
+]);
+export type RequirementKind = z.infer<typeof requirementKindSchema>;
+
 export const weightsSchema = z.object({
   /** 0 = requisito nao participa desta dimensao. */
   mvp: z.number().min(0).max(10),
@@ -77,6 +147,8 @@ export const detectionSignalSchema = z.object({
 export const requirementSchema = z.object({
   id: z.string().regex(/^[a-z0-9]+(?:[-.][a-z0-9]+)*$/, "id deve ser kebab com namespace por ponto"),
   category: categoryIdSchema,
+  /** O que a DoD realmente exige. Governa que proveniencia pode satisfazer. */
+  kind: requirementKindSchema,
   name: z.string().min(3),
   /**
    * Linguagem de leigo, ESCRITA A MAO e versionada junto do requisito.
@@ -141,7 +213,9 @@ export type Framework = z.infer<typeof frameworkSchema>;
 /** Uma evidencia concreta. Sem evidencia, nada vira "completed" com confianca alta. */
 export const evidenceSchema = z.object({
   source: z.enum(["file", "command", "founder_answer", "external_service", "manual_bootstrap"]),
-  /** caminho:linha quando aplicavel. */
+  /** De onde vem a verdade desta evidencia. */
+  provenance: provenanceSchema,
+  /** caminho:linha, ou o comando executado. */
   locator: z.string().optional(),
   note: z.string().min(3),
 });
@@ -153,7 +227,10 @@ export const requirementStateSchema = z.object({
   /** 0..1. Abaixo de CONFIDENCE_THRESHOLD o credito e rebaixado — preferimos falso negativo. */
   confidence: z.number().min(0).max(1),
   evidence: z.array(evidenceSchema).default([]),
-  verifiedBy: detectionMethodSchema.or(z.literal("manual_bootstrap")),
+  /** De onde vem a verdade deste estado. Decide se conta como verificacao independente. */
+  provenance: provenanceSchema,
+  /** Como foi coletado. Independente da proveniencia. */
+  collectionMethod: collectionMethodSchema,
   updatedAt: z.string(),
   note: z.string().optional(),
 });

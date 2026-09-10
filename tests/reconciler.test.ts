@@ -8,6 +8,7 @@ import {
   ReconcilerError,
 } from "../src/collectors/adr-reconciler.js";
 import { parseProjectState } from "../src/state/index.js";
+import { isIndependentlyVerified } from "../src/framework/schema.js";
 import { readFileSync } from "node:fs";
 import { computeNextBestAction } from "../src/navigator/next-best-action.js";
 
@@ -73,7 +74,8 @@ describe("reconciliador de decisoes: o mecanismo", () => {
     const proposals = reconcileDecisions(framework);
     const persistencia = proposals.find((p) => p.requirementId === "data.persistence-chosen");
     expect(persistencia).toBeDefined();
-    expect(persistencia!.verifiedBy).toBe("deterministic");
+    expect(persistencia!.provenance).toBe("decision_record");
+    expect(persistencia!.collectionMethod).toBe("deterministic");
     expect(persistencia!.evidence[0]!.locator).toMatch(/^docs\/adr\/.+\.md:\d+$/);
   });
 
@@ -133,7 +135,74 @@ describe("guarda P0: decisao registrada nunca aparece como pendente", () => {
   it("estado vindo de ADR conta como verificacao automatica, nao manual", () => {
     const stateById = new Map(state.states.map((s) => [s.requirementId, s]));
     for (const proposal of proposals) {
-      expect(stateById.get(proposal.requirementId)!.verifiedBy).toBe("deterministic");
+      expect(stateById.get(proposal.requirementId)!.provenance).toBe("decision_record");
+    }
+  });
+});
+
+describe("guarda estrutural: ADR nao satisfaz requisito de implementacao", () => {
+  it("recusa ADR que declara decidir um requisito de implementacao", () => {
+    // O caso extremo que precisamos impedir: um ADR afirmando que o rate
+    // limiting esta pronto jamais pode valer o que um scanner detecta.
+    const rateLimiting = framework.requirements.find((r) => r.id === "security.rate-limiting")!;
+    expect(rateLimiting.kind).toBe("implementation");
+
+    expect(() =>
+      reconcileDecisions(framework, [
+        {
+          file: "0099-rate-limiting.md",
+          title: "ADR que se declara pronto",
+          decidesLine: 5,
+          frontMatter: {
+            adr: "0099",
+            status: "aceito",
+            decides: ["security.rate-limiting"],
+            decidesPartially: [],
+          },
+        },
+      ]),
+    ).toThrow(/tipo "implementation"/);
+  });
+
+  it("recusa ADR sobre requisito operacional", () => {
+    expect(() =>
+      reconcileDecisions(framework, [
+        {
+          file: "0098-deploy.md",
+          title: "ADR operacional",
+          decidesLine: 5,
+          frontMatter: {
+            adr: "0098",
+            status: "aceito",
+            decides: ["deploy.production-deploy-works"],
+            decidesPartially: [],
+          },
+        },
+      ]),
+    ).toThrow(/tipo "operational"/);
+  });
+
+  it("aceita ADR sobre requisito cuja DoD e uma decisao documentada", () => {
+    const persistencia = framework.requirements.find((r) => r.id === "data.persistence-chosen")!;
+    expect(persistencia.kind).toBe("decision");
+    expect(() => reconcileDecisions(framework)).not.toThrow();
+  });
+
+  it("todo requisito ligado a um ADR real e do tipo decision", () => {
+    for (const doc of loadAdrDocuments()) {
+      for (const id of [...doc.frontMatter.decides, ...doc.frontMatter.decidesPartially]) {
+        const requirement = framework.requirements.find((r) => r.id === id)!;
+        expect(requirement.kind, `${doc.file} liga "${id}", que e ${requirement.kind}`).toBe(
+          "decision",
+        );
+      }
+    }
+  });
+
+  it("proposta de ADR nunca tem proveniencia independente", () => {
+    for (const proposal of reconcileDecisions(framework)) {
+      expect(proposal.provenance).toBe("decision_record");
+      expect(isIndependentlyVerified(proposal.provenance)).toBe(false);
     }
   });
 });

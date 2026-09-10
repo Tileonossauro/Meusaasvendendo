@@ -26,7 +26,8 @@ for (const dimension of DIMENSIONS) {
     : `Bootstrap / ainda nao medido (calculo provisorio: ${d.score}%)`;
   console.log(`${LABELS[dimension].padEnd(20)} ${value}`);
   console.log(
-    `${" ".repeat(20)} ${d.applicableCount} requisitos aplicaveis · cobertura verificada ${Math.round(d.measuredCoverage * 100)}%`,
+    `${" ".repeat(20)} ${d.applicableCount} aplicaveis · cobertura por evidencia ${Math.round(d.evidenceCoverage * 100)}%` +
+      ` · por scanner independente ${Math.round(d.independentCoverage * 100)}%`,
   );
 }
 

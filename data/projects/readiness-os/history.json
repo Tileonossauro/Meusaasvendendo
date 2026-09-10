@@ -142,7 +142,7 @@
       "type": "requirement_completed",
       "at": "2026-09-10T10:20:08.085Z",
       "title": "Forma de guardar dados decidida: reconciliado com uma decisão já registrada",
-      "detail": "ADR 0004 decide este requisito. O estado dizia \"missing\" enquanto a decisão já existia na documentação. Verificado automaticamente pelo reconciliador de ADRs, sem intervenção manual.",
+      "detail": "ADR 0004 decide este requisito. O estado dizia \"missing\" enquanto a decisão já existia na documentação. Decisão reconciliada automaticamente a partir de um ADR aceito — a leitura foi automática, mas o ADR e sua ligação com o requisito foram declarados por uma pessoa.",
       "requirementId": "data.persistence-chosen",
       "frameworkVersion": "0.1.0"
     },
@@ -151,7 +151,7 @@
       "type": "requirement_changed",
       "at": "2026-09-10T10:20:08.085Z",
       "title": "Onde o produto vai rodar está decidido: reconciliado com uma decisão já registrada",
-      "detail": "ADR 0001 decide este requisito em parte. O estado dizia \"missing\" enquanto a decisão já existia na documentação. Verificado automaticamente pelo reconciliador de ADRs, sem intervenção manual.",
+      "detail": "ADR 0001 decide este requisito em parte. O estado dizia \"missing\" enquanto a decisão já existia na documentação. Decisão reconciliada automaticamente a partir de um ADR aceito — a leitura foi automática, mas o ADR e sua ligação com o requisito foram declarados por uma pessoa.",
       "requirementId": "deploy.hosting-decided",
       "frameworkVersion": "0.1.0"
     },
@@ -163,6 +163,14 @@
       "detail": "Antes era \"Forma de guardar dados decidida\". O Navigator recalculou após a reconciliação.",
       "requirementId": "foundation.env-example",
       "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0025",
+      "type": "requirement_changed",
+      "at": "2026-09-10T11:00:00.000Z",
+      "title": "Passamos a distinguir de onde vem a verdade de cada evidência",
+      "detail": "Ler um documento de decisão prova que a decisão foi registrada; não prova que a implementação existe e funciona. Agora cada estado diz sua proveniência, e só verificação independente (leitura de código, execução de comando) pode liberar um Readiness Score.",
+      "frameworkVersion": "0.2.0"
     }
   ]
 }

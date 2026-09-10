@@ -74,27 +74,62 @@ export function ReadinessCards({ cards }: { cards: ReadinessCard[] }) {
           </div>
 
           {card.percent === null && (
-            <p className="mt-3 text-xs leading-relaxed text-slate-500">
-              {card.measuredCoverage === 0 ? (
-                <>
-                  Nenhum requisito foi verificado por evidência automática ainda. Mostrar um
-                  número aqui seria inventar prontidão.
-                </>
+            <div className="mt-3 space-y-2 text-xs leading-relaxed text-slate-500">
+              {card.independentCoverage === 0 ? (
+                <p>
+                  Nenhum requisito foi verificado por um scanner independente ainda. Mostrar
+                  um número aqui seria inventar prontidão.
+                </p>
               ) : (
-                <>
-                  Só {Math.round(card.measuredCoverage * 100)}% dos requisitos foram
-                  verificados por evidência automática — precisamos de 60% para o número
+                <p>
+                  Só {Math.round(card.independentCoverage * 100)}% dos requisitos foram
+                  verificados por scanner independente — precisamos de 60% para o número
                   significar prontidão de verdade.
-                </>
+                </p>
               )}
-            </p>
+
+              {/* As duas coberturas sao coisas diferentes e aparecem separadas. */}
+              <dl className="grid grid-cols-2 gap-2 border-t border-ink-line pt-2">
+                <div>
+                  <dt className="text-[10px] uppercase tracking-wide text-slate-600">
+                    por evidência
+                  </dt>
+                  <dd className="tabular-nums text-slate-400">
+                    {Math.round(card.evidenceCoverage * 100)}%
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[10px] uppercase tracking-wide text-slate-600">
+                    por scanner independente
+                  </dt>
+                  <dd className="tabular-nums text-slate-400">
+                    {Math.round(card.independentCoverage * 100)}%
+                  </dd>
+                </div>
+              </dl>
+
+              {card.criticalWithoutIndependentEvidence.length > 0 && (
+                <p className="text-slate-600">
+                  {card.criticalWithoutIndependentEvidence.length} requisito(s) crítico(s)
+                  ainda sem verificação independente.
+                </p>
+              )}
+            </div>
           )}
 
           <Disclosure label="Ver detalhes técnicos">
             <TechRow label="measured" value={String(card.measured)} />
             <TechRow
-              label="measuredCoverage"
-              value={`${Math.round(card.measuredCoverage * 100)}% (limiar: 60%)`}
+              label="evidenceCoverage"
+              value={`${Math.round(card.evidenceCoverage * 100)}% — inclui ADR, não libera o score`}
+            />
+            <TechRow
+              label="independentCoverage"
+              value={`${Math.round(card.independentCoverage * 100)}% (limiar: 60%) — libera o score`}
+            />
+            <TechRow
+              label="críticos sem evidência independente"
+              value={card.criticalWithoutIndependentEvidence.length}
             />
             <TechRow label="requisitos aplicáveis" value={card.applicableCount} />
             <TechRow

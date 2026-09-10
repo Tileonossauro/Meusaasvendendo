@@ -1,7 +1,7 @@
 {
   "projectId": "readiness-os",
   "projectName": "Readiness OS",
-  "frameworkVersion": "0.1.0",
+  "frameworkVersion": "0.2.0",
   "signals": [
     "owns_a_framework",
     "analyzes_external_content"
@@ -15,10 +15,12 @@
         {
           "source": "file",
           "locator": "docs/PRODUCT.md",
-          "note": "Promessa principal escrita na secao Promessa."
+          "note": "Promessa principal escrita na secao Promessa.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -29,10 +31,12 @@
         {
           "source": "file",
           "locator": "docs/PRODUCT.md",
-          "note": "Publico-alvo descrito na secao Para quem."
+          "note": "Publico-alvo descrito na secao Para quem.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -43,10 +47,12 @@
         {
           "source": "file",
           "locator": "docs/PRODUCT.md",
-          "note": "Fluxo principal listado passo a passo."
+          "note": "Fluxo principal listado passo a passo.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -57,10 +63,12 @@
         {
           "source": "file",
           "locator": "docs/CONSTITUTION.md",
-          "note": "Constitution com escopo, nao-escopo, restricoes e DoD."
+          "note": "Constitution com escopo, nao-escopo, restricoes e DoD.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -71,10 +79,12 @@
         {
           "source": "file",
           "locator": "CLAUDE.md",
-          "note": "Estrutura de diretorios documentada e aplicada."
+          "note": "Estrutura de diretorios documentada e aplicada.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -85,10 +95,12 @@
         {
           "source": "command",
           "locator": "npm run typecheck",
-          "note": "Executa e retorna exit code 0."
+          "note": "Executa e retorna exit code 0.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -99,10 +111,12 @@
         {
           "source": "command",
           "locator": "npm test",
-          "note": "Suite de testes do scoring, grafo e navigator passa."
+          "note": "Suite de testes do scoring, grafo e navigator passa.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -113,10 +127,12 @@
         {
           "source": "file",
           "locator": ".gitignore",
-          "note": ".env ignorado; .env.example ainda não necessário (sem segredos no slice 1)."
+          "note": ".env ignorado; .env.example ainda não necessário (sem segredos no slice 1).",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -127,10 +143,12 @@
         {
           "source": "file",
           "locator": "docs/adr/0004-estado-em-arquivo.md:5",
-          "note": "Decisão formal registrada em \"ADR 0004 — Estado em arquivo antes de banco de dados\" (status: aceito)."
+          "note": "Decisão formal registrada em \"ADR 0004 — Estado em arquivo antes de banco de dados\" (status: aceito).",
+          "provenance": "decision_record"
         }
       ],
-      "verifiedBy": "deterministic",
+      "provenance": "decision_record",
+      "collectionMethod": "deterministic",
       "updatedAt": "2026-09-10T10:20:08.085Z",
       "note": "ADR 0004 decide este requisito."
     },
@@ -139,7 +157,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -148,7 +167,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -157,7 +177,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -166,7 +187,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -175,7 +197,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -184,7 +207,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -193,7 +217,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -202,7 +227,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -211,7 +237,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -220,7 +247,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -229,7 +257,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -238,7 +267,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -247,7 +277,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -256,7 +287,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -265,7 +297,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -274,7 +307,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -283,7 +317,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -292,7 +327,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -301,7 +337,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -310,7 +347,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -319,7 +357,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -328,7 +367,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -340,10 +380,12 @@
         {
           "source": "file",
           "locator": "docs/adr/0001-stack.md:5",
-          "note": "Decisão parcial em \"ADR 0001 — Stack inicial\": Alvo de deploy escolhido (Vercel); limites do provedor ainda não anotados."
+          "note": "Decisão parcial em \"ADR 0001 — Stack inicial\": Alvo de deploy escolhido (Vercel); limites do provedor ainda não anotados.",
+          "provenance": "decision_record"
         }
       ],
-      "verifiedBy": "deterministic",
+      "provenance": "decision_record",
+      "collectionMethod": "deterministic",
       "updatedAt": "2026-09-10T10:20:08.085Z",
       "note": "ADR 0001 decide este requisito em parte."
     },
@@ -355,10 +397,12 @@
         {
           "source": "file",
           "locator": ".github/workflows/quality-gates.yml",
-          "note": "Workflow executa os gates em push e pull request."
+          "note": "Workflow executa os gates em push e pull request.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -366,7 +410,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -375,7 +420,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -384,7 +430,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -393,7 +440,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -402,7 +450,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -411,7 +460,8 @@
       "status": "missing",
       "confidence": 1,
       "evidence": [],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z",
       "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
     },
@@ -423,10 +473,12 @@
         {
           "source": "file",
           "locator": "CLAUDE.md",
-          "note": "Missao, arquitetura, comandos, principios e proibicoes."
+          "note": "Missao, arquitetura, comandos, principios e proibicoes.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -437,10 +489,12 @@
         {
           "source": "file",
           "locator": "AGENTS.md",
-          "note": "Regras, Definition of Done e processo de mudanca do framework."
+          "note": "Regras, Definition of Done e processo de mudanca do framework.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -451,10 +505,12 @@
         {
           "source": "command",
           "locator": "npm run gates",
-          "note": "Agrega typecheck + validacao do framework + testes."
+          "note": "Agrega typecheck + validacao do framework + testes.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -465,10 +521,12 @@
         {
           "source": "file",
           "locator": "docs/adr/",
-          "note": "ADRs de stack, scoring e determinismo registrados."
+          "note": "ADRs de stack, scoring e determinismo registrados.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     },
     {
@@ -479,10 +537,12 @@
         {
           "source": "command",
           "locator": "npm run validate:framework",
-          "note": "Valida schema, ids, referencias e ausencia de ciclos."
+          "note": "Valida schema, ids, referencias e ausencia de ciclos.",
+          "provenance": "human_declared"
         }
       ],
-      "verifiedBy": "manual_bootstrap",
+      "provenance": "human_declared",
+      "collectionMethod": "manual",
       "updatedAt": "2026-09-10T00:00:00.000Z"
     }
   ],

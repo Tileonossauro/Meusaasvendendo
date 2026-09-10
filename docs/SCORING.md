@@ -63,15 +63,31 @@ O teto vale **apenas para Production**. O MVP Score mede se o produto cumpre a
 promessa, nao se e seguro — misturar os dois destruiria a informacao contida na
 diferenca entre eles.
 
-### 7. Medido ou nao medido
+### 7. Medido ou nao medido — duas coberturas, nao uma
 
-`measuredCoverage` = fracao dos requisitos aplicaveis cuja verificacao foi
-automatica (`deterministic`, `tool` ou `llm`). Estado declarado manualmente
-(`manual_bootstrap`) e resposta do fundador (`ask_user`) **nao contam como medicao**.
+**Proveniencia** (de onde vem a verdade) e **metodo de coleta** (como foi obtida)
+sao eixos independentes. Ler um ADR deterministicamente prova
+"existe uma decisao formal registrada" — nao prova "a implementacao existe e
+funciona".
 
-Abaixo de **0,6** (`MEASURED_COVERAGE_THRESHOLD`) a dimensao volta com
-`measured: false`, e a interface e obrigada a exibir
-**"Bootstrap / ainda nao medido"** em vez de tratar o numero como prontidao real.
+| Cobertura | Conta o que | Libera o score? |
+| --- | --- | --- |
+| `evidenceCoverage` | qualquer evidencia, inclusive `decision_record` | **Nao** |
+| `independentCoverage` | `static_analysis`, `command_execution`, `specialized_tool`, `runtime_probe` | **Sim** |
+
+Uma dimensao so e `measured: true` quando **as duas portas** estao abertas:
+
+1. `independentCoverage >= 0,6` (`MEASURED_COVERAGE_THRESHOLD`); **e**
+2. `criticalWithoutIndependentEvidence` vazio — nenhum requisito que bloqueia
+   lancamento ou de severidade `blocker` sem verificacao independente.
+
+A segunda porta e **mitigacao parcial da DT-001**: impede que muitos requisitos
+triviais verificados facam um score parecer medido enquanto os criticos seguem
+sem evidencia. A DT-001 continua **aberta** — falta ponderar a cobertura por peso,
+metodo e confianca.
+
+Enquanto qualquer porta estiver fechada, a interface exibe
+**"Bootstrap / ainda nao medido"**.
 
 Transparencia vale mais que dashboard bonita.
 

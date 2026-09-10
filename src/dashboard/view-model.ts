@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { loadFramework, type Category, type Requirement } from "../framework/index.js";
+import { isIndependentlyVerified, loadFramework, type Category, type Requirement } from "../framework/index.js";
 import { parseProjectState } from "../state/index.js";
 import { parseProjectHistory, recentEvents, type HistoryEvent } from "../history/schema.js";
 import { computeBuildProgress, parseBuildPlan, type BuildProgress, type Milestone } from "../progress/build-progress.js";
@@ -37,7 +37,12 @@ export interface ReadinessCard {
    */
   percent: number | null;
   measured: boolean;
-  measuredCoverage: number;
+  /** Cobertura por evidencia de qualquer origem (inclui ADR). */
+  evidenceCoverage: number;
+  /** Cobertura por scanner independente. E esta que libera o score. */
+  independentCoverage: number;
+  /** Requisitos criticos sem verificacao independente. */
+  criticalWithoutIndependentEvidence: string[];
   applicableCount: number;
   /** Calculo provisorio, exposto so em "detalhes tecnicos". Nunca como prontidao. */
   provisionalPercent: number;
@@ -55,26 +60,26 @@ export interface CategoryBlock {
   notApplicable: number;
   /** Progresso da categoria, so para o mapa visual. Nao e Readiness Score. */
   percent: number;
-  /** Quantos estados vieram de verificacao automatica. */
+  /** Quantos estados vieram de verificacao INDEPENDENTE (scanner). */
   verifiedCount: number;
-  /** Quantos foram declarados a mao (bootstrap ou resposta do fundador). */
+  /** Quantos vieram de um registro de decisao (ADR) — declaracao, nao scanner. */
+  decisionRecordCount: number;
+  /** Quantos foram declarados a mao, sem nenhuma evidencia. */
   declaredCount: number;
   /**
-   * De onde vem o preenchimento desta barra. Enquanto for "declared", a barra
-   * representa ESTADO DECLARADO — nao auditoria. A interface e obrigada a
-   * rotular isso, para ninguem confundir com readiness verificado.
+   * De onde vem o preenchimento desta barra. Enquanto nao for "verified", a
+   * barra NAO representa auditoria. A interface e obrigada a rotular isso.
    */
-  evidenceSource: "declared" | "verified" | "mixed";
+  evidenceSource: "declared" | "decision_record" | "mixed" | "verified";
 }
 
-/** `manual_bootstrap` e `ask_user` sao declaracao; o resto e verificacao. */
+/**
+ * Verificacao INDEPENDENTE: o sistema observou o projeto por conta propria.
+ * Declaracao humana e registro de decisao (ADR) nao contam.
+ */
 function isVerified(state: RequirementState | undefined): boolean {
   if (!state) return false;
-  return (
-    state.verifiedBy === "deterministic" ||
-    state.verifiedBy === "tool" ||
-    state.verifiedBy === "llm"
-  );
+  return isIndependentlyVerified(state.provenance) && state.evidence.length > 0;
 }
 
 export interface RequirementCardView {
@@ -165,7 +170,9 @@ export function buildDashboardViewModel(projectId = "readiness-os"): DashboardVi
       // A regra vive aqui, no dado: a tela nao tem como "esquecer" de aplicar.
       percent: d.measured ? d.score : null,
       measured: d.measured,
-      measuredCoverage: d.measuredCoverage,
+      evidenceCoverage: d.evidenceCoverage,
+      independentCoverage: d.independentCoverage,
+      criticalWithoutIndependentEvidence: d.criticalWithoutIndependentEvidence,
       applicableCount: d.applicableCount,
       provisionalPercent: d.score,
       cappedByLaunchBlockers: d.cappedByLaunchBlockers,
@@ -195,9 +202,19 @@ export function buildDashboardViewModel(projectId = "readiness-os"): DashboardVi
     ).length;
 
     const verifiedCount = reqs.filter((r) => isVerified(stateById.get(r.id))).length;
-    const declaredCount = reqs.length - verifiedCount;
-    const evidenceSource =
-      verifiedCount === 0 ? "declared" : declaredCount === 0 ? "verified" : "mixed";
+    const decisionRecordCount = reqs.filter(
+      (r) => stateById.get(r.id)?.provenance === "decision_record",
+    ).length;
+    const declaredCount = reqs.length - verifiedCount - decisionRecordCount;
+
+    const evidenceSource: CategoryBlock["evidenceSource"] =
+      verifiedCount === reqs.length && reqs.length > 0
+        ? "verified"
+        : verifiedCount > 0
+          ? "mixed"
+          : decisionRecordCount > 0
+            ? "decision_record"
+            : "declared";
 
     return {
       category,
@@ -209,8 +226,9 @@ export function buildDashboardViewModel(projectId = "readiness-os"): DashboardVi
       notApplicable,
       percent: reqs.length === 0 ? 0 : Math.round(((completed + partial * 0.5) / reqs.length) * 100),
       verifiedCount,
+      decisionRecordCount,
       declaredCount,
-      evidenceSource: evidenceSource as CategoryBlock["evidenceSource"],
+      evidenceSource,
     };
   });
 

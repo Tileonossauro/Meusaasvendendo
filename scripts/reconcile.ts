@@ -51,7 +51,10 @@ for (const change of changes) {
   console.log(`    ${change.requirementId}: ${current?.status ?? "sem estado"} -> ${change.status}`);
   console.log(`    motivo: ${change.reason}`);
   console.log(`    evidencia: ${change.evidence[0]?.locator}`);
-  console.log(`    verificado por: ${change.verifiedBy} (confianca ${change.confidence})\n`);
+  console.log(
+    `    proveniencia: ${change.provenance} · coleta: ${change.collectionMethod}` +
+      ` (confianca ${change.confidence})\n`,
+  );
 }
 
 if (!apply) {
@@ -80,7 +83,8 @@ for (const change of changes) {
     status: change.status,
     confidence: change.confidence,
     evidence: change.evidence,
-    verifiedBy: change.verifiedBy,
+    provenance: change.provenance,
+    collectionMethod: change.collectionMethod,
     updatedAt: now,
     note: change.reason,
   };
@@ -99,7 +103,8 @@ for (const change of changes) {
     title: `${requirement.name}: reconciliado com uma decisão já registrada`,
     detail:
       `${change.reason} O estado dizia "${previousStatus}" enquanto a decisão já existia na ` +
-      `documentação. Verificado automaticamente pelo reconciliador de ADRs, sem intervenção manual.`,
+      `documentação. Decisão reconciliada automaticamente a partir de um ADR aceito — a leitura ` +
+      `foi automática, mas o ADR e sua ligação com o requisito foram declarados por uma pessoa.`,
     requirementId: change.requirementId,
     frameworkVersion: framework.frameworkVersion,
   });

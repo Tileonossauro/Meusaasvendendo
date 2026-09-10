@@ -1,5 +1,5 @@
 {
-  "frameworkVersion": "0.1.0",
+  "frameworkVersion": "0.2.0",
   "weightsAreCalibrated": false,
   "categories": [
     {
@@ -67,6 +67,7 @@
     {
       "id": "product.promise-defined",
       "category": "product-scope",
+      "kind": "decision",
       "name": "Promessa principal definida",
       "simpleExplanation": "Está escrito em algum lugar, em uma frase, o que seu produto promete entregar.",
       "technicalExplanation": "Documento de produto versionado contendo a value proposition e o core job to be done.",
@@ -109,6 +110,7 @@
     {
       "id": "product.target-user-defined",
       "category": "product-scope",
+      "kind": "decision",
       "name": "Público-alvo definido",
       "simpleExplanation": "Está claro quem é a pessoa que vai pagar e usar o produto.",
       "technicalExplanation": "Definição de persona/ICP documentada e versionada.",
@@ -145,6 +147,7 @@
     {
       "id": "product.core-flow-defined",
       "category": "product-scope",
+      "kind": "decision",
       "name": "Fluxo principal descrito ponta a ponta",
       "simpleExplanation": "Está escrito o passo a passo que o usuário faz para receber o valor do produto.",
       "technicalExplanation": "Core user journey documentado, do primeiro contato até a entrega do valor.",
@@ -183,6 +186,7 @@
     {
       "id": "product.constitution",
       "category": "product-scope",
+      "kind": "artifact",
       "name": "Project Constitution existe",
       "simpleExplanation": "Existe um documento curto que diz o que o projeto é, o que está dentro e o que está fora do escopo.",
       "technicalExplanation": "CONSTITUTION.md versionado com produto, público, promessa, escopo, não-escopo, stack, restrições e Definition of Done.",
@@ -223,6 +227,7 @@
     {
       "id": "foundation.repo-structure",
       "category": "foundation",
+      "kind": "artifact",
       "name": "Estrutura de repositório legível",
       "simpleExplanation": "Os arquivos do projeto estão organizados de um jeito que da para entender onde cada coisa mora.",
       "technicalExplanation": "Separação clara entre domínio, interface e dados; convenções de nomes consistentes.",
@@ -259,6 +264,7 @@
     {
       "id": "foundation.typecheck-gate",
       "category": "foundation",
+      "kind": "implementation",
       "name": "Verificação de tipos automatizada",
       "simpleExplanation": "Existe um comando que avisa se o código tem erros antes de você publicar.",
       "technicalExplanation": "Comando de typecheck (tsc --noEmit ou equivalente) executável e passando.",
@@ -298,6 +304,7 @@
     {
       "id": "foundation.test-gate",
       "category": "foundation",
+      "kind": "implementation",
       "name": "Testes automatizados executáveis",
       "simpleExplanation": "Existe um comando que testa sozinho se as partes importantes ainda funcionam.",
       "technicalExplanation": "Runner de testes configurado, com ao menos os caminhos críticos cobertos, executável em um comando.",
@@ -338,6 +345,7 @@
     {
       "id": "foundation.env-example",
       "category": "foundation",
+      "kind": "artifact",
       "name": "Variáveis de ambiente documentadas",
       "simpleExplanation": "Existe uma lista das configurações secretas que o projeto precisa para rodar.",
       "technicalExplanation": ".env.example versionado listando todas as variáveis exigidas, sem valores reais.",
@@ -375,6 +383,7 @@
     {
       "id": "data.persistence-chosen",
       "category": "data",
+      "kind": "decision",
       "name": "Forma de guardar dados decidida",
       "simpleExplanation": "Está decidido onde as informações do produto serão guardadas.",
       "technicalExplanation": "Decisão de persistência registrada (banco gerenciado, arquivo, etc.) com justificativa.",
@@ -413,6 +422,7 @@
     {
       "id": "data.schema-defined",
       "category": "data",
+      "kind": "implementation",
       "name": "Formato dos dados definido",
       "simpleExplanation": "Está definido quais informações o sistema guarda e como elas se relacionam.",
       "technicalExplanation": "Schema versionado (SQL, Prisma, zod ou equivalente) cobrindo as entidades do fluxo principal.",
@@ -452,6 +462,7 @@
     {
       "id": "data.migrations",
       "category": "data",
+      "kind": "implementation",
       "name": "Mudanças de banco versionadas",
       "simpleExplanation": "Quando o formato dos dados muda, existe um histórico e um caminho de volta.",
       "technicalExplanation": "Migrations versionadas e aplicáveis de forma reprodutível em cada ambiente.",
@@ -494,6 +505,7 @@
     {
       "id": "auth.method-decided",
       "category": "identity-access",
+      "kind": "decision",
       "name": "Método de login decidido",
       "simpleExplanation": "Está decidido como as pessoas vão entrar no seu produto (email e senha, Google, link mágico...).",
       "technicalExplanation": "Decisão de estratégia de autenticação registrada, com provedor e modelo de sessão.",
@@ -540,6 +552,7 @@
     {
       "id": "auth.login-works",
       "category": "identity-access",
+      "kind": "implementation",
       "name": "Cadastro e login funcionam de verdade",
       "simpleExplanation": "Uma pessoa real consegue criar conta, entrar e sair.",
       "technicalExplanation": "Fluxo de signup/login/logout implementado e coberto por teste automatizado end-to-end ou de integração.",
@@ -588,6 +601,7 @@
     {
       "id": "auth.session-protection",
       "category": "identity-access",
+      "kind": "implementation",
       "name": "Sessão protegida",
       "simpleExplanation": "O crachá de acesso da pessoa não pode ser roubado ou copiado facilmente.",
       "technicalExplanation": "Cookies httpOnly/secure/sameSite, expiração de sessão e inválidação no logout.",
@@ -630,6 +644,7 @@
     {
       "id": "auth.authorization-checks",
       "category": "identity-access",
+      "kind": "implementation",
       "name": "Cada um só vê o que é seu",
       "simpleExplanation": "Um usuário não consegue ver ou alterar os dados de outro usuário.",
       "technicalExplanation": "Checagem de propriedade/permissão no servidor em toda rota que le ou escreve dados de usuário.",
@@ -677,6 +692,7 @@
     {
       "id": "core.primary-flow-implemented",
       "category": "core-functionality",
+      "kind": "implementation",
       "name": "Fluxo principal implementado",
       "simpleExplanation": "O caminho que entrega o valor principal do produto funciona de ponta a ponta.",
       "technicalExplanation": "Todos os passos do core flow implementados e conectados, sem placeholders ou mocks no caminho crítico.",
@@ -722,6 +738,7 @@
     {
       "id": "core.primary-flow-tested",
       "category": "core-functionality",
+      "kind": "implementation",
       "name": "Fluxo principal coberto por teste",
       "simpleExplanation": "Existe um teste automático que garante que o caminho principal continua funcionando.",
       "technicalExplanation": "Teste de integração ou e2e cobrindo o core flow completo.",
@@ -762,6 +779,7 @@
     {
       "id": "core.error-and-empty-states",
       "category": "core-functionality",
+      "kind": "implementation",
       "name": "O produto se comporta quando algo dá errado",
       "simpleExplanation": "Quando falta dado ou acontece um erro, o usuário vê uma mensagem útil em vez de uma tela quebrada.",
       "technicalExplanation": "Estados de vazio, carregamento e erro tratados nas telas do fluxo principal; erros não expoem stack trace.",
@@ -804,6 +822,7 @@
     {
       "id": "billing.pricing-decided",
       "category": "monetization",
+      "kind": "decision",
       "name": "Preço e planos decididos",
       "simpleExplanation": "Você já decidiu quanto vai cobrar e quais são os planos.",
       "technicalExplanation": "Modelo de precificação definido: planos, limites por plano, ciclo de cobrança e moeda.",
@@ -850,6 +869,7 @@
     {
       "id": "billing.gateway-configured",
       "category": "monetization",
+      "kind": "operational",
       "name": "Meio de pagamento configurado",
       "simpleExplanation": "A conta no sistema de pagamento existe e está ligada ao produto.",
       "technicalExplanation": "Conta no gateway criada, produtos/preços cadastrados, chaves de API configuradas por ambiente.",
@@ -897,6 +917,7 @@
     {
       "id": "billing.checkout-implemented",
       "category": "monetization",
+      "kind": "implementation",
       "name": "Tela de pagamento funciona",
       "simpleExplanation": "O cliente consegue chegar até a tela de pagamento e concluir a compra.",
       "technicalExplanation": "Fluxo de checkout implementado ligando usuário, plano e sessão de pagamento do gateway.",
@@ -940,6 +961,7 @@
     {
       "id": "billing.webhook-idempotency",
       "category": "monetization",
+      "kind": "implementation",
       "name": "Confirmação de pagamento processada uma única vez",
       "simpleExplanation": "Seu sistema pode processar a mesma confirmação de pagamento mais de uma vez, e isso cobra ou libera coisas em duplicidade.",
       "technicalExplanation": "Handler de webhook com verificação de assinatura e proteção de idempotência por event id persistido.",
@@ -987,6 +1009,7 @@
     {
       "id": "billing.entitlements",
       "category": "monetization",
+      "kind": "implementation",
       "name": "Quem pagou recebe o que pagou",
       "simpleExplanation": "Depois do pagamento, a pessoa realmente ganha acesso ao que comprou; e quem não pagou, não ganha.",
       "technicalExplanation": "Entitlements derivados do estado da assinatura e verificados no servidor em cada recurso pago.",
@@ -1030,6 +1053,7 @@
     {
       "id": "billing.cancellation-flow",
       "category": "monetization",
+      "kind": "implementation",
       "name": "Cancelamento e reembolso tratados",
       "simpleExplanation": "Quando alguém cancela ou o pagamento falha, o acesso e ajustado sozinho.",
       "technicalExplanation": "Eventos de cancelamento, falha de pagamento e expiração atualizam entitlements automaticamente.",
@@ -1072,6 +1096,7 @@
     {
       "id": "security.no-secrets-in-repo",
       "category": "security",
+      "kind": "implementation",
       "name": "Nenhuma senha ou chave dentro do código",
       "simpleExplanation": "Não existe nenhuma senha, chave ou token escrito dentro dos arquivos do projeto.",
       "technicalExplanation": "Ausência de credenciais em arquivos versionados e no histórico do git; .env ignorado.",
@@ -1115,6 +1140,7 @@
     {
       "id": "security.input-validation",
       "category": "security",
+      "kind": "implementation",
       "name": "Entradas do usuário validadas no servidor",
       "simpleExplanation": "O sistema confere no servidor tudo que o usuário envia, em vez de confiar na tela.",
       "technicalExplanation": "Validação de schema no servidor em toda rota que aceita entrada externa.",
@@ -1158,6 +1184,7 @@
     {
       "id": "security.rate-limiting",
       "category": "security",
+      "kind": "implementation",
       "name": "Limite de tentativas em rotas sensíveis",
       "simpleExplanation": "Ninguém consegue tentar adivinhar senhas ou abusar do sistema milhares de vezes por minuto.",
       "technicalExplanation": "Rate limiting por IP e por conta em rotas de autenticação, envio de email e operações caras.",
@@ -1200,6 +1227,7 @@
     {
       "id": "security.untrusted-content-boundary",
       "category": "security",
+      "kind": "implementation",
       "name": "Conteúdo analisado tratado como não confiável",
       "simpleExplanation": "O conteúdo dos projetos que o produto analisa nunca pode dar ordens ao sistema.",
       "technicalExplanation": "Fronteira de confiança explícita: conteúdo de repositório analisado entra como dado, nunca como instrução ao modelo; sanitização e delimitação obrigatórias.",
@@ -1244,6 +1272,7 @@
     {
       "id": "security.least-privilege-access",
       "category": "security",
+      "kind": "decision",
       "name": "Acesso mínimo a sistemas de terceiros",
       "simpleExplanation": "O produto só pede a permissão que realmente precisa nos sistemas que conecta.",
       "technicalExplanation": "Integrações com escopo mínimo, leitura por padrão, acesso por repositório e politica de retenção explícita.",
@@ -1288,6 +1317,7 @@
     {
       "id": "reliability.error-tracking",
       "category": "reliability-observability",
+      "kind": "operational",
       "name": "Você fica sabendo quando quebra",
       "simpleExplanation": "Se o produto der erro para um cliente, você e avisado em vez de descobrir por reclamação.",
       "technicalExplanation": "Serviço de error tracking configurado em produção, capturando exceções com contexto.",
@@ -1331,6 +1361,7 @@
     {
       "id": "reliability.health-check",
       "category": "reliability-observability",
+      "kind": "implementation",
       "name": "Verificação de saúde do sistema",
       "simpleExplanation": "Existe um jeito automático de saber se o produto está no ar.",
       "technicalExplanation": "Endpoint de health check verificando dependências críticas, monitorado externamente.",
@@ -1373,6 +1404,7 @@
     {
       "id": "deploy.hosting-decided",
       "category": "deploy-delivery",
+      "kind": "decision",
       "name": "Onde o produto vai rodar está decidido",
       "simpleExplanation": "Está decidido em qual serviço o produto ficara hospedado.",
       "technicalExplanation": "Alvo de deploy escolhido e registrado, com implicações de runtime e limites conhecidos.",
@@ -1409,6 +1441,7 @@
     {
       "id": "deploy.ci-pipeline",
       "category": "deploy-delivery",
+      "kind": "implementation",
       "name": "Verificação automática a cada mudança",
       "simpleExplanation": "Toda alteração passa por uma checagem automática antes de virar oficial.",
       "technicalExplanation": "Pipeline de CI executando typecheck, testes e validações do framework em cada push e pull request.",
@@ -1450,6 +1483,7 @@
     {
       "id": "deploy.production-deploy-works",
       "category": "deploy-delivery",
+      "kind": "operational",
       "name": "O produto está realmente no ar",
       "simpleExplanation": "Existe um endereço na internet onde o produto funciona de verdade.",
       "technicalExplanation": "Deploy de produção executado com sucesso, acessível publicamente e reproduzível.",
@@ -1494,6 +1528,7 @@
     {
       "id": "deploy.env-secrets-management",
       "category": "deploy-delivery",
+      "kind": "operational",
       "name": "Segredos guardados no lugar certo",
       "simpleExplanation": "As chaves de produção ficam guardadas no serviço de hospedagem, não no seu computador nem no código.",
       "technicalExplanation": "Secrets gerenciados pelo provedor, separados por ambiente, sem duplicação em arquivos versionados.",
@@ -1537,6 +1572,7 @@
     {
       "id": "legal.terms-and-privacy",
       "category": "legal-privacy",
+      "kind": "operational",
       "name": "Termos de uso e politica de privacidade",
       "simpleExplanation": "Existem as duas páginas legais mínimas para receber usuários e dinheiro.",
       "technicalExplanation": "Termos de uso e politica de privacidade publicados e acessíveis, descrevendo dados coletados e retenção.",
@@ -1577,6 +1613,7 @@
     {
       "id": "legal.data-retention-policy",
       "category": "legal-privacy",
+      "kind": "decision",
       "name": "Politica de retenção de dados",
       "simpleExplanation": "Está decidido por quanto tempo você guarda os dados dos clientes e o que apaga.",
       "technicalExplanation": "Politica de retenção e exclusão documentada, coerente com o que o produto realmente armazena.",
@@ -1619,6 +1656,7 @@
     {
       "id": "launch.landing-page",
       "category": "launch",
+      "kind": "operational",
       "name": "Porta de entrada pública",
       "simpleExplanation": "Existe uma página que explica o produto e permite que alguém comece a usar.",
       "technicalExplanation": "Landing page publicada com proposta de valor e chamada para ação funcional.",
@@ -1658,6 +1696,7 @@
     {
       "id": "launch.first-real-user-test",
       "category": "launch",
+      "kind": "operational",
       "name": "Alguém de fora usou de verdade",
       "simpleExplanation": "Pelo menos uma pessoa que não e você percorreu o produto inteiro e conseguiu.",
       "technicalExplanation": "Teste com usuário externo percorrendo o core flow em produção, com resultado registrado.",
@@ -1697,6 +1736,7 @@
     {
       "id": "ai.claude-md",
       "category": "ai-build-readiness",
+      "kind": "artifact",
       "name": "Manual do projeto para agentes",
       "simpleExplanation": "Existe um arquivo que explica o projeto para a IA em poucos minutos.",
       "technicalExplanation": "CLAUDE.md com missão, arquitetura, stack, comandos, estrutura, principios e proibições.",
@@ -1734,6 +1774,7 @@
     {
       "id": "ai.agents-md",
       "category": "ai-build-readiness",
+      "kind": "artifact",
       "name": "Regras de trabalho para agentes",
       "simpleExplanation": "Existe um documento com as regras que qualquer IA precisa seguir ao mexer no projeto.",
       "technicalExplanation": "AGENTS.md com padrões de implementação, Definition of Done, testes obrigatórios e processo de mudança do framework.",
@@ -1773,6 +1814,7 @@
     {
       "id": "ai.quality-gates-runnable",
       "category": "ai-build-readiness",
+      "kind": "implementation",
       "name": "Verificações rodam com um comando",
       "simpleExplanation": "Existe um único comando que confere se está tudo certo antes de aceitar uma mudança.",
       "technicalExplanation": "Comando agregador de quality gates (typecheck + validação do framework + testes) executável e passando.",
@@ -1813,6 +1855,7 @@
     {
       "id": "ai.decision-log",
       "category": "ai-build-readiness",
+      "kind": "artifact",
       "name": "Histórico de decisões",
       "simpleExplanation": "As decisões importantes ficam registradas com o motivo, para ninguém refazer a discussão.",
       "technicalExplanation": "Registro de ADRs versionado, com contexto, decisão, alternativas e consequências.",
@@ -1850,6 +1893,7 @@
     {
       "id": "ai.framework-validation",
       "category": "ai-build-readiness",
+      "kind": "implementation",
       "name": "Framework validado automaticamente",
       "simpleExplanation": "Se alguém escrever um requisito errado, o sistema avisa antes de aceitar.",
       "technicalExplanation": "Validação de schema do framework e do grafo de dependências (ids únicos, referências existentes, ausência de ciclos) executada nos gates.",

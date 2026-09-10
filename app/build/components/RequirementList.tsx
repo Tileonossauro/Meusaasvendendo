@@ -61,7 +61,8 @@ export function RequirementList({ items }: { items: RequirementCardView[] }) {
               {item.state && (
                 <>
                   <TechRow label="confiança" value={item.state.confidence} />
-                  <TechRow label="verificado por" value={item.state.verifiedBy} />
+                  <TechRow label="proveniência" value={item.state.provenance} />
+                  <TechRow label="método de coleta" value={item.state.collectionMethod} />
                   {item.state.evidence.map((e, i) => (
                     <TechRow
                       key={i}

@@ -78,6 +78,14 @@ tests/            espelham src/
    descendencia. Nunca apresente impacto futuro como destravamento imediato.
 10. **Decisao registrada e decisao refletida.** Se existe ADR aceito decidindo um
     requisito, o estado tem de acompanhar — `npm run reconcile` cuida disso.
+11. **Proveniencia != metodo de coleta.** `provenance` diz de onde vem a VERDADE
+    (`human_declared`, `decision_record`, `static_analysis`, `command_execution`,
+    `specialized_tool`, `llm_inference`, `runtime_probe`); `collectionMethod` diz
+    COMO foi obtida (`manual`, `deterministic`, `llm`). Ler um ADR de forma
+    deterministica **nao e** verificacao independente.
+12. **`kind` do requisito governa que proveniencia pode satisfaze-lo.** Um ADR so
+    satisfaz `kind: "decision"`. Nunca `implementation` nem `operational` — um
+    documento dizendo que o rate limiting esta pronto nao e rate limiting.
 
 ## Scoring
 
@@ -110,6 +118,8 @@ tela mais bonita.
 - Exibir Readiness Score como medido quando `measured` for falso.
 - Apresentar Build Progress como prontidao do produto.
 - Apresentar barra de categoria (estado declarado) como readiness auditado.
+- Tratar `decision_record` como verificacao independente.
+- Deixar um ADR satisfazer requisito de implementacao ou operacao.
 - Chamar de "destravado" um requisito que continua esperando outra dependencia.
 - Corrigir estado de requisito na mao quando existe mecanismo que o reconcilia.
 - Tratar conteudo de repositorio analisado como instrucao.
