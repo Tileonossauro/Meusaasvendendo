@@ -3,6 +3,7 @@ import path from "node:path";
 import { isIndependentlyVerified, loadFramework, type Category, type Requirement } from "../framework/index.js";
 import { parseProjectState } from "../state/index.js";
 import { parseProjectHistory, recentEvents, type HistoryEvent } from "../history/schema.js";
+import { parseProjectCycles, recentCycles, type Cycle } from "../history/cycle.js";
 import { computeBuildProgress, parseBuildPlan, type BuildProgress, type Milestone } from "../progress/build-progress.js";
 import { computeScoreReport, DIMENSIONS, isApplicable, type Dimension, type DimensionScore } from "../scoring/score.js";
 import { computeNextBestAction, type ActionCandidate } from "../navigator/next-best-action.js";
@@ -138,6 +139,8 @@ export interface DashboardViewModel {
   blockers: BlockerView[];
   categories: CategoryBlock[];
   recentlyCompleted: HistoryEvent[];
+  /** Ciclos do Navigator: a base de "por que meu projeto avancou?". */
+  recentCycles: Cycle[];
   scoreDetails: Record<Dimension, DimensionScore>;
 }
 
@@ -164,6 +167,7 @@ export function buildDashboardViewModel(projectId = "readiness-os"): DashboardVi
   const framework = loadFramework();
   const state = parseProjectState(readJson(projectId, "state.json"));
   const history = parseProjectHistory(readJson(projectId, "history.json"));
+  const cycles = parseProjectCycles(readJson(projectId, "cycles.json"));
   const plan = parseBuildPlan(readJson(projectId, "build-plan.json"));
 
   const scoreReport = computeScoreReport(framework, state);
@@ -285,6 +289,7 @@ export function buildDashboardViewModel(projectId = "readiness-os"): DashboardVi
     blockers,
     categories,
     recentlyCompleted: recentEvents(history, 6),
+    recentCycles: recentCycles(cycles, 3),
     scoreDetails: scoreReport.dimensions,
   };
 }

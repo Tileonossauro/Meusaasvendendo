@@ -1,0 +1,96 @@
+{
+  "projectId": "readiness-os",
+  "cycles": [
+    {
+      "id": "cycle-0001",
+      "at": "2026-09-10T11:21:50.689Z",
+      "frameworkVersion": "0.3.0",
+      "navigatorBefore": {
+        "requirementId": "foundation.env-example",
+        "requirementName": "Variáveis de ambiente documentadas",
+        "priority": 96.3,
+        "unlocksNow": [
+          "security.no-secrets-in-repo",
+          "deploy.env-secrets-management"
+        ],
+        "downstreamImpact": [
+          "deploy.production-deploy-works",
+          "launch.landing-page",
+          "launch.first-real-user-test"
+        ]
+      },
+      "actionTaken": "Antes de criar o arquivo de configuração, verificamos se o projeto realmente precisa de alguma. Ele não lê nenhuma variável de ambiente — criar o arquivo seria encenação. Em vez disso, ensinamos o sistema a detectar sozinho quando um projeto precisa de configuração, e o requisito passou a não se aplicar por enquanto.",
+      "actionTechnical": "Adicionado detectSignals() ao repo-scanner: busca process.env (exceto NODE_ENV) em src/, app/ e scripts/. foundation.env-example passou de applicability.always para requiresSignals: [uses_environment_config]. O scan aplica os sinais ao estado e registra evento. Framework 0.2.0 -> 0.3.0.",
+      "evidenceProduced": [
+        "busca por process.env em 30 arquivos de src/, app/ e scripts/ — nenhuma leitura (NODE_ENV desconsiderado)",
+        "src/collectors/repo-scanner.ts:detectSignals"
+      ],
+      "requirementsChanged": [
+        {
+          "requirementId": "foundation.env-example",
+          "from": "partial (aplicável)",
+          "to": "not_applicable",
+          "simpleReason": "O projeto ainda não precisa de nenhuma configuração secreta para rodar."
+        }
+      ],
+      "navigatorAfter": {
+        "requirementId": "deploy.env-secrets-management",
+        "requirementName": "Segredos guardados no lugar certo",
+        "priority": 107.3,
+        "unlocksNow": [],
+        "downstreamImpact": [
+          "deploy.production-deploy-works",
+          "launch.landing-page",
+          "launch.first-real-user-test"
+        ]
+      },
+      "sufficiencyBefore": [
+        {
+          "dimension": "mvp",
+          "weightedCoverage": 0.39,
+          "sufficient": false,
+          "criticalGaps": 2,
+          "blindSpots": 1
+        },
+        {
+          "dimension": "production",
+          "weightedCoverage": 0.41,
+          "sufficient": false,
+          "criticalGaps": 4,
+          "blindSpots": 3
+        },
+        {
+          "dimension": "aiBuild",
+          "weightedCoverage": 0.62,
+          "sufficient": false,
+          "criticalGaps": 0,
+          "blindSpots": 1
+        }
+      ],
+      "sufficiencyAfter": [
+        {
+          "dimension": "mvp",
+          "weightedCoverage": 0.39,
+          "sufficient": false,
+          "criticalGaps": 2,
+          "blindSpots": 1
+        },
+        {
+          "dimension": "production",
+          "weightedCoverage": 0.4,
+          "sufficient": false,
+          "criticalGaps": 4,
+          "blindSpots": 3
+        },
+        {
+          "dimension": "aiBuild",
+          "weightedCoverage": 0.62,
+          "sufficient": false,
+          "criticalGaps": 0,
+          "blindSpots": 1
+        }
+      ],
+      "outcome": "Nenhum número subiu — a cobertura de Production até caiu 1 ponto. O ciclo evitou construir algo inútil e deixou o framework mais correto para qualquer projeto futuro: um SaaS sem configuração externa não é cobrado por não documentá-la."
+    }
+  ]
+}

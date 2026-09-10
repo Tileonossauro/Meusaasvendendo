@@ -17,7 +17,7 @@ import { appendHistoryEvent } from "../src/history/create-event.js";
 import { systemClock } from "../src/history/clock.js";
 import { computeNextBestAction } from "../src/navigator/next-best-action.js";
 import { computeScoreReport, DIMENSIONS } from "../src/scoring/score.js";
-import { scanRepository } from "../src/collectors/repo-scanner.js";
+import { detectSignals, scanRepository } from "../src/collectors/repo-scanner.js";
 import { proposalChangesState } from "../src/collectors/types.js";
 import type { HistoryEvent } from "../src/history/schema.js";
 import type { ProjectState } from "../src/framework/schema.js";
@@ -46,6 +46,12 @@ console.log(`Execucao de comandos: ${runCommands ? "ligada" : "desligada"}\n`);
 
 const proposals = scanRepository({ runCommands });
 const stateById = new Map(state.states.map((s) => [s.requirementId, s]));
+
+// --- sinais do projeto: ligam e desligam a aplicabilidade de requisitos ---
+// Mante-los a mao seria o mesmo problema que motivou o reconciliador de ADRs:
+// a realidade muda e o estado nao acompanha.
+const signalProposals = detectSignals({ trust: "self" });
+const signalsBefore = [...state.signals].sort();
 const changes = proposals.filter((p) => proposalChangesState(p, stateById.get(p.requirementId)));
 
 const byStatus = proposals.reduce<Record<string, number>>((acc, p) => {
@@ -73,10 +79,29 @@ for (const proposal of proposals) {
   console.log(`      em linguagem simples: ${proposal.simpleReason}\n`);
 }
 
+console.log("Sinais do projeto detectados:");
+for (const proposal of signalProposals) {
+  const has = state.signals.includes(proposal.signal);
+  const change = proposal.present === has ? "sem mudanca" : proposal.present ? "LIGAR" : "DESLIGAR";
+  console.log(`  ${proposal.signal} = ${proposal.present}  (${change})`);
+  console.log(`      ${proposal.reason}`);
+}
+console.log();
+
 if (!apply) {
   console.log("Nada foi escrito. Rode com --apply para aplicar.\n");
   process.exit(0);
 }
+
+for (const proposal of signalProposals) {
+  const has = state.signals.includes(proposal.signal);
+  if (proposal.present && !has) state.signals.push(proposal.signal);
+  if (!proposal.present && has) {
+    state.signals = state.signals.filter((s) => s !== proposal.signal);
+  }
+}
+state.signals.sort();
+const signalsChanged = JSON.stringify(signalsBefore) !== JSON.stringify(state.signals);
 
 
 const newEvents: HistoryEvent[] = [];
@@ -113,6 +138,22 @@ for (const proposal of changes) {
     frameworkVersion: framework.frameworkVersion,
   }, clock);
   newEvents.push(event);
+}
+
+if (signalsChanged) {
+  for (const proposal of signalProposals) {
+    const { event } = appendHistoryEvent(
+      history,
+      {
+        type: "requirement_changed",
+        title: `Sinal do projeto detectado: ${proposal.signal} = ${proposal.present}`,
+        detail: `${proposal.simpleReason} Detectado por leitura do código, em ${proposal.evidence[0]?.locator ?? "—"}. Isso liga ou desliga requisitos do framework.`,
+        frameworkVersion: framework.frameworkVersion,
+      },
+      clock,
+    );
+    newEvents.push(event);
+  }
 }
 
 state.updatedAt = now;

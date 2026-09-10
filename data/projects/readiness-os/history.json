@@ -442,6 +442,26 @@
       "detail": "Não encontramos proteção testada contra um projeto analisado tentar dar ordens ao sistema — mas também não conseguimos garantir que ela não existe. O estado passou de \"missing\" para \"uncertain\", com evidência em busca por teste de prompt injection em tests/. Verificação independente: o sistema conferiu o repositório por conta própria.",
       "requirementId": "security.untrusted-content-boundary",
       "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0051",
+      "type": "requirement_completed",
+      "at": "2026-09-10T11:20:47.042Z",
+      "atSource": "runtime_clock",
+      "title": "Verificações rodam com um comando: verificado pelo scanner",
+      "detail": "Um único comando confere tudo, e ele rodou agora com sucesso. O estado passou de \"partial\" para \"completed\", com evidência em package.json:15. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "ai.quality-gates-runnable",
+      "frameworkVersion": "0.3.0"
+    },
+    {
+      "id": "evt-0052",
+      "type": "requirement_completed",
+      "at": "2026-09-10T11:20:47.043Z",
+      "atSource": "runtime_clock",
+      "title": "Testes automatizados executáveis: verificado pelo scanner",
+      "detail": "Os testes automáticos rodaram agora e passaram. O estado passou de \"partial\" para \"completed\", com evidência em package.json:12. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "foundation.test-gate",
+      "frameworkVersion": "0.3.0"
     }
   ]
 }

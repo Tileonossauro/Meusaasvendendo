@@ -798,6 +798,75 @@ function assertProposalsAreHonest(proposals: StateProposal[]): void {
   }
 }
 
+/**
+ * SINAIS DO PROJETO detectados por leitura de codigo.
+ *
+ * Sinais ligam e desligam a aplicabilidade de requisitos. Mante-los a mao seria
+ * o mesmo problema que motivou o reconciliador de ADRs: a realidade muda e o
+ * estado nao acompanha. Aqui o scanner descobre sozinho.
+ */
+export interface SignalProposal {
+  signal: string;
+  present: boolean;
+  evidence: Evidence[];
+  reason: string;
+  simpleReason: string;
+}
+
+export function detectSignals(options: ScanOptions = {}): SignalProposal[] {
+  const ctx: Ctx = {
+    root: options.root ?? process.cwd(),
+    runCommands: false,
+    trust: options.trust ?? "self",
+  };
+
+  const files = [
+    ...listFiles(ctx, "src"),
+    ...listFiles(ctx, "app"),
+    ...listFiles(ctx, "scripts"),
+  ].filter((f) => /\.(ts|tsx|mjs|js)$/.test(f));
+
+  // NODE_ENV nao conta: e do runtime, nao configuracao do produto.
+  const ENV_READ = /process\.env\.(?!NODE_ENV\b)([A-Z0-9_]+)/;
+  const hits: { file: string; line: number; variable: string }[] = [];
+
+  for (const file of files) {
+    const content = read(ctx, file);
+    if (content === null) continue;
+    const lines = content.split("\n");
+    for (let i = 0; i < lines.length; i += 1) {
+      const match = ENV_READ.exec(lines[i]!);
+      if (match) hits.push({ file, line: i + 1, variable: match[1]! });
+    }
+  }
+
+  const present = hits.length > 0;
+  return [
+    {
+      signal: "uses_environment_config",
+      present,
+      evidence: [
+        present
+          ? fileEvidence(
+              hits[0]!.file,
+              hits[0]!.line,
+              `Leitura de configuracao por ambiente: ${[...new Set(hits.map((h) => h.variable))].join(", ")}.`,
+            )
+          : commandEvidence(
+              `busca por process.env em ${files.length} arquivos de src/, app/ e scripts/`,
+              "Nenhuma leitura de variavel de ambiente (NODE_ENV desconsiderado).",
+            ),
+      ],
+      reason: present
+        ? `${hits.length} leitura(s) de variavel de ambiente no codigo.`
+        : "O projeto nao le nenhuma variavel de ambiente: nao ha configuracao a documentar.",
+      simpleReason: present
+        ? "O projeto precisa de configurações externas para rodar."
+        : "O projeto ainda não precisa de nenhuma configuração secreta para rodar.",
+    },
+  ];
+}
+
 /** Roda todas as verificacoes. Ordem estavel: mesma entrada, mesma saida. */
 export function scanRepository(options: ScanOptions = {}): StateProposal[] {
   const trust = options.trust ?? "self";

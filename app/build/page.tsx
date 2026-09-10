@@ -4,6 +4,7 @@ import { NextBestAction } from "./components/NextBestAction";
 import { RequirementList, BlockerList } from "./components/RequirementList";
 import { ProjectMap } from "./components/ProjectMap";
 import { RecentlyCompleted, NowBuilding } from "./components/History";
+import { Cycles } from "./components/Cycles";
 import { Section } from "./components/Section";
 
 // Le arquivos locais a cada requisicao: editar o estado e recarregar a pagina
@@ -88,6 +89,15 @@ export default function BuildPage() {
         hint="As 12 áreas que um SaaS precisa cobrir, e quanto de cada uma já existe — por estado declarado, não por auditoria."
       >
         <ProjectMap blocks={vm.categories} />
+      </Section>
+
+      {/* POR QUE O PROJETO AVANÇOU */}
+      <Section
+        title="Por que o projeto avançou"
+        count={vm.recentCycles.length}
+        hint="Cada volta completa do ciclo: o que era recomendado, o que foi feito, e o que mudou por causa disso."
+      >
+        <Cycles cycles={vm.recentCycles} />
       </Section>
 
       {/* RECENTEMENTE CONCLUÍDO */}

@@ -39,9 +39,9 @@
     },
     {
       "id": "m5-cobrir-criticos",
-      "name": "Cobrir os pontos cegos que a régua apontou",
-      "outcome": "As perguntas que hoje não podem ser respondidas passam a ter evidência suficiente — começando pela que está mais perto.",
-      "status": "planned",
+      "name": "Seguir o Navigator, ciclo a ciclo",
+      "outcome": "Cada volta do loop é executada e registrada — inclusive quando o resultado correto é não construir nada.",
+      "status": "in_progress",
       "weight": 6
     }
   ]

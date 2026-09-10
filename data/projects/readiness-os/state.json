@@ -3,8 +3,8 @@
   "projectName": "Readiness OS",
   "frameworkVersion": "0.2.0",
   "signals": [
-    "owns_a_framework",
-    "analyzes_external_content"
+    "analyzes_external_content",
+    "owns_a_framework"
   ],
   "states": [
     {
@@ -123,8 +123,8 @@
     },
     {
       "requirementId": "foundation.test-gate",
-      "status": "partial",
-      "confidence": 0.9,
+      "status": "completed",
+      "confidence": 0.95,
       "evidence": [
         {
           "source": "file",
@@ -136,14 +136,14 @@
           "source": "command",
           "provenance": "command_execution",
           "locator": "npm run test",
-          "note": "Falhou: Command failed: npm run test"
+          "note": "Executado nesta varredura, exit code 0."
         }
       ],
       "provenance": "command_execution",
       "collectionMethod": "deterministic",
-      "updatedAt": "2026-09-10T11:14:44.311Z",
-      "note": "\"npm run test\" existe mas falhou.",
-      "detectionOutcome": "confirmed_present"
+      "detectionOutcome": "confirmed_present",
+      "updatedAt": "2026-09-10T11:20:38.816Z",
+      "note": "\"npm run test\" executou e retornou exit code 0."
     },
     {
       "requirementId": "foundation.env-example",
@@ -405,9 +405,9 @@
       ],
       "provenance": "static_analysis",
       "collectionMethod": "deterministic",
+      "detectionOutcome": "not_detected",
       "updatedAt": "2026-09-10T11:14:44.311Z",
-      "note": "Nenhum teste com nome referente a fronteira de confianca. NAO e ausencia conclusiva: a protecao pode existir com outro nome ou em outra forma que este scanner nao reconhece.",
-      "detectionOutcome": "not_detected"
+      "note": "Nenhum teste com nome referente a fronteira de confianca. NAO e ausencia conclusiva: a protecao pode existir com outro nome ou em outra forma que este scanner nao reconhece."
     },
     {
       "requirementId": "security.least-privilege-access",
@@ -569,8 +569,8 @@
     },
     {
       "requirementId": "ai.quality-gates-runnable",
-      "status": "partial",
-      "confidence": 0.9,
+      "status": "completed",
+      "confidence": 0.95,
       "evidence": [
         {
           "source": "file",
@@ -582,14 +582,14 @@
           "source": "command",
           "provenance": "command_execution",
           "locator": "npm run gates",
-          "note": "Falhou: Command failed: npm run gates"
+          "note": "Executado nesta varredura, exit code 0."
         }
       ],
       "provenance": "command_execution",
       "collectionMethod": "deterministic",
-      "updatedAt": "2026-09-10T11:14:44.311Z",
-      "note": "\"npm run gates\" existe mas falhou.",
-      "detectionOutcome": "confirmed_present"
+      "detectionOutcome": "confirmed_present",
+      "updatedAt": "2026-09-10T11:20:38.816Z",
+      "note": "\"npm run gates\" executou e retornou exit code 0."
     },
     {
       "requirementId": "ai.decision-log",
@@ -632,5 +632,5 @@
       "note": "\"npm run validate:framework\" executou e retornou exit code 0."
     }
   ],
-  "updatedAt": "2026-09-10T11:14:44.311Z"
+  "updatedAt": "2026-09-10T11:20:38.816Z"
 }

@@ -2,6 +2,45 @@
 
 Mudancas relevantes de produto, framework e scoring.
 
+## [0.6.0] — 2026-09-10 — Integridade do historico, ausencia conclusiva e 1o ciclo
+
+### Corrigido (P0) — timestamps
+
+Doze eventos tinham hora escrita a mao; onze estavam no futuro. Agora todo
+evento nasce em `createHistoryEvent()` com relogio injetavel; o tipo do draft
+nao expoe `at`. Os invalidos foram recuperados da data do commit que os
+introduziu e marcados `atSource: "commit_reconstructed"`. Auditoria de
+integridade entrou nos quality gates. Ver ADR 0008.
+
+### Corrigido (P1) — ausencia conclusiva
+
+`detectionOutcome` distingue `confirmed_absent` (o coletor conhece todo o espaco
+relevante, declarado em `observationScope`) de `not_detected`. So a primeira
+ganha forca de observacao elevada; `missing` apoiado em `not_detected` e recusado
+pelo scanner. `security.untrusted-content-boundary` deixou de ser `missing` e
+virou `uncertain`.
+
+### Ciclo 0001 do Navigator
+
+NBA recomendava "Variaveis de ambiente documentadas". Antes de criar o arquivo,
+verificamos: o projeto **nao le nenhuma variavel de ambiente**. Criar seria
+encenacao.
+
+- `detectSignals()` no scanner: sinais do projeto passam a ser DETECTADOS, nao
+  mantidos a mao (mesmo problema que motivou o reconciliador de ADRs).
+- `foundation.env-example` passou a depender do sinal `uses_environment_config`.
+  Framework 0.2.0 -> 0.3.0.
+- **Nenhum numero subiu.** Production caiu de 41% para 40%. O ciclo evitou
+  trabalho inutil e deixou o framework correto para qualquer projeto futuro.
+- NBA passou para "Segredos guardados no lugar certo".
+
+### Adicionado — registro de ciclos
+
+`src/history/cycle.ts` e `data/projects/<id>/cycles.json`: NBA antes, acao,
+evidencia, requisitos alterados, `unlocksNow`, `downstreamImpact`, NBA depois e
+suficiencia antes/depois. Base da funcionalidade "por que meu projeto avancou?",
+ja visivel no dashboard.
+
 ## [0.5.0] — 2026-09-10 — Marco 4: suficiencia de medicao (DT-001 paga)
 
 ### Seguranca (P0 arquitetural)

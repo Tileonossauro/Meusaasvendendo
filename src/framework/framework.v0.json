@@ -1,5 +1,5 @@
 {
-  "frameworkVersion": "0.2.0",
+  "frameworkVersion": "0.3.0",
   "weightsAreCalibrated": false,
   "categories": [
     {
@@ -356,8 +356,11 @@
         "aiBuild": 6
       },
       "applicability": {
-        "always": true,
-        "requiresSignals": []
+        "always": false,
+        "requiresSignals": [
+          "uses_environment_config"
+        ],
+        "notApplicableReason": "O projeto ainda não lê nenhuma variável de ambiente: não há configuração a documentar."
       },
       "detection": [
         {

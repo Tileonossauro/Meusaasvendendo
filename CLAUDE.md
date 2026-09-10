@@ -45,11 +45,11 @@ src/scoring/      calculo deterministico dos tres scores
 src/navigator/    Next Best Action
 src/state/        estado por projeto (multi-projeto desde o inicio)
 src/progress/     Build Progress (progresso do PLANO, nunca prontidao)
-src/history/      eventos de progresso por projeto
+src/history/      eventos, relogio injetavel e registro de ciclos do Navigator
 src/collectors/   coletores de evidencia (reconciliador de ADRs, scanner do repo)
 src/dashboard/    view model do Self-Build Dashboard
 app/build/        a pagina /build e seus componentes
-data/projects/<projectId>/{state,build-plan,history}.json
+data/projects/<projectId>/{state,build-plan,history,cycles}.json
 scripts/          validate-framework.ts, report.ts
 docs/             PRODUCT, CONSTITUTION, ARCHITECTURE, SCORING, NEXT_BEST_ACTION, adr/
 tests/            espelham src/
@@ -152,6 +152,8 @@ tela mais bonita.
 - Construir qualquer item listado em `docs/BACKLOG.md` como "nao agora".
 - Executar comandos de um repositorio que nao seja o proprio Readiness OS.
 - Escrever timestamp de evento a mao.
+- Construir algo so porque o Navigator apontou, sem antes checar se o requisito
+  realmente se aplica ao estagio atual. Se nao se aplica, corrija a applicability.
 - Declarar ausencia conclusiva sem dizer que espaco foi inspecionado.
 - Ajustar limiar de suficiencia para fazer um score aparecer. O marco e provar a
   regua, nao produzir uma porcentagem bonita.
