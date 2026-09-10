@@ -172,3 +172,23 @@ describe("cobertura por evidencia nao e cobertura por scanner independente", () 
     }
   });
 })
+
+describe("o motivo exibido e o motivo real do bloqueio", () => {
+  it("nao afirma que falta cobertura quando a cobertura ja passou do limiar", () => {
+    // Guarda contra a copy que dizia "so 65% ... precisamos de 60%".
+    for (const card of vm.readiness) {
+      if (card.percent === null && card.independentCoverage >= 0.6) {
+        expect(card.criticalWithoutIndependentEvidence.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("se nao ha critico pendente e a cobertura passou, a dimensao e medida", () => {
+    for (const card of vm.readiness) {
+      if (card.independentCoverage >= 0.6 && card.criticalWithoutIndependentEvidence.length === 0) {
+        expect(card.measured).toBe(true);
+        expect(card.percent).not.toBeNull();
+      }
+    }
+  });
+});

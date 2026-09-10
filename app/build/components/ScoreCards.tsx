@@ -75,16 +75,26 @@ export function ReadinessCards({ cards }: { cards: ReadinessCard[] }) {
 
           {card.percent === null && (
             <div className="mt-3 space-y-2 text-xs leading-relaxed text-slate-500">
+              {/* O motivo exibido precisa ser o motivo REAL do bloqueio. */}
               {card.independentCoverage === 0 ? (
                 <p>
                   Nenhum requisito foi verificado por um scanner independente ainda. Mostrar
                   um número aqui seria inventar prontidão.
                 </p>
-              ) : (
+              ) : card.independentCoverage < 0.6 ? (
                 <p>
                   Só {Math.round(card.independentCoverage * 100)}% dos requisitos foram
                   verificados por scanner independente — precisamos de 60% para o número
                   significar prontidão de verdade.
+                </p>
+              ) : (
+                <p>
+                  A cobertura já passou de 60%, mas{" "}
+                  <strong className="font-semibold text-slate-400">
+                    {card.criticalWithoutIndependentEvidence.length} requisito(s) crítico(s)
+                  </strong>{" "}
+                  ainda não foram verificados. São justamente os que decidem se dá para
+                  receber usuários reais — sem eles, o número enganaria.
                 </p>
               )}
 
@@ -110,8 +120,10 @@ export function ReadinessCards({ cards }: { cards: ReadinessCard[] }) {
 
               {card.criticalWithoutIndependentEvidence.length > 0 && (
                 <p className="text-slate-600">
-                  {card.criticalWithoutIndependentEvidence.length} requisito(s) crítico(s)
-                  ainda sem verificação independente.
+                  Faltam:{" "}
+                  {card.criticalWithoutIndependentEvidence
+                    .map((id) => id.split(".")[1] ?? id)
+                    .join(", ")}
                 </p>
               )}
             </div>
