@@ -137,12 +137,19 @@ describe("scanner: dependencia presente != funcionalidade pronta", () => {
   });
 });
 
-describe("scanner: ausencia confirmada tambem e evidencia", () => {
-  it("registra ausencia da fronteira de confianca como missing verificado", () => {
+describe("scanner: ausencia so vira evidencia forte quando e conclusiva", () => {
+  it("nao encontrar a fronteira de confianca por nome NAO prova que ela nao existe", () => {
     const p = byId.get("security.untrusted-content-boundary")!;
-    expect(p.status).toBe("missing");
-    expect(p.reason).toContain("Ausencia confirmada");
+    expect(p.status).toBe("uncertain");
+    expect(p.detectionOutcome).toBe("not_detected");
+    expect(p.reason).toContain("NAO e ausencia conclusiva");
     expect(p.evidence[0]!.locator).toContain("tests/");
+  });
+
+  it("ausencia em caminho fixo E conclusiva, e declara o espaco inspecionado", () => {
+    const p = byId.get("foundation.env-example")!;
+    expect(p.detectionOutcome).toBe("confirmed_absent");
+    expect(p.observationScope).toBeTruthy();
   });
 });
 

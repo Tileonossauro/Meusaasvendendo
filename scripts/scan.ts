@@ -13,6 +13,8 @@ import path from "node:path";
 import { loadFramework } from "../src/framework/index.js";
 import { parseProjectState } from "../src/state/index.js";
 import { parseProjectHistory } from "../src/history/schema.js";
+import { appendHistoryEvent } from "../src/history/create-event.js";
+import { systemClock } from "../src/history/clock.js";
 import { computeNextBestAction } from "../src/navigator/next-best-action.js";
 import { computeScoreReport, DIMENSIONS } from "../src/scoring/score.js";
 import { scanRepository } from "../src/collectors/repo-scanner.js";
@@ -23,7 +25,8 @@ import type { ProjectState } from "../src/framework/schema.js";
 const apply = process.argv.includes("--apply");
 const runCommands = !process.argv.includes("--no-commands");
 const projectId = "readiness-os";
-const now = new Date().toISOString();
+const clock = systemClock;
+const now = clock.now().toISOString();
 
 const dir = path.join(process.cwd(), "data", "projects", projectId);
 const statePath = path.join(dir, "state.json");
@@ -75,10 +78,6 @@ if (!apply) {
   process.exit(0);
 }
 
-let counter = history.events.reduce((max, e) => {
-  const n = Number.parseInt(e.id.replace(/\D/g, ""), 10);
-  return Number.isNaN(n) ? max : Math.max(max, n);
-}, 0);
 
 const newEvents: HistoryEvent[] = [];
 
@@ -94,6 +93,8 @@ for (const proposal of changes) {
     evidence: proposal.evidence,
     provenance: proposal.provenance,
     collectionMethod: proposal.collectionMethod,
+    detectionOutcome: proposal.detectionOutcome,
+    observationScope: proposal.observationScope,
     updatedAt: now,
     note: proposal.reason,
   };
@@ -101,11 +102,8 @@ for (const proposal of changes) {
   if (current) Object.assign(current, next);
   else state.states.push(next);
 
-  counter += 1;
-  newEvents.push({
-    id: `evt-${String(counter).padStart(4, "0")}`,
+  const { event } = appendHistoryEvent(history, {
     type: proposal.status === "completed" ? "requirement_completed" : "requirement_changed",
-    at: now,
     title: `${requirement.name}: verificado pelo scanner`,
     detail:
       `${proposal.simpleReason} O estado passou de "${previousStatus}" para "${proposal.status}", ` +
@@ -113,7 +111,8 @@ for (const proposal of changes) {
       `Verificação independente: o sistema conferiu o repositório por conta própria.`,
     requirementId: proposal.requirementId,
     frameworkVersion: framework.frameworkVersion,
-  });
+  }, clock);
+  newEvents.push(event);
 }
 
 state.updatedAt = now;
@@ -124,19 +123,15 @@ const after = {
 };
 
 if (before.action?.requirement.id !== after.action?.requirement.id) {
-  counter += 1;
-  newEvents.push({
-    id: `evt-${String(counter).padStart(4, "0")}`,
+  const { event } = appendHistoryEvent(history, {
     type: "dependency_unblocked",
-    at: now,
     title: `A recomendação mudou: agora é "${after.action?.requirement.name ?? "nenhuma"}"`,
     detail: `Antes era "${before.action?.requirement.name ?? "nenhuma"}". O Navigator recalculou após a varredura.`,
     requirementId: after.action?.requirement.id,
     frameworkVersion: framework.frameworkVersion,
-  });
+  }, clock);
+  newEvents.push(event);
 }
-
-history.events.push(...newEvents);
 writeFileSync(statePath, JSON.stringify(state, null, 2) + "\n");
 writeFileSync(historyPath, JSON.stringify(history, null, 2) + "\n");
 

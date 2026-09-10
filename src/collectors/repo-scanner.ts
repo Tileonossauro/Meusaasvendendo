@@ -213,7 +213,10 @@ function docSectionCheck(args: {
         evidence: [fileEvidence(args.file, null, `Arquivo nao encontrado: ${args.file}`)],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
-        reason: `${args.file} nao existe no repositorio.`,
+        // Caminho fixo e conhecido: se nao esta la, nao existe. Conclusivo.
+        detectionOutcome: "confirmed_absent",
+        observationScope: `caminho fixo ${args.file}`,
+        reason: `${args.file} nao existe no repositorio (caminho fixo inspecionado).`,
         simpleReason: args.simpleWhenMissing,
       };
     }
@@ -235,6 +238,7 @@ function docSectionCheck(args: {
         ],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
+        detectionOutcome: "confirmed_present",
         reason: `${args.file}: secao ausente ou vazia demais para contar como conteudo real.`,
         simpleReason: args.simpleWhenMissing,
       };
@@ -247,6 +251,7 @@ function docSectionCheck(args: {
       evidence: [fileEvidence(args.file, section.line, `${args.noteFound} (${section.chars} caracteres).`)],
       provenance: "static_analysis",
       collectionMethod: "deterministic",
+      detectionOutcome: "confirmed_present",
       reason: `${args.file}:${section.line} contem a secao exigida com conteudo real.`,
       simpleReason: args.simpleWhenFound,
     };
@@ -271,6 +276,9 @@ function commandGateCheck(args: {
         evidence: [fileEvidence("package.json", null, `Script "${args.script}" nao declarado.`)],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
+        // package.json.scripts e o espaco COMPLETO dos scripts npm. Conclusivo.
+        detectionOutcome: "confirmed_absent",
+        observationScope: "package.json > scripts (espaco completo dos scripts npm)",
         reason: `package.json nao declara o script "${args.script}".`,
         simpleReason: args.simpleMissing,
       };
@@ -291,6 +299,7 @@ function commandGateCheck(args: {
         ],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
+        detectionOutcome: "not_detected",
         reason: `Script "${args.script}" existe, mas nao foi executado nesta varredura. Declarar nao prova que passa.`,
         simpleReason: "O comando existe, mas não foi executado agora para confirmar que funciona.",
       };
@@ -307,6 +316,7 @@ function commandGateCheck(args: {
         ],
         provenance: "command_execution",
         collectionMethod: "deterministic",
+        detectionOutcome: "confirmed_present",
         reason: `"npm run ${args.script}" existe mas falhou.`,
         simpleReason: args.simpleFail,
       };
@@ -322,6 +332,7 @@ function commandGateCheck(args: {
       ],
       provenance: "command_execution",
       collectionMethod: "deterministic",
+      detectionOutcome: "confirmed_present",
       reason: `"npm run ${args.script}" executou e retornou exit code 0.`,
       simpleReason: args.simplePass,
     };
@@ -386,6 +397,7 @@ const CHECKS: Check[] = [
         ],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
+        detectionOutcome: "confirmed_present",
         reason: `Faltam diretorios (${expected.filter((d) => !present.includes(d)).join(", ") || "nenhum"}) ou documentacao da estrutura.`,
         simpleReason: "A organização de pastas existe, mas ainda não está toda documentada.",
       };
@@ -401,6 +413,7 @@ const CHECKS: Check[] = [
       ],
       provenance: "static_analysis",
       collectionMethod: "deterministic",
+      detectionOutcome: "confirmed_present",
       reason: "Diretorios de topo presentes e estrutura documentada no CLAUDE.md.",
       simpleReason: "As pastas do projeto estão organizadas e explicadas no manual do projeto.",
     };
@@ -438,6 +451,9 @@ const CHECKS: Check[] = [
         ],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
+        // A ausencia do .env.example e conclusiva: caminho fixo.
+        detectionOutcome: "confirmed_absent",
+        observationScope: "caminho fixo .env.example",
         reason: ".env esta ignorado, mas .env.example nao existe — a Definition of Done exige a lista de variaveis.",
         simpleReason:
           "As senhas estão protegidas de irem para o repositório, mas ainda falta a lista das configurações que o projeto precisa.",
@@ -454,6 +470,7 @@ const CHECKS: Check[] = [
       ],
       provenance: "static_analysis",
       collectionMethod: "deterministic",
+      detectionOutcome: "confirmed_present",
       reason: ".env ignorado e .env.example presente.",
       simpleReason: "A lista de configurações existe e as senhas estão protegidas.",
     };
@@ -481,6 +498,7 @@ const CHECKS: Check[] = [
       ],
       provenance: "static_analysis",
       collectionMethod: "deterministic",
+      detectionOutcome: "confirmed_present",
       reason:
         "Schemas versionados e usados para validacao. NAO e possivel provar estaticamente que cobrem todas as entidades do fluxo principal — por isso partial, nao completed.",
       simpleReason:
@@ -520,6 +538,7 @@ const CHECKS: Check[] = [
         evidence: findings.slice(0, 3).map((f) => fileEvidence(f.split(" ")[0]!, null, `Padrao de segredo encontrado: ${f}`)),
         provenance: "specialized_tool",
         collectionMethod: "deterministic",
+        detectionOutcome: "confirmed_present",
         reason: `${findings.length} possivel(is) segredo(s) em arquivo versionado.`,
         simpleReason: "Encontramos o que parece ser uma senha ou chave dentro dos arquivos do projeto.",
       };
@@ -538,6 +557,8 @@ const CHECKS: Check[] = [
       ],
       provenance: "specialized_tool",
       collectionMethod: "deterministic",
+      // Busca por PADROES: um segredo em formato desconhecido escapa. Nao conclusivo.
+      detectionOutcome: "not_detected",
       reason:
         "Nenhum padrao conhecido de segredo nos arquivos versionados. O HISTORICO do git nao foi varrido e a DoD exige isso — por isso partial, nao completed.",
       simpleReason:
@@ -562,16 +583,20 @@ const CHECKS: Check[] = [
         evidence: [fileEvidence(boundaryTests[0]!, null, "Teste dedicado encontrado pelo nome do arquivo.")],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
+        detectionOutcome: "not_detected",
         reason:
           "Existe teste com nome relacionado a fronteira de confianca, mas este scanner nao consegue provar que ele exercita a protecao.",
         simpleReason: "Existe um teste sobre esse assunto, mas não dá para confirmar sozinho que ele protege de verdade.",
       };
     }
 
+    // "Nao achei teste com esse nome" NAO prova que a protecao nao existe:
+    // ela pode estar implementada e coberta por um teste com outro nome, ou por
+    // um mecanismo que este scanner nao reconhece. Ausencia NAO conclusiva.
     return {
       requirementId: "security.untrusted-content-boundary",
-      status: "missing",
-      confidence: 0.9,
+      status: "uncertain",
+      confidence: 0.5,
       evidence: [
         commandEvidence(
           "busca por teste de prompt injection em tests/",
@@ -580,10 +605,12 @@ const CHECKS: Check[] = [
       ],
       provenance: "static_analysis",
       collectionMethod: "deterministic",
+      detectionOutcome: "not_detected",
       reason:
-        "Ausencia confirmada: nenhum teste cobre a fronteira de confianca. A DoD exige teste de prompt injection passando.",
+        "Nenhum teste com nome referente a fronteira de confianca. NAO e ausencia conclusiva: " +
+        "a protecao pode existir com outro nome ou em outra forma que este scanner nao reconhece.",
       simpleReason:
-        "Ainda não existe proteção testada contra um projeto analisado tentar dar ordens ao sistema.",
+        "Não encontramos proteção testada contra um projeto analisado tentar dar ordens ao sistema — mas também não conseguimos garantir que ela não existe.",
     };
   },
 
@@ -598,7 +625,9 @@ const CHECKS: Check[] = [
         evidence: [fileEvidence(".github/workflows", null, "Nenhum workflow de CI encontrado.")],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
-        reason: "Nenhum workflow de CI versionado.",
+        detectionOutcome: "confirmed_absent",
+        observationScope: "diretorio fixo .github/workflows",
+        reason: "Nenhum workflow de CI versionado (diretorio fixo inspecionado).",
         simpleReason: "Não existe verificação automática a cada mudança.",
       };
     }
@@ -617,6 +646,7 @@ const CHECKS: Check[] = [
       ],
       provenance: "static_analysis",
       collectionMethod: "deterministic",
+      detectionOutcome: "confirmed_present",
       reason:
         `Workflow existe e executa ${runsGates.length} gate(s). NAO e possivel verificar localmente se a falha BLOQUEIA o merge ` +
         "(depende da configuracao de branch protection no GitHub) — por isso partial.",
@@ -641,6 +671,7 @@ const CHECKS: Check[] = [
         evidence: [fileEvidence("CLAUDE.md", 1, `${found.length} de ${required.length} secoes obrigatorias presentes.`)],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
+        detectionOutcome: "confirmed_present",
         reason: "CLAUDE.md existe mas falta secao obrigatoria (estrutura, comandos ou proibicoes).",
         simpleReason: "O manual para a IA existe, mas está incompleto.",
       };
@@ -653,6 +684,7 @@ const CHECKS: Check[] = [
       evidence: [fileEvidence("CLAUDE.md", proibido, "Estrutura, comandos e proibicoes documentados.")],
       provenance: "static_analysis",
       collectionMethod: "deterministic",
+      detectionOutcome: "confirmed_present",
       reason: "CLAUDE.md contem estrutura, comandos e lista de proibicoes.",
       simpleReason: "O manual do projeto para a IA está completo.",
     };
@@ -670,6 +702,7 @@ const CHECKS: Check[] = [
         evidence: [fileEvidence("AGENTS.md", dod?.line ?? null, "Definition of Done ausente ou muito curta.")],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
+        detectionOutcome: "confirmed_present",
         reason: "AGENTS.md sem Definition of Done com conteudo real.",
         simpleReason: "As regras para a IA existem, mas não definem quando uma tarefa está pronta.",
       };
@@ -681,6 +714,7 @@ const CHECKS: Check[] = [
       evidence: [fileEvidence("AGENTS.md", dod.line, `Definition of Done definida (${dod.chars} caracteres).`)],
       provenance: "static_analysis",
       collectionMethod: "deterministic",
+      detectionOutcome: "confirmed_present",
       reason: "AGENTS.md define Definition of Done com conteudo real.",
       simpleReason: "As regras de trabalho para a IA estão escritas, incluindo quando algo está pronto.",
     };
@@ -717,6 +751,8 @@ const CHECKS: Check[] = [
         evidence: [fileEvidence("docs/adr", null, `${adrs.length} arquivo(s), ${complete.length} seguindo o template.`)],
         provenance: "static_analysis",
         collectionMethod: "deterministic",
+        detectionOutcome: adrs.length > 0 ? "confirmed_present" : "confirmed_absent",
+        observationScope: adrs.length > 0 ? undefined : "diretorio fixo docs/adr",
         reason: "Nenhum ADR contem contexto, decisao e alternativas.",
         simpleReason: "As decisões importantes ainda não estão registradas com o motivo.",
       };
@@ -732,11 +768,35 @@ const CHECKS: Check[] = [
       ],
       provenance: "static_analysis",
       collectionMethod: "deterministic",
+      detectionOutcome: "confirmed_present",
       reason: `${complete.length} ADR(s) seguem o template completo.`,
       simpleReason: "As decisões importantes estão registradas com contexto e alternativas.",
     };
   },
 ];
+
+/**
+ * Guarda estrutural contra conclusoes que este scanner nao pode sustentar.
+ * Falha alto: um scanner que mente e pior que um scanner que se cala.
+ */
+function assertProposalsAreHonest(proposals: StateProposal[]): void {
+  for (const p of proposals) {
+    // Ausencia conclusiva exige declarar o espaco inspecionado.
+    if (p.detectionOutcome === "confirmed_absent" && !p.observationScope) {
+      throw new Error(
+        `${p.requirementId}: ausencia declarada como conclusiva sem informar o espaco inspecionado.`,
+      );
+    }
+    // `missing` so e legitimo com ausencia conclusiva OU deteccao positiva do
+    // problema (ex.: encontramos um segredo). Nunca por "procurei e nao achei".
+    if (p.status === "missing" && p.detectionOutcome === "not_detected") {
+      throw new Error(
+        `${p.requirementId}: status "missing" apoiado em "not_detected". ` +
+          `"Nao encontrei" nao prova ausencia — use uncertain ou partial.`,
+      );
+    }
+  }
+}
 
 /** Roda todas as verificacoes. Ordem estavel: mesma entrada, mesma saida. */
 export function scanRepository(options: ScanOptions = {}): StateProposal[] {
@@ -764,5 +824,7 @@ export function scanRepository(options: ScanOptions = {}): StateProposal[] {
     const proposal = check(ctx);
     if (proposal) proposals.push(proposal);
   }
+
+  assertProposalsAreHonest(proposals);
   return proposals.sort((a, b) => a.requirementId.localeCompare(b.requirementId));
 }

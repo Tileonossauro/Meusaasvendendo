@@ -13,6 +13,8 @@ import path from "node:path";
 import { loadFramework } from "../src/framework/index.js";
 import { parseProjectState } from "../src/state/index.js";
 import { parseProjectHistory } from "../src/history/schema.js";
+import { appendHistoryEvent } from "../src/history/create-event.js";
+import { systemClock } from "../src/history/clock.js";
 import { computeNextBestAction } from "../src/navigator/next-best-action.js";
 import { reconcileDecisions } from "../src/collectors/adr-reconciler.js";
 import { proposalChangesState } from "../src/collectors/types.js";
@@ -21,7 +23,8 @@ import type { ProjectState } from "../src/framework/schema.js";
 
 const projectId = process.argv.find((a) => !a.startsWith("--") && a !== process.argv[0] && a !== process.argv[1]) ?? "readiness-os";
 const apply = process.argv.includes("--apply");
-const now = new Date().toISOString();
+const clock = systemClock;
+const now = clock.now().toISOString();
 
 const dir = path.join(process.cwd(), "data", "projects", projectId);
 const statePath = path.join(dir, "state.json");
@@ -63,12 +66,6 @@ if (!apply) {
   process.exit(0);
 }
 
-// Ids derivados do maior id existente, nunca do tamanho da lista: remover um
-// evento antigo nao pode fazer o proximo id colidir com um ja usado.
-let eventCounter = history.events.reduce((max, e) => {
-  const n = Number.parseInt(e.id.replace(/\D/g, ""), 10);
-  return Number.isNaN(n) ? max : Math.max(max, n);
-}, 0);
 const newEvents: HistoryEvent[] = [];
 
 for (const change of changes) {
@@ -86,6 +83,7 @@ for (const change of changes) {
     evidence: change.evidence,
     provenance: change.provenance,
     collectionMethod: change.collectionMethod,
+    detectionOutcome: change.detectionOutcome,
     updatedAt: now,
     note: change.reason,
   };
@@ -96,11 +94,8 @@ for (const change of changes) {
     state.states.push(next);
   }
 
-  eventCounter += 1;
-  newEvents.push({
-    id: `evt-${String(eventCounter).padStart(4, "0")}`,
+  const { event } = appendHistoryEvent(history, {
     type: change.status === "completed" ? "requirement_completed" : "requirement_changed",
-    at: now,
     title: `${requirement.name}: reconciliado com uma decisão já registrada`,
     detail:
       `${change.reason} O estado dizia "${previousStatus}" enquanto a decisão já existia na ` +
@@ -108,26 +103,23 @@ for (const change of changes) {
       `foi automática, mas o ADR e sua ligação com o requisito foram declarados por uma pessoa.`,
     requirementId: change.requirementId,
     frameworkVersion: framework.frameworkVersion,
-  });
+  }, clock);
+  newEvents.push(event);
 }
 
 state.updatedAt = now;
 
 const after = computeNextBestAction(framework, state).nextBestAction;
 if (before?.requirement.id !== after?.requirement.id) {
-  eventCounter += 1;
-  newEvents.push({
-    id: `evt-${String(eventCounter).padStart(4, "0")}`,
+  const { event } = appendHistoryEvent(history, {
     type: "dependency_unblocked",
-    at: now,
     title: `A recomendação mudou: agora é "${after?.requirement.name ?? "nenhuma"}"`,
     detail: `Antes era "${before?.requirement.name ?? "nenhuma"}". O Navigator recalculou após a reconciliação.`,
     requirementId: after?.requirement.id,
     frameworkVersion: framework.frameworkVersion,
-  });
+  }, clock);
+  newEvents.push(event);
 }
-
-history.events.push(...newEvents);
 
 writeFileSync(statePath, JSON.stringify(state, null, 2) + "\n");
 writeFileSync(historyPath, JSON.stringify(history, null, 2) + "\n");

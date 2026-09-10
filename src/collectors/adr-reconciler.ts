@@ -195,6 +195,7 @@ export function reconcileDecisions(
         evidence,
         provenance: "decision_record",
         collectionMethod: "deterministic",
+        detectionOutcome: "confirmed_present",
         simpleReason:
           entry.status === "completed"
             ? "Esta decisão já está registrada por escrito no projeto."

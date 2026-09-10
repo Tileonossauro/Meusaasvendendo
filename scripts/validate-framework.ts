@@ -2,8 +2,11 @@
  * Quality gate do nosso ativo principal.
  * Roda no `npm run gates` e na CI. Framework invalido = build vermelho.
  */
+import { readFileSync } from "node:fs";
 import { loadFramework } from "../src/framework/index.js";
 import { buildGraph } from "../src/graph/graph.js";
+import { parseProjectHistory } from "../src/history/schema.js";
+import { auditHistoryIntegrity } from "../src/history/create-event.js";
 
 try {
   const framework = loadFramework();
@@ -23,10 +26,24 @@ try {
     throw new Error(`Requisitos em categorias nao declaradas: ${orphanCategories.join(", ")}`);
   }
 
+  // Integridade do historico tambem e quality gate: timestamp inventado e o
+  // mesmo problema que score inventado.
+  const history = parseProjectHistory(
+    JSON.parse(readFileSync("data/projects/readiness-os/history.json", "utf8")),
+  );
+  const issues = auditHistoryIntegrity(history);
+  if (issues.length > 0) {
+    throw new Error(
+      `Historico com ${issues.length} problema(s) de integridade: ` +
+        issues.map((i) => `${i.eventId} (${i.problem}: ${i.detail})`).join("; "),
+    );
+  }
+
   console.log(
     `Framework v${framework.frameworkVersion} valido: ` +
       `${framework.requirements.length} requisitos em ${framework.categories.length} categorias.`,
   );
+  console.log(`Historico integro: ${history.events.length} eventos, nenhum problema.`);
 } catch (error) {
   console.error("Framework INVALIDO:", error instanceof Error ? error.message : error);
   process.exit(1);

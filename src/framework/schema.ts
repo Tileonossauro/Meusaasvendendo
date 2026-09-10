@@ -79,6 +79,26 @@ export const provenanceSchema = z.enum([
 ]);
 export type Provenance = z.infer<typeof provenanceSchema>;
 
+/**
+ * RESULTADO DA DETECCAO — "nao encontrei" nao e o mesmo que "provei que nao existe".
+ *
+ * - `confirmed_present`: observamos o fato positivamente.
+ * - `confirmed_absent`:  ausencia CONCLUSIVA. So vale quando o coletor conhece
+ *   todo o espaco relevante (um caminho fixo, uma lista enumeravel). Exige
+ *   `observationScope` declarando qual espaco foi inspecionado.
+ * - `not_detected`:      procuramos e nao achamos, mas o espaco de busca nao e
+ *   completo. Pode existir de forma que o detector nao reconhece.
+ *
+ * Um detector de padroes que nao acha rate limiting produz `not_detected`,
+ * jamais `confirmed_absent`.
+ */
+export const detectionOutcomeSchema = z.enum([
+  "confirmed_present",
+  "confirmed_absent",
+  "not_detected",
+]);
+export type DetectionOutcome = z.infer<typeof detectionOutcomeSchema>;
+
 /** COMO a evidencia foi coletada. Eixo independente da proveniencia. */
 export const collectionMethodSchema = z.enum(["manual", "deterministic", "llm"]);
 export type CollectionMethod = z.infer<typeof collectionMethodSchema>;
@@ -231,8 +251,25 @@ export const requirementStateSchema = z.object({
   provenance: provenanceSchema,
   /** Como foi coletado. Independente da proveniencia. */
   collectionMethod: collectionMethodSchema,
+  /** O que a deteccao concluiu. Governa se a ausencia vale observacao forte. */
+  detectionOutcome: detectionOutcomeSchema.optional(),
+  /**
+   * Qual espaco foi inspecionado. OBRIGATORIO quando `confirmed_absent`:
+   * e o que justifica a ausencia ser conclusiva.
+   */
+  observationScope: z.string().optional(),
   updatedAt: z.string(),
   note: z.string().optional(),
+}).superRefine((state, ctx) => {
+  if (state.detectionOutcome === "confirmed_absent" && !state.observationScope) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["observationScope"],
+      message:
+        `Requisito "${state.requirementId}": ausencia declarada como conclusiva sem informar ` +
+        "qual espaco foi inspecionado. Sem isso nao ha como justificar a conclusao.",
+    });
+  }
 });
 export type RequirementState = z.infer<typeof requirementStateSchema>;
 

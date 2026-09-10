@@ -102,12 +102,14 @@ export function observationStrength(
   const base = PROVENANCE_STRENGTH[state.provenance];
   if (base === 0) return 0;
 
-  // Provar AUSENCIA nao exige executar nada: se o arquivo nao existe, ele nao
-  // existe. Por isso a adequacao ao tipo nao penaliza um `missing` observado.
-  const fit =
-    state.status === "missing"
-      ? 1
-      : (KIND_FIT[requirement.kind][state.provenance] ?? 0);
+  // Provar AUSENCIA nao exige executar nada — MAS so quando a ausencia e
+  // CONCLUSIVA: o coletor precisa conhecer todo o espaco relevante (um caminho
+  // fixo, uma lista enumeravel). "Procurei padroes e nao achei" nao prova nada:
+  // a funcionalidade pode existir de forma que o detector nao reconhece.
+  const conclusiveAbsence =
+    state.status === "missing" && state.detectionOutcome === "confirmed_absent";
+
+  const fit = conclusiveAbsence ? 1 : (KIND_FIT[requirement.kind][state.provenance] ?? 0);
 
   return Math.round(base * fit * state.confidence * 100) / 100;
 }

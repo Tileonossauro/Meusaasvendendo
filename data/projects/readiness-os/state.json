@@ -123,8 +123,8 @@
     },
     {
       "requirementId": "foundation.test-gate",
-      "status": "completed",
-      "confidence": 0.95,
+      "status": "partial",
+      "confidence": 0.9,
       "evidence": [
         {
           "source": "file",
@@ -136,13 +136,14 @@
           "source": "command",
           "provenance": "command_execution",
           "locator": "npm run test",
-          "note": "Executado nesta varredura, exit code 0."
+          "note": "Falhou: Command failed: npm run test"
         }
       ],
       "provenance": "command_execution",
       "collectionMethod": "deterministic",
-      "updatedAt": "2026-09-10T10:36:24.150Z",
-      "note": "\"npm run test\" executou e retornou exit code 0."
+      "updatedAt": "2026-09-10T11:14:44.311Z",
+      "note": "\"npm run test\" existe mas falhou.",
+      "detectionOutcome": "confirmed_present"
     },
     {
       "requirementId": "foundation.env-example",
@@ -392,20 +393,21 @@
     },
     {
       "requirementId": "security.untrusted-content-boundary",
-      "status": "missing",
-      "confidence": 0.9,
+      "status": "uncertain",
+      "confidence": 0.5,
       "evidence": [
         {
           "source": "command",
           "provenance": "command_execution",
           "locator": "busca por teste de prompt injection em tests/",
-          "note": "6 arquivos de teste varridos; nenhum cobre conteudo nao confiavel."
+          "note": "8 arquivos de teste varridos; nenhum com nome referente a fronteira de confianca."
         }
       ],
       "provenance": "static_analysis",
       "collectionMethod": "deterministic",
-      "updatedAt": "2026-09-10T10:36:24.150Z",
-      "note": "Ausencia confirmada: nenhum teste cobre a fronteira de confianca. A DoD exige teste de prompt injection passando."
+      "updatedAt": "2026-09-10T11:14:44.311Z",
+      "note": "Nenhum teste com nome referente a fronteira de confianca. NAO e ausencia conclusiva: a protecao pode existir com outro nome ou em outra forma que este scanner nao reconhece.",
+      "detectionOutcome": "not_detected"
     },
     {
       "requirementId": "security.least-privilege-access",
@@ -567,8 +569,8 @@
     },
     {
       "requirementId": "ai.quality-gates-runnable",
-      "status": "completed",
-      "confidence": 0.95,
+      "status": "partial",
+      "confidence": 0.9,
       "evidence": [
         {
           "source": "file",
@@ -580,13 +582,14 @@
           "source": "command",
           "provenance": "command_execution",
           "locator": "npm run gates",
-          "note": "Executado nesta varredura, exit code 0."
+          "note": "Falhou: Command failed: npm run gates"
         }
       ],
       "provenance": "command_execution",
       "collectionMethod": "deterministic",
-      "updatedAt": "2026-09-10T10:36:24.150Z",
-      "note": "\"npm run gates\" executou e retornou exit code 0."
+      "updatedAt": "2026-09-10T11:14:44.311Z",
+      "note": "\"npm run gates\" existe mas falhou.",
+      "detectionOutcome": "confirmed_present"
     },
     {
       "requirementId": "ai.decision-log",
@@ -629,5 +632,5 @@
       "note": "\"npm run validate:framework\" executou e retornou exit code 0."
     }
   ],
-  "updatedAt": "2026-09-10T10:36:24.150Z"
+  "updatedAt": "2026-09-10T11:14:44.311Z"
 }

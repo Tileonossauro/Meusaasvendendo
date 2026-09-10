@@ -119,8 +119,24 @@ forca = forca_da_proveniencia × adequacao_ao_tipo × confianca
 Ler um arquivo prova que um documento existe; nao prova que um codigo funciona.
 Um ADR vale 1 para `decision` e **0** para `implementation`.
 
-**Excecao deliberada:** quando o status observado e `missing`, a adequacao vale 1.
-Provar que algo NAO existe nao exige executar nada — e uma observacao forte.
+**Excecao deliberada, e restrita:** quando o status observado e `missing` **e a
+ausencia e CONCLUSIVA**, a adequacao vale 1. Provar que algo nao existe nao exige
+executar nada.
+
+A ausencia so e conclusiva quando o coletor conhece **todo o espaco relevante** e
+declara qual foi (`observationScope`):
+
+| Situacao | `detectionOutcome` | Ganha o bonus? |
+| --- | --- | --- |
+| `.env.example` nao esta no caminho fixo | `confirmed_absent` | sim |
+| script npm nao esta em `package.json > scripts` | `confirmed_absent` | sim |
+| `.github/workflows` vazio | `confirmed_absent` | sim |
+| busca por padroes nao achou rate limiting | `not_detected` | **nao** |
+| varredura de segredos sem achado | `not_detected` | **nao** |
+
+`missing` apoiado em `not_detected` e **recusado pelo scanner**: vira `uncertain`
+ou `partial`. "Procurei e nao achei" nao e prova — a funcionalidade pode existir
+de uma forma que o detector nao reconhece.
 
 **Por dimensao**, com as tres portas:
 

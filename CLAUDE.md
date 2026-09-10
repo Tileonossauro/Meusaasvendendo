@@ -95,7 +95,16 @@ tests/            espelham src/
     observamos o bastante para publicar. Quem libera o score e a suficiencia
     (`src/scoring/sufficiency.ts`), avaliada POR DIMENSAO. Nao existe porta
     global: e desejavel que AI Build seja publicavel antes de Production.
-15. **NUNCA execute comandos de repositorio de terceiro no host.** O executor
+15. **Agentes nao escrevem timestamp.** Todo evento de historico nasce em
+    `createHistoryEvent()`, que carimba o relogio no momento da execucao. Nos
+    testes o relogio e injetado (`fixedClock`). Ver ADR 0008.
+16. **"Nao encontrei" != "provei que nao existe".** `detectionOutcome` distingue
+    `confirmed_absent` (ausencia conclusiva — o coletor conhece TODO o espaco
+    relevante, e declara qual em `observationScope`) de `not_detected`
+    (procurou, nao achou, nao pode descartar). So a primeira ganha forca de
+    observacao elevada. Status `missing` apoiado em `not_detected` derruba o
+    scanner.
+17. **NUNCA execute comandos de repositorio de terceiro no host.** O executor
     atual (`runNpmScript`) so e seguro para o proprio Readiness OS
     (`trust: "self"`). Repositorio externo exige sandbox descartavel, sem
     segredos, com limite de recursos, timeout e politica de rede — ADR 0007 e
@@ -142,5 +151,7 @@ tela mais bonita.
   (ver `docs/RESEARCH.md`).
 - Construir qualquer item listado em `docs/BACKLOG.md` como "nao agora".
 - Executar comandos de um repositorio que nao seja o proprio Readiness OS.
+- Escrever timestamp de evento a mao.
+- Declarar ausencia conclusiva sem dizer que espaco foi inspecionado.
 - Ajustar limiar de suficiencia para fazer um score aparecer. O marco e provar a
   regua, nao produzir uma porcentagem bonita.

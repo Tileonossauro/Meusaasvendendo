@@ -21,7 +21,15 @@ export type HistoryEventType = z.infer<typeof historyEventTypeSchema>;
 export const historyEventSchema = z.object({
   id: z.string(),
   type: historyEventTypeSchema,
-  at: z.string(),
+  /** SEMPRE vem do relogio, via createHistoryEvent. Nunca escrito a mao. */
+  at: z.string().datetime(),
+  /**
+   * De onde veio o timestamp.
+   * - `runtime_clock`: relogio no momento da execucao (o normal);
+   * - `commit_reconstructed`: recuperado da data do commit que introduziu o
+   *   evento, ao corrigir timestamps invalidos escritos a mao. Ver ADR 0008.
+   */
+  atSource: z.enum(["runtime_clock", "commit_reconstructed"]).default("runtime_clock"),
   /** Titulo em linguagem de leigo. E o que aparece em "Recentemente concluido". */
   title: z.string().min(3),
   /** Detalhe opcional, tambem em linguagem simples. */

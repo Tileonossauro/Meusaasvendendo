@@ -1,5 +1,6 @@
 import type {
   CollectionMethod,
+  DetectionOutcome,
   Evidence,
   Provenance,
   RequirementState,
@@ -27,6 +28,13 @@ export interface StateProposal {
   provenance: Provenance;
   /** Como foi obtida. Eixo independente da proveniencia. */
   collectionMethod: CollectionMethod;
+  /**
+   * O que a deteccao concluiu. `confirmed_absent` so e legitimo quando o
+   * coletor conhece todo o espaco relevante — e exige `observationScope`.
+   */
+  detectionOutcome: DetectionOutcome;
+  /** Espaco inspecionado. Obrigatorio quando a ausencia e conclusiva. */
+  observationScope?: string;
   /** Motivo tecnico da conclusao — para auditoria. */
   reason: string;
   /** O mesmo motivo em linguagem de leigo — e o que Leonardo le. */

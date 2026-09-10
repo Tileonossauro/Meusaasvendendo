@@ -81,12 +81,18 @@ describe("forca da observacao", () => {
     expect(observationStrength(deploy, stateOf({ provenance: "static_analysis" }))).toBeLessThan(0.5);
   });
 
-  it("confirmar AUSENCIA e observacao forte, mesmo sem executar nada", () => {
-    // Se o arquivo nao existe, ele nao existe: nao e preciso rodar comando.
+  it("ausencia CONCLUSIVA e observacao forte, mesmo sem executar nada", () => {
+    // Se o caminho e fixo e o arquivo nao esta la, ele nao existe.
     const boundary = req("security.untrusted-content-boundary");
     const ausente = observationStrength(
       boundary,
-      stateOf({ status: "missing", provenance: "static_analysis", confidence: 0.9 }),
+      stateOf({
+        status: "missing",
+        provenance: "static_analysis",
+        confidence: 0.9,
+        detectionOutcome: "confirmed_absent",
+        observationScope: "caminho fixo",
+      }),
     );
     const presente = observationStrength(
       boundary,
@@ -94,6 +100,16 @@ describe("forca da observacao", () => {
     );
     expect(ausente).toBeGreaterThan(presente);
     expect(ausente).toBeGreaterThanOrEqual(SUFFICIENCY_THRESHOLDS.criticalMinStrength);
+  });
+
+  it("ausencia NAO conclusiva nao ganha o bonus", () => {
+    // "Procurei padroes e nao achei" nao prova que a funcionalidade nao existe.
+    const boundary = req("security.untrusted-content-boundary");
+    const naoConclusiva = observationStrength(
+      boundary,
+      stateOf({ status: "missing", detectionOutcome: "not_detected", confidence: 0.9 }),
+    );
+    expect(naoConclusiva).toBeLessThan(SUFFICIENCY_THRESHOLDS.criticalMinStrength);
   });
 
   it("confianca baixa reduz a forca proporcionalmente", () => {
