@@ -75,8 +75,18 @@ export function ReadinessCards({ cards }: { cards: ReadinessCard[] }) {
 
           {card.percent === null && (
             <p className="mt-3 text-xs leading-relaxed text-slate-500">
-              Nenhum requisito foi verificado por evidência automática ainda. Mostrar um
-              número aqui seria inventar prontidão.
+              {card.measuredCoverage === 0 ? (
+                <>
+                  Nenhum requisito foi verificado por evidência automática ainda. Mostrar um
+                  número aqui seria inventar prontidão.
+                </>
+              ) : (
+                <>
+                  Só {Math.round(card.measuredCoverage * 100)}% dos requisitos foram
+                  verificados por evidência automática — precisamos de 60% para o número
+                  significar prontidão de verdade.
+                </>
+              )}
             </p>
           )}
 

@@ -121,12 +121,18 @@
     },
     {
       "requirementId": "data.persistence-chosen",
-      "status": "missing",
-      "confidence": 1,
-      "evidence": [],
-      "verifiedBy": "manual_bootstrap",
-      "updatedAt": "2026-09-10T00:00:00.000Z",
-      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "docs/adr/0004-estado-em-arquivo.md:5",
+          "note": "Decisão formal registrada em \"ADR 0004 — Estado em arquivo antes de banco de dados\" (status: aceito)."
+        }
+      ],
+      "verifiedBy": "deterministic",
+      "updatedAt": "2026-09-10T10:20:08.085Z",
+      "note": "ADR 0004 decide este requisito."
     },
     {
       "requirementId": "data.schema-defined",
@@ -328,12 +334,18 @@
     },
     {
       "requirementId": "deploy.hosting-decided",
-      "status": "missing",
-      "confidence": 1,
-      "evidence": [],
-      "verifiedBy": "manual_bootstrap",
-      "updatedAt": "2026-09-10T00:00:00.000Z",
-      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+      "status": "partial",
+      "confidence": 0.7,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "docs/adr/0001-stack.md:5",
+          "note": "Decisão parcial em \"ADR 0001 — Stack inicial\": Alvo de deploy escolhido (Vercel); limites do provedor ainda não anotados."
+        }
+      ],
+      "verifiedBy": "deterministic",
+      "updatedAt": "2026-09-10T10:20:08.085Z",
+      "note": "ADR 0001 decide este requisito em parte."
     },
     {
       "requirementId": "deploy.ci-pipeline",
@@ -474,5 +486,5 @@
       "updatedAt": "2026-09-10T00:00:00.000Z"
     }
   ],
-  "updatedAt": "2026-09-10T00:00:00.000Z"
+  "updatedAt": "2026-09-10T10:20:08.085Z"
 }

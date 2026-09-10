@@ -1,3 +1,9 @@
+---
+adr: "0002"
+status: aceito
+date: 2026-09-10
+---
+
 # ADR 0002 — Scoring deterministico fora do LLM
 
 **Status:** aceito · 2026-09-10

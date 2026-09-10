@@ -762,8 +762,8 @@
     {
       "id": "core.error-and-empty-states",
       "category": "core-functionality",
-      "name": "O produto se comporta quando algo da errado",
-      "simpleExplanation": "Quando falta dado ou acontece um erro, o usuário ve uma mensagem útil em vez de uma tela quebrada.",
+      "name": "O produto se comporta quando algo dá errado",
+      "simpleExplanation": "Quando falta dado ou acontece um erro, o usuário vê uma mensagem útil em vez de uma tela quebrada.",
       "technicalExplanation": "Estados de vazio, carregamento e erro tratados nas telas do fluxo principal; erros não expoem stack trace.",
       "whyItMatters": "A primeira impressão de um usuário real costuma ser justamente um estado vazio ou um erro.",
       "weights": {
@@ -1451,7 +1451,7 @@
       "id": "deploy.production-deploy-works",
       "category": "deploy-delivery",
       "name": "O produto está realmente no ar",
-      "simpleExplanation": "Existe um endereco na internet onde o produto funciona de verdade.",
+      "simpleExplanation": "Existe um endereço na internet onde o produto funciona de verdade.",
       "technicalExplanation": "Deploy de produção executado com sucesso, acessível publicamente e reproduzível.",
       "whyItMatters": "Enquanto roda só na sua máquina, não existe produto para ninguém além de você.",
       "weights": {

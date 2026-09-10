@@ -1,3 +1,9 @@
+---
+adr: "0003"
+status: aceito
+date: 2026-09-10
+---
+
 # ADR 0003 — Framework como dado versionado, nao prompt
 
 **Status:** aceito · 2026-09-10

@@ -98,6 +98,71 @@
         "from": 38,
         "to": 50
       }
+    },
+    {
+      "id": "evt-0015",
+      "type": "requirement_changed",
+      "at": "2026-09-10T10:15:00.000Z",
+      "title": "O Navigator passou a separar 'destrava agora' de 'abre caminho'",
+      "detail": "Antes ele dizia que uma ação destravava tudo que vinha depois dela no mapa. Agora conta só o que fica realmente executável de imediato, e mostra o resto como caminho aberto para o futuro.",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0016",
+      "type": "requirement_changed",
+      "at": "2026-09-10T10:16:00.000Z",
+      "title": "O mapa das áreas passou a dizer que mostra estado declarado",
+      "detail": "As barras por área não são auditoria enquanto o scanner não existir. Cada cartão agora diz de onde veio o seu preenchimento.",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0017",
+      "type": "milestone_completed",
+      "at": "2026-09-10T10:18:00.000Z",
+      "title": "Marco 2 concluído: o loop fechou com evidência real",
+      "detail": "Uma decisão já registrada foi reconciliada automaticamente, o estado mudou, o grafo mudou, a recomendação mudou e o histórico registrou tudo.",
+      "milestoneId": "m2-loop-fechado",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0018",
+      "type": "score_changed",
+      "at": "2026-09-10T10:18:01.000Z",
+      "title": "Build Progress subiu de 50% para 70%",
+      "detail": "Terceiro dos quatro marcos concluído. Os Readiness Scores seguem em 'ainda não medido': a cobertura verificada subiu de 0% para 8%, longe dos 60% necessários.",
+      "frameworkVersion": "0.1.0",
+      "scoreChange": {
+        "dimension": "buildProgress",
+        "from": 50,
+        "to": 70
+      }
+    },
+    {
+      "id": "evt-0019",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:20:08.085Z",
+      "title": "Forma de guardar dados decidida: reconciliado com uma decisão já registrada",
+      "detail": "ADR 0004 decide este requisito. O estado dizia \"missing\" enquanto a decisão já existia na documentação. Verificado automaticamente pelo reconciliador de ADRs, sem intervenção manual.",
+      "requirementId": "data.persistence-chosen",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0020",
+      "type": "requirement_changed",
+      "at": "2026-09-10T10:20:08.085Z",
+      "title": "Onde o produto vai rodar está decidido: reconciliado com uma decisão já registrada",
+      "detail": "ADR 0001 decide este requisito em parte. O estado dizia \"missing\" enquanto a decisão já existia na documentação. Verificado automaticamente pelo reconciliador de ADRs, sem intervenção manual.",
+      "requirementId": "deploy.hosting-decided",
+      "frameworkVersion": "0.1.0"
+    },
+    {
+      "id": "evt-0021",
+      "type": "dependency_unblocked",
+      "at": "2026-09-10T10:20:08.085Z",
+      "title": "A recomendação mudou: agora é \"Variáveis de ambiente documentadas\"",
+      "detail": "Antes era \"Forma de guardar dados decidida\". O Navigator recalculou após a reconciliação.",
+      "requirementId": "foundation.env-example",
+      "frameworkVersion": "0.1.0"
     }
   ]
 }

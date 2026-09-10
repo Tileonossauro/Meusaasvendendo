@@ -35,9 +35,18 @@ export function NextBestAction({ action }: { action: RequirementCardView | null 
           label="Desbloqueia"
           value={
             <span className="text-sm text-slate-200">
-              {action.unlocks} requisito{action.unlocks === 1 ? "" : "s"}
-              {action.unlockedAiTasks > 0 && (
-                <span className="text-slate-400"> ({action.unlockedAiTasks} para a IA)</span>
+              {/* "agora" e "abre caminho" sao coisas diferentes — e o fundador
+                  precisa enxergar a diferenca. */}
+              <strong className="font-semibold">
+                {action.unlocksNow} agora
+              </strong>
+              {action.unlockedAiTasksNow > 0 && (
+                <span className="text-slate-400"> ({action.unlockedAiTasksNow} para a IA)</span>
+              )}
+              {action.downstreamImpact > 0 && (
+                <span className="mt-1 block text-xs text-slate-400">
+                  abre caminho para outros {action.downstreamImpact}
+                </span>
               )}
             </span>
           }
@@ -70,6 +79,8 @@ export function NextBestAction({ action }: { action: RequirementCardView | null 
           value={`${r.weights.mvp}/${r.weights.production}/${r.weights.aiBuild}`}
         />
         <TechRow label="prioridade" value={action.priority} />
+        <TechRow label="destrava agora (imediato)" value={action.unlocksNow} />
+        <TechRow label="impacto downstream (futuro)" value={action.downstreamImpact} />
         <div className="mt-2 border-t border-ink-line pt-2">
           <p className="mb-1 text-slate-500">Decomposição da prioridade:</p>
           {Object.entries(action.breakdown).map(([key, value]) => (

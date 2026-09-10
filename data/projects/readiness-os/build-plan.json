@@ -19,8 +19,8 @@
     {
       "id": "m2-loop-fechado",
       "name": "Fechar o loop: executar, reverificar, ver mudar",
-      "outcome": "Executamos a ação recomendada, o estado é reverificado e o progresso sobe na sua frente.",
-      "status": "planned",
+      "outcome": "Executamos a ação recomendada, o estado foi reverificado com evidência e o progresso mudou na sua frente.",
+      "status": "done",
       "weight": 4
     },
     {

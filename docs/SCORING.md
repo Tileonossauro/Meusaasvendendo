@@ -112,6 +112,28 @@ no estado do projeto e em cada evento do historico. Sem isso nao da para compara
 resultados entre versoes do framework, nem explicar por que um score mudou apos
 uma mudanca de regra.
 
+## Limite conhecido de `measuredCoverage`
+
+A cobertura hoje e uma **contagem** de requisitos verificados, sem considerar
+peso, criticidade, metodo de verificacao ou confianca. Isso significa que 60% de
+requisitos triviais poderiam fazer uma dimensao parecer medida enquanto os
+requisitos criticos seguem sem evidencia.
+
+E divida tecnica **deliberada e registrada** (DT-001 em `docs/BACKLOG.md`), a ser
+paga antes de qualquer dimensao cruzar o limiar pela primeira vez. Hoje a
+cobertura real e de 8% — muito abaixo do limiar —, entao a divida ainda nao
+produz dano.
+
+## Barras de categoria nao sao readiness
+
+O mapa do projeto mostra uma barra por area. Ela e calculada sobre o **estado
+declarado** dos requisitos, que hoje vem majoritariamente de `manual_bootstrap`.
+
+Cada cartao carrega um rotulo dizendo de onde veio o preenchimento
+(`estado declarado`, `parte verificada`, `verificado`), e o mapa inteiro tem um
+aviso enquanto houver estado declarado. Readiness verificado por evidencia
+aparece **somente** nos tres Readiness Scores.
+
 ## Calibracao
 
 Os pesos e limiares desta versao sao **hipoteses**, nao verdade cientifica.

@@ -16,7 +16,28 @@ Nossa primeira vitoria nao e login nem cobranca. E o **loop fechado**:
 
 Quando isso funcionar ponta a ponta, temos o primeiro vertical slice.
 
-## Estado apos o Marco 1 (dashboard entregue)
+## Estado apos o Marco 2 (loop fechado)
+
+O loop completo dos 9 passos rodou de ponta a ponta sobre um requisito real:
+
+1. estado atual: `data.persistence-chosen` = `missing`;
+2. o Navigator recomendou "Forma de guardar dados decidida";
+3. a decisao ja existia (ADR 0004) — a acao foi construir o reconciliador;
+4. evidencia registrada: `docs/adr/0004-estado-em-arquivo.md:5`;
+5. estado reverificado automaticamente: `completed`, `verifiedBy: deterministic`;
+6. o grafo mudou: dependentes de persistencia sairam de bloqueados;
+7. a recomendacao mudou para "Variaveis de ambiente documentadas";
+8. o historico registrou 3 eventos, gerados pelo proprio reconciliador;
+9. o dashboard mostrou tudo isso.
+
+**O que foi automatico:** a deteccao da inconsistencia, a leitura dos ADRs, a
+proposta de estado com evidencia, a aplicacao, a geracao dos eventos e o
+recalculo do Navigator.
+
+**O que foi manual:** escrever o front-matter que liga cada ADR ao requisito que
+ele decide. Essa e a unica parte humana — e ela e revisavel em diff.
+
+## Estado anterior (Marco 1 — dashboard entregue)
 
 Passos 1, 2, 3, 4 e 6 funcionam. O passo 8 (score muda) ja funciona para o
 **Build Progress** — mudou de 38% para 50% quando o Marco 1 foi concluido, e o

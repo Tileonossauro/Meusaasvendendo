@@ -80,6 +80,35 @@ ADR em `docs/adr/NNNN-titulo.md` com: contexto, decisao, alternativas
 consideradas, consequencias. Uma decisao estrutural sem ADR e uma decisao que
 sera desfeita por engano na proxima sessao.
 
+**Todo ADR comeca com front-matter legivel por maquina:**
+
+```
+---
+adr: "0007"
+status: aceito
+date: AAAA-MM-DD
+decides:            # requisitos que este ADR satisfaz por completo
+  - id.do.requisito
+decidesPartially:   # requisitos decididos so em parte
+  - outro.requisito
+note: O que ainda falta para a decisao parcial virar completa.
+---
+```
+
+Se o ADR decide um requisito do framework, **declare a ligacao**. Sem isso o
+estado nao acompanha a decisao, e o Navigator volta a pedir ao fundador algo que
+ele ja decidiu — foi exatamente o bug que originou o ADR 0006.
+
+Depois de escrever o ADR, rode:
+
+```bash
+npm run reconcile              # mostra o que mudaria
+npm run reconcile -- --apply   # aplica e registra o historico
+```
+
+**Nunca edite o estado de um requisito na mao quando existe mecanismo que o
+reconcilia.** Corrigir o sintoma deixa a causa viva.
+
 ## Como evitar scope creep
 
 Antes de implementar, compare com `docs/CONSTITUTION.md`:

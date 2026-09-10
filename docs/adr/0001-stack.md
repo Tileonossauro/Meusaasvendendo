@@ -1,3 +1,12 @@
+---
+adr: "0001"
+status: aceito
+date: 2026-09-10
+decidesPartially:
+  - deploy.hosting-decided
+note: Alvo de deploy escolhido (Vercel); limites do provedor ainda não anotados.
+---
+
 # ADR 0001 — Stack inicial
 
 **Status:** aceito · 2026-09-10

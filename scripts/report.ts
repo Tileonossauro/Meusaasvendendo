@@ -33,10 +33,15 @@ for (const dimension of DIMENSIONS) {
 const navigator = computeNextBestAction(framework, state);
 console.log("\nPROXIMO PASSO RECOMENDADO");
 if (navigator.nextBestAction) {
-  const { requirement, unlocks, unlockedAiTasks, reason, priority } = navigator.nextBestAction;
+  const { requirement, unlocksNow, downstreamImpact, unlockedAiTasksNow, reason, priority } =
+    navigator.nextBestAction;
   console.log(`  ${requirement.name}`);
   console.log(`  ${requirement.simpleExplanation}`);
-  console.log(`  Responsavel: ${requirement.owner} · Destrava: ${unlocks.length} (${unlockedAiTasks} para a IA) · Prioridade: ${priority}`);
+  console.log(
+    `  Responsavel: ${requirement.owner} · Destrava agora: ${unlocksNow.length}` +
+      ` (${unlockedAiTasksNow} para a IA) · Abre caminho para: ${downstreamImpact.length}` +
+      ` · Prioridade: ${priority}`,
+  );
   console.log(`  Por que: ${reason}`);
 } else {
   console.log("  Nada disponivel: tudo concluido ou tudo bloqueado por dependencia.");

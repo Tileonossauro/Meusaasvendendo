@@ -8,6 +8,19 @@ import { isApplicable } from "../scoring/score.js";
  * Uma auditoria diz "voce tem 31 problemas". O Navigator diz "faca ESTA coisa
  * agora, porque ela destrava outras sete". O algoritmo e deterministico e
  * documentado em docs/NEXT_BEST_ACTION.md; o LLM nao vota aqui.
+ *
+ * DESTRAVA AGORA vs IMPACTO FUTURO
+ * --------------------------------
+ * Num grafo A -> B -> C -> D, concluir A torna B executavel imediatamente.
+ * C e D continuam bloqueados: A apenas abre caminho para eles.
+ *
+ * Chamar os quatro de "destravados" seria mentira para o fundador. Por isso o
+ * resultado separa:
+ *   - `unlocksNow`        — ficam executaveis IMEDIATAMENTE ao concluir esta acao;
+ *   - `downstreamImpact`  — descendentes que esta acao ajuda a liberar depois.
+ *
+ * O grafo transitivo continua alimentando o ranking (impacto de longo prazo
+ * importa), mas com peso menor que o destravamento imediato.
  */
 
 const SEVERITY_POINTS: Record<Severity, number> = {
@@ -21,19 +34,20 @@ const SEVERITY_POINTS: Record<Severity, number> = {
 export const NBA_WEIGHTS = {
   severity: 1,
   launchBlocking: 30,
-  /** Por requisito destravado (direta ou indiretamente) — a QUANTIDADE. */
-  perUnlockedRequirement: 6,
-  /**
-   * Multiplicador sobre o peso somado dos requisitos destravados — a RELEVANCIA.
-   * Destravar dois requisitos criticos vale mais que destravar cinco triviais.
-   */
-  unlockedWeight: 0.5,
-  /** Bonus por bloqueador de lancamento destravado. */
+  /** Por requisito que fica executavel IMEDIATAMENTE. */
+  perUnlockedNow: 6,
+  /** Multiplicador sobre o peso somado dos destravados agora (relevancia). */
+  unlocksNowWeight: 0.5,
+  /** Por descendente que esta acao ajuda a liberar no futuro. Vale menos. */
+  perDownstream: 2,
+  /** Multiplicador sobre o peso somado do impacto futuro. Vale menos. */
+  downstreamWeight: 0.2,
+  /** Bonus por bloqueador de lancamento na cadeia (imediato ou futuro). */
   perUnlockedLaunchBlocker: 8,
+  /** Bonus por tarefa de IA que fica executavel agora. */
+  perUnlockedAiTaskNow: 4,
   /** Multiplicador aplicado ao peso somado do proprio requisito. */
   ownWeight: 1.5,
-  /** Bonus quando destrava tarefas que a IA consegue executar sozinha. */
-  perUnlockedAiTask: 4,
   /** Decisao do fundador que destrava trabalho tende a ser gargalo: priorize. */
   founderBottleneck: 15,
 } as const;
@@ -41,21 +55,25 @@ export const NBA_WEIGHTS = {
 export interface ActionCandidate {
   requirement: Requirement;
   priority: number;
-  /** Requisitos aplicaveis ainda nao concluidos que este destrava (transitivo). */
-  unlocks: string[];
-  unlockedAiTasks: number;
-  /** Peso somado dos requisitos destravados: a relevancia, nao so a contagem. */
-  unlockedWeight: number;
+  /** Ficam executaveis IMEDIATAMENTE ao concluir esta acao. */
+  unlocksNow: string[];
+  /** Descendentes que esta acao ajuda a liberar depois — nao agora. */
+  downstreamImpact: string[];
+  /** Quantas das tarefas destravadas agora a IA consegue executar sozinha. */
+  unlockedAiTasksNow: number;
+  /** Bloqueadores de lancamento em toda a cadeia (imediatos + futuros). */
   unlockedLaunchBlockers: number;
+  unlocksNowWeight: number;
+  downstreamWeight: number;
   /** Explicacao ja em linguagem simples — o produto e "simple first". */
   reason: string;
   breakdown: Record<string, number>;
 }
 
 export interface NavigatorResult {
-  /** A recomendacao. `null` quando nao ha nada disponivel (tudo pronto ou tudo bloqueado). */
+  /** A recomendacao. `null` quando nao ha nada disponivel. */
   nextBestAction: ActionCandidate | null;
-  /** Ranking completo, ordenado. Alimenta "depende de voce" e "IA pode fazer". */
+  /** Ranking completo. Alimenta "depende de voce" e "IA pode fazer". */
   candidates: ActionCandidate[];
   /** Aplicaveis, em aberto, mas com dependencia nao satisfeita. */
   blocked: { requirementId: string; waitingOn: string[] }[];
@@ -88,6 +106,12 @@ export function computeNextBestAction(
     return status === "completed" || status === "not_applicable";
   };
 
+  const sumWeights = (ids: string[]): number =>
+    ids.reduce((sum, id) => {
+      const r = byId.get(id);
+      return r ? sum + r.weights.mvp + r.weights.production + r.weights.aiBuild : sum;
+    }, 0);
+
   const candidates: ActionCandidate[] = [];
   const blocked: { requirementId: string; waitingOn: string[] }[] = [];
 
@@ -101,26 +125,46 @@ export function computeNextBestAction(
       continue;
     }
 
-    const unlocks = (graph.transitiveDependents.get(requirement.id) ?? []).filter(isOpen);
-    const unlockedRequirements = unlocks.map((id) => byId.get(id)!);
-    const unlockedAiTasks = unlockedRequirements.filter((r) => r.aiCanHandle).length;
-    const unlockedLaunchBlockers = unlockedRequirements.filter((r) => r.launchBlocking).length;
-    const unlockedWeight = unlockedRequirements.reduce(
-      (sum, r) => sum + r.weights.mvp + r.weights.production + r.weights.aiBuild,
-      0,
-    );
+    // Destrava AGORA: dependente direto, em aberto, cujas OUTRAS dependencias
+    // ja estao satisfeitas. Concluir este requisito o torna executavel.
+    const unlocksNow = (graph.dependents.get(requirement.id) ?? [])
+      .filter(isOpen)
+      .filter((id) => {
+        const dependent = byId.get(id)!;
+        return dependent.dependsOn
+          .filter((d) => d !== requirement.id)
+          .every((d) => isSatisfied(d));
+      })
+      .sort();
 
+    const immediate = new Set(unlocksNow);
+    // Impacto futuro: todo o resto da descendencia em aberto.
+    const downstreamImpact = (graph.transitiveDependents.get(requirement.id) ?? [])
+      .filter(isOpen)
+      .filter((id) => !immediate.has(id))
+      .sort();
+
+    const unlockedAiTasksNow = unlocksNow.filter((id) => byId.get(id)!.aiCanHandle).length;
+    const unlockedLaunchBlockers = [...unlocksNow, ...downstreamImpact].filter(
+      (id) => byId.get(id)!.launchBlocking,
+    ).length;
+
+    const unlocksNowWeight = sumWeights(unlocksNow);
+    const downstreamWeight = sumWeights(downstreamImpact);
     const ownWeight =
       requirement.weights.mvp + requirement.weights.production + requirement.weights.aiBuild;
-    const founderIsBottleneck = requirement.userActionRequired && unlocks.length > 0;
+    const touchesSomething = unlocksNow.length + downstreamImpact.length > 0;
+    const founderIsBottleneck = requirement.userActionRequired && touchesSomething;
 
     const breakdown = {
       severity: SEVERITY_POINTS[requirement.severity] * NBA_WEIGHTS.severity,
       launchBlocking: requirement.launchBlocking ? NBA_WEIGHTS.launchBlocking : 0,
-      unlocks: unlocks.length * NBA_WEIGHTS.perUnlockedRequirement,
-      unlockedWeight: unlockedWeight * NBA_WEIGHTS.unlockedWeight,
+      unlocksNow: unlocksNow.length * NBA_WEIGHTS.perUnlockedNow,
+      unlocksNowWeight: unlocksNowWeight * NBA_WEIGHTS.unlocksNowWeight,
+      downstreamImpact: downstreamImpact.length * NBA_WEIGHTS.perDownstream,
+      downstreamWeight: downstreamWeight * NBA_WEIGHTS.downstreamWeight,
       unlockedLaunchBlockers: unlockedLaunchBlockers * NBA_WEIGHTS.perUnlockedLaunchBlocker,
-      unlockedAiTasks: unlockedAiTasks * NBA_WEIGHTS.perUnlockedAiTask,
+      unlockedAiTasksNow: unlockedAiTasksNow * NBA_WEIGHTS.perUnlockedAiTaskNow,
       ownWeight: ownWeight * NBA_WEIGHTS.ownWeight,
       founderBottleneck: founderIsBottleneck ? NBA_WEIGHTS.founderBottleneck : 0,
     };
@@ -130,11 +174,13 @@ export function computeNextBestAction(
     candidates.push({
       requirement,
       priority,
-      unlocks,
-      unlockedAiTasks,
-      unlockedWeight,
+      unlocksNow,
+      downstreamImpact,
+      unlockedAiTasksNow,
       unlockedLaunchBlockers,
-      reason: buildReason(requirement, unlocks.length, unlockedAiTasks),
+      unlocksNowWeight,
+      downstreamWeight,
+      reason: buildReason(requirement, unlocksNow.length, downstreamImpact.length, unlockedAiTasksNow),
       breakdown,
     });
   }
@@ -150,20 +196,45 @@ export function computeNextBestAction(
   return { nextBestAction: candidates[0] ?? null, candidates, blocked };
 }
 
-function buildReason(requirement: Requirement, unlockCount: number, aiTasks: number): string {
+/**
+ * Texto em linguagem de leigo — e precisa ser VERDADEIRO:
+ * "destrava agora" e "abre caminho para" sao coisas diferentes.
+ */
+function buildReason(
+  requirement: Requirement,
+  nowCount: number,
+  downstreamCount: number,
+  aiTasksNow: number,
+): string {
   const parts: string[] = [];
+
   if (requirement.launchBlocking) {
-    parts.push("Impede que o produto receba usuarios reais.");
+    parts.push("Impede que o produto receba usuários reais.");
   }
-  if (unlockCount > 0) {
+
+  if (nowCount > 0 && downstreamCount > 0) {
     parts.push(
-      aiTasks > 0
-        ? `Destrava ${unlockCount} requisito(s), sendo ${aiTasks} que a IA consegue executar sozinha.`
-        : `Destrava ${unlockCount} requisito(s).`,
+      `Destrava ${plural(nowCount, "tarefa", "tarefas")} agora e abre caminho para outros ${downstreamCount} requisito(s).`,
+    );
+  } else if (nowCount > 0) {
+    parts.push(`Destrava ${plural(nowCount, "tarefa", "tarefas")} agora.`);
+  } else if (downstreamCount > 0) {
+    parts.push(
+      `Não destrava nada de imediato, mas abre caminho para ${downstreamCount} requisito(s) mais adiante.`,
     );
   }
-  if (parts.length === 0) {
-    parts.push("Nao destrava outros itens, mas ainda falta para o produto cumprir a promessa.");
+
+  if (aiTasksNow > 0) {
+    parts.push(`${aiTasksNow} delas a IA consegue executar sozinha.`);
   }
+
+  if (parts.length === 0) {
+    parts.push("Não destrava outros itens, mas ainda falta para o produto cumprir a promessa.");
+  }
+
   return parts.join(" ");
+}
+
+function plural(count: number, singular: string, plural_: string): string {
+  return `${count} ${count === 1 ? singular : plural_}`;
 }

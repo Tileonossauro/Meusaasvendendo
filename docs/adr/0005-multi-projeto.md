@@ -1,3 +1,9 @@
+---
+adr: "0005"
+status: aceito
+date: 2026-09-10
+---
+
 # ADR 0005 — Arquitetura multi-projeto desde o inicio
 
 **Status:** aceito · 2026-09-10

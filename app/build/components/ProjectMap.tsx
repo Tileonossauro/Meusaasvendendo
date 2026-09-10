@@ -2,9 +2,35 @@ import type { CategoryBlock } from "../../../src/dashboard/view-model.js";
 import { Disclosure, TechRow } from "./Disclosure";
 
 /** As 12 áreas do projeto. Progresso de preenchimento, não Readiness Score. */
+const SOURCE_LABEL: Record<CategoryBlock["evidenceSource"], { text: string; className: string }> = {
+  declared: {
+    text: "estado declarado",
+    className: "bg-amber-500/10 text-amber-300/90 ring-amber-500/25",
+  },
+  mixed: {
+    text: "parte verificada",
+    className: "bg-sky-500/10 text-sky-300/90 ring-sky-500/25",
+  },
+  verified: {
+    text: "verificado",
+    className: "bg-emerald-500/10 text-emerald-300/90 ring-emerald-500/25",
+  },
+};
+
 export function ProjectMap({ blocks }: { blocks: CategoryBlock[] }) {
+  const anyDeclared = blocks.some((b) => b.evidenceSource !== "verified");
+
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <>
+      {anyDeclared && (
+        <p className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-xs leading-relaxed text-amber-200/90">
+          <strong className="font-semibold">Estas barras não são auditoria.</strong> Enquanto o
+          scanner não existir, elas mostram o <strong>estado declarado</strong> de cada área — ou
+          seja, o que nós registramos à mão. Cada cartão diz de onde veio o seu preenchimento.
+          Prontidão verificada por evidência aparece só nos três Readiness Scores, no topo.
+        </p>
+      )}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {blocks.map((block) => (
         <div key={block.category.id} className="rounded-xl border border-ink-line bg-ink-soft p-4">
           <div className="flex items-baseline justify-between gap-2">
@@ -13,6 +39,12 @@ export function ProjectMap({ blocks }: { blocks: CategoryBlock[] }) {
               {block.completed}/{block.total}
             </span>
           </div>
+
+          <span
+            className={`mt-2 inline-block rounded px-1.5 py-0.5 text-[10px] font-medium tracking-wide ring-1 ${SOURCE_LABEL[block.evidenceSource].className}`}
+          >
+            {SOURCE_LABEL[block.evidenceSource].text}
+          </span>
 
           <p className="mt-1 text-xs leading-relaxed text-slate-500">
             {block.category.simple}
@@ -44,9 +76,16 @@ export function ProjectMap({ blocks }: { blocks: CategoryBlock[] }) {
             <TechRow label="parciais" value={block.partial} />
             <TechRow label="faltando" value={block.missing} />
             <TechRow label="não aplicáveis" value={block.notApplicable} />
+            <TechRow label="verificados automaticamente" value={block.verifiedCount} />
+            <TechRow label="declarados à mão" value={block.declaredCount} />
+            <TechRow
+              label="natureza da barra"
+              value={`${block.percent}% de estado ${block.evidenceSource === "verified" ? "verificado" : "declarado"} — não é readiness`}
+            />
           </Disclosure>
         </div>
       ))}
-    </div>
+      </div>
+    </>
   );
 }

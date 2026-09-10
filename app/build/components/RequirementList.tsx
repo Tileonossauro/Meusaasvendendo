@@ -37,7 +37,15 @@ export function RequirementList({ items }: { items: RequirementCardView[] }) {
 
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
               <span>Status: {STATUS_LABEL[item.status] ?? item.status}</span>
-              {item.unlocks > 0 && <span>Desbloqueia {item.unlocks} requisito(s)</span>}
+              {item.unlocksNow > 0 && (
+                <span>
+                  Destrava {item.unlocksNow} agora
+                  {item.downstreamImpact > 0 && ` · abre caminho para ${item.downstreamImpact}`}
+                </span>
+              )}
+              {item.unlocksNow === 0 && item.downstreamImpact > 0 && (
+                <span>Abre caminho para {item.downstreamImpact} requisito(s)</span>
+              )}
               <span>
                 {r.aiCanHandle ? "A IA consegue resolver" : "Precisa de uma pessoa"}
               </span>

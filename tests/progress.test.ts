@@ -95,3 +95,32 @@ describe("historico nao pode divergir do calculo", () => {
     }
   });
 });
+
+describe("integridade do historico", () => {
+  it("ids de evento sao unicos", async () => {
+    const { readFileSync } = await import("node:fs");
+    const history = parseProjectHistory(
+      JSON.parse(readFileSync("data/projects/readiness-os/history.json", "utf8")),
+    );
+    const ids = history.events.map((e) => e.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("evento de reconciliacao nao registra o status novo como se fosse o antigo", async () => {
+    const { readFileSync } = await import("node:fs");
+    const history = parseProjectHistory(
+      JSON.parse(readFileSync("data/projects/readiness-os/history.json", "utf8")),
+    );
+    const state = JSON.parse(readFileSync("data/projects/readiness-os/state.json", "utf8")) as {
+      states: { requirementId: string; status: string }[];
+    };
+
+    for (const event of history.events) {
+      if (!event.detail?.includes("O estado dizia")) continue;
+      const declarado = /O estado dizia "([^"]+)"/.exec(event.detail)?.[1];
+      const atual = state.states.find((s) => s.requirementId === event.requirementId)?.status;
+      // Se o evento diz que mudou, o status antigo nao pode ser igual ao atual.
+      expect(declarado).not.toBe(atual);
+    }
+  });
+});

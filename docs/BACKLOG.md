@@ -44,3 +44,39 @@ fundador, tarefas disponiveis para IA, bloqueadores criticos, projeto mais proxi
 de ficar pronto, projeto que mais precisa de atencao e atividade recente.
 
 Marco de validacao: o fundador adicionar um **segundo** projeto real.
+
+## Divida tecnica deliberada — resolver antes de liberar scores para clientes
+
+### DT-001 — `measuredCoverage` conta requisitos, nao relevancia
+
+**Status:** aceita conscientemente · registrada em 2026-09-10 · dona: revisao do Marco do scanner
+
+**O problema.** Hoje `measuredCoverage` (em `src/scoring/score.ts`) e uma contagem
+simples: requisitos verificados automaticamente dividido por requisitos aplicaveis.
+Quando passa de 60%, a dimensao e considerada MEDIDA e passa a exibir porcentagem.
+
+**Por que isso e perigoso.** 60% de requisitos triviais verificados fariam um
+Production Score parecer medido enquanto os requisitos criticos — os que de fato
+decidem se e seguro receber usuarios e dinheiro — seguem com pouca ou nenhuma
+evidencia. O numero ficaria tecnicamente correto e praticamente mentiroso.
+E exatamente o tipo de falso positivo que este produto existe para evitar.
+
+**O que precisa ser revisado antes de liberar scores para clientes:**
+
+- **Peso dos requisitos cobertos** — cobertura deveria ser ponderada pelo peso na
+  dimensao, nao pela contagem.
+- **Criticidade** — requisito `launchBlocking` ou `blocker` sem evidencia deveria
+  impedir a dimensao de ser considerada medida, independentemente do percentual.
+- **Metodo de verificacao** — `deterministic` e `tool` merecem mais peso de
+  cobertura que `llm`.
+- **Confianca/evidencia** — requisito verificado com confianca baixa nao deveria
+  contar como cobertura cheia.
+
+**Enquanto nao for resolvida.** O limiar de 60% segue valendo, e as tres dimensoes
+seguem em "Bootstrap / ainda nao medido" — hoje a cobertura real e de 8%, muito
+abaixo do limiar, entao a divida ainda nao produz dano. Ela precisa ser paga antes
+de qualquer dimensao cruzar o limiar pela primeira vez.
+
+**Nao resolver junto com o scanner sem revisar.** O scanner vai elevar a cobertura
+rapidamente; se o criterio nao for revisado antes, o primeiro score "medido" pode
+ser justamente o menos confiavel.

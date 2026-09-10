@@ -55,14 +55,37 @@ export interface CategoryBlock {
   notApplicable: number;
   /** Progresso da categoria, so para o mapa visual. Nao e Readiness Score. */
   percent: number;
+  /** Quantos estados vieram de verificacao automatica. */
+  verifiedCount: number;
+  /** Quantos foram declarados a mao (bootstrap ou resposta do fundador). */
+  declaredCount: number;
+  /**
+   * De onde vem o preenchimento desta barra. Enquanto for "declared", a barra
+   * representa ESTADO DECLARADO — nao auditoria. A interface e obrigada a
+   * rotular isso, para ninguem confundir com readiness verificado.
+   */
+  evidenceSource: "declared" | "verified" | "mixed";
+}
+
+/** `manual_bootstrap` e `ask_user` sao declaracao; o resto e verificacao. */
+function isVerified(state: RequirementState | undefined): boolean {
+  if (!state) return false;
+  return (
+    state.verifiedBy === "deterministic" ||
+    state.verifiedBy === "tool" ||
+    state.verifiedBy === "llm"
+  );
 }
 
 export interface RequirementCardView {
   requirement: Requirement;
   state: RequirementState | null;
   status: string;
-  unlocks: number;
-  unlockedAiTasks: number;
+  /** Quantos ficam executaveis IMEDIATAMENTE. Nunca confundir com o de baixo. */
+  unlocksNow: number;
+  /** Quantos esta acao ajuda a liberar mais adiante. */
+  downstreamImpact: number;
+  unlockedAiTasksNow: number;
   priority: number;
   reason: string;
   breakdown: Record<string, number>;
@@ -113,8 +136,9 @@ function toCardView(candidate: ActionCandidate, state: ProjectState): Requiremen
     requirement: candidate.requirement,
     state: state.states.find((s) => s.requirementId === candidate.requirement.id) ?? null,
     status: state.states.find((s) => s.requirementId === candidate.requirement.id)?.status ?? "missing",
-    unlocks: candidate.unlocks.length,
-    unlockedAiTasks: candidate.unlockedAiTasks,
+    unlocksNow: candidate.unlocksNow.length,
+    downstreamImpact: candidate.downstreamImpact.length,
+    unlockedAiTasksNow: candidate.unlockedAiTasksNow,
     priority: candidate.priority,
     reason: candidate.reason,
     breakdown: candidate.breakdown,
@@ -170,6 +194,11 @@ export function buildDashboardViewModel(projectId = "readiness-os"): DashboardVi
       (r) => r.category === category.id && !isApplicable(r, state.signals),
     ).length;
 
+    const verifiedCount = reqs.filter((r) => isVerified(stateById.get(r.id))).length;
+    const declaredCount = reqs.length - verifiedCount;
+    const evidenceSource =
+      verifiedCount === 0 ? "declared" : declaredCount === 0 ? "verified" : "mixed";
+
     return {
       category,
       total: reqs.length,
@@ -179,6 +208,9 @@ export function buildDashboardViewModel(projectId = "readiness-os"): DashboardVi
       blocked: reqs.filter((r) => statusOf(r) === "blocked").length,
       notApplicable,
       percent: reqs.length === 0 ? 0 : Math.round(((completed + partial * 0.5) / reqs.length) * 100),
+      verifiedCount,
+      declaredCount,
+      evidenceSource: evidenceSource as CategoryBlock["evidenceSource"],
     };
   });
 

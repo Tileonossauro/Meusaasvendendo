@@ -1,3 +1,11 @@
+---
+adr: "0004"
+status: aceito
+date: 2026-09-10
+decides:
+  - data.persistence-chosen
+---
+
 # ADR 0004 — Estado em arquivo antes de banco de dados
 
 **Status:** aceito · 2026-09-10

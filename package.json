@@ -16,7 +16,8 @@
     "report": "tsx scripts/report.ts",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "reconcile": "tsx scripts/reconcile.ts"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

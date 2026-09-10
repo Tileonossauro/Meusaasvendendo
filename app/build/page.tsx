@@ -85,7 +85,7 @@ export default function BuildPage() {
       {/* MAPA DO PROJETO */}
       <Section
         title="Mapa do projeto"
-        hint="As 12 áreas que um SaaS precisa cobrir, e quanto de cada uma já existe."
+        hint="As 12 áreas que um SaaS precisa cobrir, e quanto de cada uma já existe — por estado declarado, não por auditoria."
       >
         <ProjectMap blocks={vm.categories} />
       </Section>

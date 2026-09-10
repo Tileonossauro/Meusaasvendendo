@@ -91,3 +91,48 @@ describe("dashboard: conteudo exigido pelo criterio de conclusao", () => {
     expect(() => buildDashboardViewModel("projeto-que-nao-existe")).toThrow();
   });
 });
+
+describe("mapa das areas: barra declarada nao pode passar por auditoria", () => {
+  it("toda categoria declara a origem do seu preenchimento", () => {
+    for (const block of vm.categories) {
+      expect(["declared", "verified", "mixed"]).toContain(block.evidenceSource);
+      expect(block.verifiedCount + block.declaredCount).toBe(block.total);
+    }
+  });
+
+  it("categoria sem nenhuma verificacao automatica e marcada como declarada", () => {
+    for (const block of vm.categories) {
+      if (block.verifiedCount === 0) {
+        expect(block.evidenceSource).toBe("declared");
+      }
+    }
+  });
+
+  it("categoria que ganhou verificacao deterministica deixa de ser so declarada", () => {
+    // Dados e Deploy receberam estado vindo de ADR (verificacao deterministica).
+    const dados = vm.categories.find((c) => c.category.id === "data")!;
+    expect(dados.verifiedCount).toBeGreaterThan(0);
+    expect(dados.evidenceSource).not.toBe("declared");
+  });
+
+  it("a barra da categoria nunca e apresentada como Readiness Score", () => {
+    // Enquanto houver estado declarado, nenhuma dimensao pode estar medida.
+    const algumDeclarado = vm.categories.some((c) => c.declaredCount > 0);
+    if (algumDeclarado) {
+      expect(vm.readiness.every((r) => r.percent === null)).toBe(true);
+    }
+  });
+});
+
+describe("o texto do cartao acompanha a cobertura real", () => {
+  it("nao afirma 'nenhum verificado' quando ja existe verificacao automatica", () => {
+    // Guarda contra copy que envelhece: hoje a cobertura ja e maior que zero.
+    for (const card of vm.readiness) {
+      if (card.measuredCoverage > 0) {
+        expect(card.measured).toBe(false); // ainda abaixo do limiar
+        expect(card.percent).toBeNull();
+      }
+    }
+    expect(vm.readiness.every((c) => c.measuredCoverage > 0)).toBe(true);
+  });
+})

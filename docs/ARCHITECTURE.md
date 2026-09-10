@@ -36,11 +36,24 @@ Tudo acima e funcao pura: mesma entrada, mesma saida. Sem rede, sem relogio
 | Scoring | `src/scoring` | Calcular os tres scores | **Nunca** |
 | Navigator | `src/navigator` | Priorizar a proxima acao | Nao |
 | Estado | `src/state` | Ler e validar estado por projeto | Nao |
-| Coleta (futuro) | `src/collectors` | Produzir evidencia | Sim, com evidencia |
+| Coleta | `src/collectors` | Produzir evidencia | Sim, com evidencia |
 | Interface (Slice 1) | `app/` | Self-Build Dashboard | Nao |
 
 O LLM entra apenas na camada de coleta, e mesmo la a saida e sempre
 `status + evidencia + confianca` — nunca uma porcentagem.
+
+## Coletores: como o estado deixa de ser declarado
+
+Um coletor le uma fonte de verdade e **propoe** estado com evidencia. Ele nunca
+escreve direto: quem aplica e um script, que tambem registra o historico.
+
+| Coletor | Fonte | Metodo | Status |
+| --- | --- | --- | --- |
+| `adr-reconciler` | `docs/adr/*.md` (front-matter) | deterministico | existe |
+| scanner de codigo | o repositorio analisado | deterministico + LLM com evidencia | Marco 3 |
+
+Contrato comum: `(fonte) -> StateProposal[]` com `status`, `confidence`,
+`evidence` (com `arquivo:linha`) e `verifiedBy`. Ver ADR 0006.
 
 ## Modelo de dados
 

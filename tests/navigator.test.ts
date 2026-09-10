@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { loadFramework } from "../src/framework/index.js";
 import type { Framework, ProjectState } from "../src/framework/schema.js";
-import { computeNextBestAction } from "../src/navigator/next-best-action.js";
+import { computeNextBestAction, NBA_WEIGHTS } from "../src/navigator/next-best-action.js";
 
 const framework: Framework = loadFramework();
 
@@ -61,7 +61,7 @@ describe("next best action", () => {
     const { candidates } = computeNextBestAction(framework, state);
     const pricing = candidates.find((c) => c.requirement.id === "billing.pricing-decided");
     expect(pricing).toBeDefined();
-    expect(pricing!.unlocks.length).toBeGreaterThan(0);
+    expect(pricing!.unlocksNow.length).toBeGreaterThan(0);
     expect(pricing!.breakdown.founderBottleneck).toBeGreaterThan(0);
   });
 
@@ -82,5 +82,93 @@ describe("next best action", () => {
     }));
     const result = computeNextBestAction(framework, { ...emptyState(), states: all });
     expect(result.nextBestAction).toBeNull();
+  });
+});
+
+describe("destrava agora vs impacto futuro", () => {
+  // Cadeia real do framework:
+  // billing.pricing-decided -> gateway-configured -> checkout -> webhook -> entitlements
+  const chainState = (): ProjectState => ({
+    ...emptyState(["charges_money", "has_user_accounts"]),
+    states: [
+      {
+        requirementId: "product.target-user-defined",
+        status: "completed",
+        confidence: 1,
+        evidence: [],
+        verifiedBy: "deterministic",
+        updatedAt: "x",
+      },
+    ],
+  });
+
+  it("so conta como 'destrava agora' o que fica realmente executavel", () => {
+    const { candidates } = computeNextBestAction(framework, chainState());
+    const pricing = candidates.find((c) => c.requirement.id === "billing.pricing-decided")!;
+
+    // Concluir o preco torna o gateway executavel — e so ele.
+    expect(pricing.unlocksNow).toEqual(["billing.gateway-configured"]);
+
+    // O checkout depende do gateway (ainda em aberto): e futuro, nao agora.
+    expect(pricing.downstreamImpact).toContain("billing.checkout-implemented");
+    expect(pricing.unlocksNow).not.toContain("billing.checkout-implemented");
+  });
+
+  it("nao conta o mesmo requisito nas duas listas", () => {
+    const { candidates } = computeNextBestAction(framework, chainState());
+    for (const candidate of candidates) {
+      const now = new Set(candidate.unlocksNow);
+      for (const id of candidate.downstreamImpact) {
+        expect(now.has(id)).toBe(false);
+      }
+    }
+  });
+
+  it("nao promete como imediato um dependente que tem outra dependencia em aberto", () => {
+    const { candidates } = computeNextBestAction(framework, chainState());
+    for (const candidate of candidates) {
+      for (const id of candidate.unlocksNow) {
+        const dependent = framework.requirements.find((r) => r.id === id)!;
+        const otherDeps = dependent.dependsOn.filter((d) => d !== candidate.requirement.id);
+        for (const dep of otherDeps) {
+          const depReq = framework.requirements.find((r) => r.id === dep)!;
+          const applicable =
+            depReq.applicability.always ||
+            depReq.applicability.requiresSignals.every((s) =>
+              ["charges_money", "has_user_accounts"].includes(s),
+            );
+          const satisfied =
+            !applicable || dep === "product.target-user-defined";
+          expect(satisfied).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("o texto para o fundador distingue 'agora' de 'abre caminho'", () => {
+    const { candidates } = computeNextBestAction(framework, chainState());
+    const pricing = candidates.find((c) => c.requirement.id === "billing.pricing-decided")!;
+    expect(pricing.reason).toContain("agora");
+    expect(pricing.reason).toContain("abre caminho");
+  });
+
+  it("preserva o grafo transitivo no ranking, com peso menor que o imediato", () => {
+    expect(NBA_WEIGHTS.perDownstream).toBeLessThan(NBA_WEIGHTS.perUnlockedNow);
+    expect(NBA_WEIGHTS.downstreamWeight).toBeLessThan(NBA_WEIGHTS.unlocksNowWeight);
+
+    const { candidates } = computeNextBestAction(framework, chainState());
+    const pricing = candidates.find((c) => c.requirement.id === "billing.pricing-decided")!;
+    // O impacto futuro entra na pontuacao, mas nao vira promessa de imediato.
+    expect(pricing.breakdown.downstreamImpact).toBeGreaterThan(0);
+    expect(pricing.breakdown.unlocksNow).toBeGreaterThan(0);
+  });
+
+  it("continua deterministico apos a separacao", () => {
+    const a = computeNextBestAction(framework, chainState());
+    const b = computeNextBestAction(framework, chainState());
+    expect(a.candidates.map((c) => c.requirement.id)).toEqual(
+      b.candidates.map((c) => c.requirement.id),
+    );
+    expect(a.candidates.map((c) => c.priority)).toEqual(b.candidates.map((c) => c.priority));
   });
 });
