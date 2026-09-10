@@ -3,10 +3,10 @@ import { loadFramework } from "../src/framework/index.js";
 import {
   loadAdrDocuments,
   parseFrontMatter,
-  proposalChangesState,
   reconcileDecisions,
   ReconcilerError,
 } from "../src/collectors/adr-reconciler.js";
+import { proposalChangesState } from "../src/collectors/types.js";
 import { parseProjectState } from "../src/state/index.js";
 import { isIndependentlyVerified } from "../src/framework/schema.js";
 import { readFileSync } from "node:fs";

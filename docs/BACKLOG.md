@@ -72,10 +72,18 @@ E exatamente o tipo de falso positivo que este produto existe para evitar.
 - **Confianca/evidencia** — requisito verificado com confianca baixa nao deveria
   contar como cobertura cheia.
 
+**Mitigacao parcial ja aplicada (2026-09-10).** Uma segunda porta foi adicionada
+ao `measured`: nenhuma dimensao e considerada medida enquanto existir requisito
+critico (bloqueia lancamento ou severidade `blocker`) sem verificacao
+independente. Isso ja provou seu valor: apos o Marco 3 a cobertura chegou a 65%,
+acima do limiar, e os scores corretamente **nao** foram liberados, porque 3
+requisitos criticos seguem sem evidencia. **A DT-001 continua aberta** — falta a
+ponderacao por peso, metodo de verificacao e confianca.
+
 **Enquanto nao for resolvida.** O limiar de 60% segue valendo, e as tres dimensoes
-seguem em "Bootstrap / ainda nao medido" — hoje a cobertura real e de 8%, muito
-abaixo do limiar, entao a divida ainda nao produz dano. Ela precisa ser paga antes
-de qualquer dimensao cruzar o limiar pela primeira vez.
+seguem em "Bootstrap / ainda nao medido". A cobertura independente ja e de 65% —
+acima do limiar —, entao a partir de agora e apenas a porta dos criticos que
+sustenta a honestidade do numero. Pagar a divida virou prioridade real.
 
 **Nao resolver junto com o scanner sem revisar.** O scanner vai elevar a cobertura
 rapidamente; se o criterio nao for revisado antes, o primeiro score "medido" pode

@@ -14,7 +14,8 @@ import { loadFramework } from "../src/framework/index.js";
 import { parseProjectState } from "../src/state/index.js";
 import { parseProjectHistory } from "../src/history/schema.js";
 import { computeNextBestAction } from "../src/navigator/next-best-action.js";
-import { proposalChangesState, reconcileDecisions } from "../src/collectors/adr-reconciler.js";
+import { reconcileDecisions } from "../src/collectors/adr-reconciler.js";
+import { proposalChangesState } from "../src/collectors/types.js";
 import type { HistoryEvent } from "../src/history/schema.js";
 import type { ProjectState } from "../src/framework/schema.js";
 

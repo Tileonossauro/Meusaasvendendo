@@ -30,6 +30,8 @@ npm test
 npm run report             # estado atual do projeto no terminal
 npm run reconcile          # mostra decisoes (ADR) fora de sincronia com o estado
 npm run reconcile -- --apply  # aplica a reconciliacao e registra o historico
+npm run scan               # scanner deterministico do proprio repositorio
+npm run scan -- --apply    # aplica a varredura e registra o historico
 npm run dev                # sobe a interface — o dashboard fica em /build
 npm run build              # build de producao do Next
 ```
@@ -44,7 +46,7 @@ src/navigator/    Next Best Action
 src/state/        estado por projeto (multi-projeto desde o inicio)
 src/progress/     Build Progress (progresso do PLANO, nunca prontidao)
 src/history/      eventos de progresso por projeto
-src/collectors/   coletores de evidencia (hoje: reconciliador de ADRs)
+src/collectors/   coletores de evidencia (reconciliador de ADRs, scanner do repo)
 src/dashboard/    view model do Self-Build Dashboard
 app/build/        a pagina /build e seus componentes
 data/projects/<projectId>/{state,build-plan,history}.json
@@ -86,6 +88,9 @@ tests/            espelham src/
 12. **`kind` do requisito governa que proveniencia pode satisfaze-lo.** Um ADR so
     satisfaz `kind: "decision"`. Nunca `implementation` nem `operational` — um
     documento dizendo que o rate limiting esta pronto nao e rate limiting.
+13. **Dependencia presente != funcionalidade pronta.** O scanner nunca marca
+    `completed` por existir pacote, arquivo ou nome parecido. O que nao for
+    provavel vira `partial` com o motivo, ou `uncertain`.
 
 ## Scoring
 

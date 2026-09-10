@@ -2,6 +2,48 @@
 
 Mudancas relevantes de produto, framework e scoring.
 
+## [0.4.0] — 2026-09-10 — Marco 3: scanner deterministico local
+
+### Adicionado
+
+- **`src/collectors/repo-scanner.ts`** — o Readiness OS passa a analisar o
+  proprio repositorio e produzir evidencia INDEPENDENTE. Sem LLM: apenas leitura
+  de arquivos e execucao de comandos.
+- **`npm run scan`** (e `-- --apply`) — mostra e aplica o que o scanner provou.
+- **`src/collectors/types.ts`** — contrato comum dos coletores, com ordem de
+  autoridade entre proveniencias: fonte mais fraca nunca sobrescreve a mais forte.
+
+### Resultado
+
+17 requisitos saíram do estado declarado a mao: 12 `completed`, 4 `partial`,
+1 `missing` com ausencia confirmada. Cobertura por scanner independente:
+**0% -> 65%**.
+
+**Os tres Readiness Scores continuam "ainda nao medido"** — 3 requisitos
+criticos (fluxo principal, deploy de producao, segredos de producao) seguem sem
+evidencia independente, e a segunda porta do `measured` os exige. Cobertura alta
+nao libera o score sozinha.
+
+### Falsos positivos deliberadamente evitados
+
+- `.env` ignorado pelo git **nao** completa `foundation.env-example`: sem
+  `.env.example` fica `partial`.
+- Schemas existirem **nao** prova que cobrem o fluxo principal: `partial`.
+- Varredura de segredos **nao** cobre o historico do git: `partial`, nunca
+  `completed`.
+- Workflow de CI existir **nao** prova que a falha bloqueia o merge: `partial`.
+- Script declarado no `package.json` **nao** conta como aprovado: sem executar,
+  vira `uncertain` com confianca 0,5 (abaixo da porta de confianca).
+- Requisito `kind: "operational"` nunca vira `completed` por leitura estatica.
+- Requisito `kind: "implementation"` so vira `completed` com
+  `provenance: "command_execution"` — coberto por teste.
+
+### Corrigido durante o desenvolvimento
+
+A deteccao da fronteira de confianca procurava a palavra "injection" dentro dos
+testes e encontrava o proprio arquivo de teste do scanner. Passou a olhar o NOME
+do arquivo. Falso positivo por auto-referencia, achado pelo dogfooding.
+
 ## [0.2.0] — 2026-09-10 — Proveniencia da evidencia (framework v0.2.0)
 
 ### Corrigido (P0 arquitetural)

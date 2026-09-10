@@ -17,7 +17,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "reconcile": "tsx scripts/reconcile.ts"
+    "reconcile": "tsx scripts/reconcile.ts",
+    "scan": "tsx scripts/scan.ts"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

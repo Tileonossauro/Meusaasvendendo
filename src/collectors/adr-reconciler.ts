@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { isIndependentlyVerified, type Evidence, type Framework, type RequirementState } from "../framework/schema.js";
+import type { Evidence, Framework } from "../framework/schema.js";
+import type { StateProposal } from "./types.js";
 
 /**
  * RECONCILIACAO DE DECISOES — primeiro coletor deterministico do projeto.
@@ -36,21 +37,6 @@ export interface AdrDocument {
   title: string;
   /** Linha (1-indexed) onde o front-matter declara a ligacao. Vira evidencia. */
   decidesLine: number;
-}
-
-export interface StateProposal {
-  requirementId: string;
-  status: "completed" | "partial";
-  confidence: number;
-  evidence: Evidence[];
-  /**
-   * SEMPRE `decision_record`. Um ADR e declaracao humana lida por maquina:
-   * prova que a decisao foi registrada, nunca que a implementacao existe.
-   */
-  provenance: "decision_record";
-  /** A LEITURA foi deterministica — eixo independente da proveniencia. */
-  collectionMethod: "deterministic";
-  reason: string;
 }
 
 export class ReconcilerError extends Error {}
@@ -209,6 +195,10 @@ export function reconcileDecisions(
         evidence,
         provenance: "decision_record",
         collectionMethod: "deterministic",
+        simpleReason:
+          entry.status === "completed"
+            ? "Esta decisão já está registrada por escrito no projeto."
+            : "Esta decisão já está registrada por escrito, mas ainda falta parte dela.",
         reason:
           entry.status === "completed"
             ? `ADR ${doc.frontMatter.adr} decide este requisito.`
@@ -219,20 +209,4 @@ export function reconcileDecisions(
 
   // Ordem estavel para diffs previsiveis.
   return proposals.sort((a, b) => a.requirementId.localeCompare(b.requirementId));
-}
-
-/** Uma proposta so vira mudanca se realmente alterar o estado atual. */
-export function proposalChangesState(
-  proposal: StateProposal,
-  current: RequirementState | undefined,
-): boolean {
-  if (!current) return true;
-  // Estado ja verificado de forma INDEPENDENTE nao e rebaixado por um ADR:
-  // o scanner tem mais autoridade que uma declaracao.
-  if (isIndependentlyVerified(current.provenance)) return false;
-  return (
-    current.status !== proposal.status ||
-    current.provenance !== proposal.provenance ||
-    current.evidence.length === 0
-  );
 }

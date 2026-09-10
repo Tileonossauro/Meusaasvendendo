@@ -26,7 +26,14 @@
     {
       "id": "m3-scanner-local",
       "name": "Primeiro scanner deterministico (nosso próprio repo)",
-      "outcome": "Os Readiness Scores saem de 'ainda não medido' para medidos por evidência real.",
+      "outcome": "O sistema analisa o próprio repositório e substitui estado declarado por evidência que ele mesmo produziu.",
+      "status": "done",
+      "weight": 6
+    },
+    {
+      "id": "m4-cobertura-critica",
+      "name": "Cobrir os requisitos críticos com evidência independente",
+      "outcome": "Os Readiness Scores deixam de ser 'ainda não medido' porque os requisitos que decidem segurança e lançamento passam a ter evidência real.",
       "status": "planned",
       "weight": 6
     }

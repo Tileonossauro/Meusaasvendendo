@@ -113,12 +113,22 @@ describe("mapa das areas: barra declarada nao pode passar por auditoria", () => 
     }
   });
 
-  it("categoria com estado vindo de ADR e rotulada como decisao registrada, nao verificada", () => {
-    // Dados recebeu estado do ADR 0004. Isso NAO e verificacao independente.
-    const dados = vm.categories.find((c) => c.category.id === "data")!;
-    expect(dados.decisionRecordCount).toBeGreaterThan(0);
-    expect(dados.verifiedCount).toBe(0);
-    expect(dados.evidenceSource).toBe("decision_record");
+  it("categoria cuja unica evidencia e um ADR nao pode ser rotulada como verificada", () => {
+    // Regra, nao instancia: se nada foi verificado por scanner, o selo jamais
+    // pode sugerir auditoria — no maximo "decisao registrada".
+    for (const block of vm.categories) {
+      if (block.verifiedCount === 0 && block.decisionRecordCount > 0) {
+        expect(block.evidenceSource).toBe("decision_record");
+      }
+    }
+  });
+
+  it("categoria com scanner e ADR juntos e rotulada como parcialmente verificada", () => {
+    for (const block of vm.categories) {
+      if (block.verifiedCount > 0 && block.verifiedCount < block.total) {
+        expect(block.evidenceSource).toBe("mixed");
+      }
+    }
   });
 
   it("a barra da categoria nunca e apresentada como Readiness Score", () => {

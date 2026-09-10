@@ -171,6 +171,181 @@
       "title": "Passamos a distinguir de onde vem a verdade de cada evidência",
       "detail": "Ler um documento de decisão prova que a decisão foi registrada; não prova que a implementação existe e funciona. Agora cada estado diz sua proveniência, e só verificação independente (leitura de código, execução de comando) pode liberar um Readiness Score.",
       "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0026",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Regras de trabalho para agentes: verificado pelo scanner",
+      "detail": "As regras de trabalho para a IA estão escritas, incluindo quando algo está pronto. O estado passou de \"completed\" para \"completed\", com evidência em AGENTS.md:12. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "ai.agents-md",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0027",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Manual do projeto para agentes: verificado pelo scanner",
+      "detail": "O manual do projeto para a IA está completo. O estado passou de \"completed\" para \"completed\", com evidência em CLAUDE.md:112. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "ai.claude-md",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0028",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Histórico de decisões: verificado pelo scanner",
+      "detail": "As decisões importantes estão registradas com contexto e alternativas. O estado passou de \"completed\" para \"completed\", com evidência em docs/adr/0001-stack.md:26. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "ai.decision-log",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0029",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Framework validado automaticamente: verificado pelo scanner",
+      "detail": "A validação do framework rodou agora e passou. O estado passou de \"completed\" para \"completed\", com evidência em package.json:14. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "ai.framework-validation",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0030",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Verificações rodam com um comando: verificado pelo scanner",
+      "detail": "Um único comando confere tudo, e ele rodou agora com sucesso. O estado passou de \"completed\" para \"completed\", com evidência em package.json:15. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "ai.quality-gates-runnable",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0031",
+      "type": "requirement_changed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Formato dos dados definido: verificado pelo scanner",
+      "detail": "O formato dos dados está definido e é conferido pelo sistema, mas não dá para provar sozinho que cobre tudo. O estado passou de \"missing\" para \"partial\", com evidência em src/framework/schema.ts:123. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "data.schema-defined",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0032",
+      "type": "requirement_changed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Verificação automática a cada mudança: verificado pelo scanner",
+      "detail": "A verificação automática roda a cada mudança, mas não dá para conferir daqui se ela realmente impede um merge com erro. O estado passou de \"completed\" para \"partial\", com evidência em .github/workflows/quality-gates.yml:6. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "deploy.ci-pipeline",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0033",
+      "type": "requirement_changed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Variáveis de ambiente documentadas: verificado pelo scanner",
+      "detail": "As senhas estão protegidas de irem para o repositório, mas ainda falta a lista das configurações que o projeto precisa. O estado passou de \"partial\" para \"partial\", com evidência em .gitignore:5. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "foundation.env-example",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0034",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Estrutura de repositório legível: verificado pelo scanner",
+      "detail": "As pastas do projeto estão organizadas e explicadas no manual do projeto. O estado passou de \"completed\" para \"completed\", com evidência em .. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "foundation.repo-structure",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0035",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Testes automatizados executáveis: verificado pelo scanner",
+      "detail": "Os testes automáticos rodaram agora e passaram. O estado passou de \"completed\" para \"completed\", com evidência em package.json:12. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "foundation.test-gate",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0036",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Verificação de tipos automatizada: verificado pelo scanner",
+      "detail": "O verificador de erros de código rodou agora e passou. O estado passou de \"completed\" para \"completed\", com evidência em package.json:11. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "foundation.typecheck-gate",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0037",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Project Constitution existe: verificado pelo scanner",
+      "detail": "A Constitution do projeto existe e diz o que está fora do escopo. O estado passou de \"completed\" para \"completed\", com evidência em docs/CONSTITUTION.md:39. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "product.constitution",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0038",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Fluxo principal descrito ponta a ponta: verificado pelo scanner",
+      "detail": "O passo a passo do fluxo principal está escrito no PRODUCT.md. O estado passou de \"completed\" para \"completed\", com evidência em docs/PRODUCT.md:55. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "product.core-flow-defined",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0039",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Promessa principal definida: verificado pelo scanner",
+      "detail": "A promessa do produto está escrita no PRODUCT.md. O estado passou de \"completed\" para \"completed\", com evidência em docs/PRODUCT.md:3. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "product.promise-defined",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0040",
+      "type": "requirement_completed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Público-alvo definido: verificado pelo scanner",
+      "detail": "O público-alvo está descrito no PRODUCT.md. O estado passou de \"completed\" para \"completed\", com evidência em docs/PRODUCT.md:8. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "product.target-user-defined",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0041",
+      "type": "requirement_changed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Nenhuma senha ou chave dentro do código: verificado pelo scanner",
+      "detail": "Não encontramos senhas nos arquivos atuais do projeto. Ainda falta conferir o histórico de alterações. O estado passou de \"missing\" para \"partial\", com evidência em varredura de padroes de segredo em src/, app/, scripts/, data/. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "security.no-secrets-in-repo",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0042",
+      "type": "requirement_changed",
+      "at": "2026-09-10T10:36:24.150Z",
+      "title": "Conteúdo analisado tratado como não confiável: verificado pelo scanner",
+      "detail": "Ainda não existe proteção testada contra um projeto analisado tentar dar ordens ao sistema. O estado passou de \"missing\" para \"missing\", com evidência em busca por teste de prompt injection em tests/. Verificação independente: o sistema conferiu o repositório por conta própria.",
+      "requirementId": "security.untrusted-content-boundary",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0043",
+      "type": "milestone_completed",
+      "at": "2026-09-10T12:00:00.000Z",
+      "title": "Marco 3 concluído: o Readiness OS passou a analisar o próprio código",
+      "detail": "O scanner determinístico lê o repositório, executa os comandos de verificação e produz evidência própria. 17 requisitos saíram do estado declarado à mão.",
+      "milestoneId": "m3-scanner-local",
+      "frameworkVersion": "0.2.0"
+    },
+    {
+      "id": "evt-0044",
+      "type": "score_changed",
+      "at": "2026-09-10T12:00:01.000Z",
+      "title": "Cobertura por scanner independente subiu de 0% para 65%",
+      "detail": "Mesmo assim os três Readiness Scores continuam em 'ainda não medido': 3 requisitos críticos (fluxo principal, deploy e segredos de produção) ainda não têm evidência independente. Cobertura alta não libera o score sozinha.",
+      "frameworkVersion": "0.2.0",
+      "scoreChange": {
+        "dimension": "production",
+        "from": 0,
+        "to": 65
+      }
     }
   ]
 }

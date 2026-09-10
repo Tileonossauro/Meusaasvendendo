@@ -47,10 +47,16 @@ O LLM entra apenas na camada de coleta, e mesmo la a saida e sempre
 Um coletor le uma fonte de verdade e **propoe** estado com evidencia. Ele nunca
 escreve direto: quem aplica e um script, que tambem registra o historico.
 
-| Coletor | Fonte | Metodo | Status |
+| Coletor | Fonte | Proveniencia que produz | Status |
 | --- | --- | --- | --- |
-| `adr-reconciler` | `docs/adr/*.md` (front-matter) | deterministico | existe |
-| scanner de codigo | o repositorio analisado | deterministico + LLM com evidencia | Marco 3 |
+| `adr-reconciler` | `docs/adr/*.md` (front-matter) | `decision_record` | existe |
+| `repo-scanner` | arquivos + execucao de comandos | `static_analysis`, `command_execution`, `specialized_tool` | existe |
+| scanner com LLM | interpretacao arquitetural | `llm_inference` | futuro |
+| sondas de runtime | o sistema no ar | `runtime_probe` | futuro |
+
+**Autoridade entre coletores** (`src/collectors/types.ts`): uma fonte de menor
+autoridade nunca sobrescreve uma de maior. Um ADR nao rebaixa o que o scanner
+observou; nada rebaixa a execucao de um comando.
 
 Contrato comum: `(fonte) -> StateProposal[]` com `status`, `confidence`,
 `evidence` (com `arquivo:linha`) e `verifiedBy`. Ver ADR 0006.
