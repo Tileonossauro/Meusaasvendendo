@@ -1,0 +1,27 @@
+{
+  "name": "readiness-os",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "GPS de conclusao para projetos SaaS construidos com agentes de IA.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate:framework": "tsx scripts/validate-framework.ts",
+    "gates": "npm run typecheck && npm run validate:framework && npm run test",
+    "report": "tsx scripts/report.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  }
+}

@@ -1,0 +1,478 @@
+{
+  "projectId": "readiness-os",
+  "projectName": "Readiness OS",
+  "frameworkVersion": "0.1.0",
+  "signals": [
+    "owns_a_framework",
+    "analyzes_external_content"
+  ],
+  "states": [
+    {
+      "requirementId": "product.promise-defined",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "docs/PRODUCT.md",
+          "note": "Promessa principal escrita na secao Promessa."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "product.target-user-defined",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "docs/PRODUCT.md",
+          "note": "Publico-alvo descrito na secao Para quem."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "product.core-flow-defined",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "docs/PRODUCT.md",
+          "note": "Fluxo principal listado passo a passo."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "product.constitution",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "docs/CONSTITUTION.md",
+          "note": "Constitution com escopo, nao-escopo, restricoes e DoD."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "foundation.repo-structure",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "CLAUDE.md",
+          "note": "Estrutura de diretorios documentada e aplicada."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "foundation.typecheck-gate",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "command",
+          "locator": "npm run typecheck",
+          "note": "Executa e retorna exit code 0."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "foundation.test-gate",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "command",
+          "locator": "npm test",
+          "note": "Suite de testes do scoring, grafo e navigator passa."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "foundation.env-example",
+      "status": "partial",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": ".gitignore",
+          "note": ".env ignorado; .env.example ainda nao necessario (sem segredos no slice 1)."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "data.persistence-chosen",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "data.schema-defined",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "data.migrations",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "auth.method-decided",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "auth.login-works",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "auth.session-protection",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "auth.authorization-checks",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "core.primary-flow-implemented",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "core.primary-flow-tested",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "core.error-and-empty-states",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.pricing-decided",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.gateway-configured",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.checkout-implemented",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.webhook-idempotency",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.entitlements",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "billing.cancellation-flow",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "security.no-secrets-in-repo",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "security.input-validation",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "security.rate-limiting",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "security.untrusted-content-boundary",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "security.least-privilege-access",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "reliability.error-tracking",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "reliability.health-check",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "deploy.hosting-decided",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "deploy.ci-pipeline",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": ".github/workflows/quality-gates.yml",
+          "note": "Workflow executa os gates em push e pull request."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "deploy.production-deploy-works",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "deploy.env-secrets-management",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "legal.terms-and-privacy",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "legal.data-retention-policy",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "launch.landing-page",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "launch.first-real-user-test",
+      "status": "missing",
+      "confidence": 1,
+      "evidence": [],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z",
+      "note": "Ainda nao construido. Bootstrap: estado declarado manualmente, nao medido por scanner."
+    },
+    {
+      "requirementId": "ai.claude-md",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "CLAUDE.md",
+          "note": "Missao, arquitetura, comandos, principios e proibicoes."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "ai.agents-md",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "AGENTS.md",
+          "note": "Regras, Definition of Done e processo de mudanca do framework."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "ai.quality-gates-runnable",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "command",
+          "locator": "npm run gates",
+          "note": "Agrega typecheck + validacao do framework + testes."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "ai.decision-log",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "file",
+          "locator": "docs/adr/",
+          "note": "ADRs de stack, scoring e determinismo registrados."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "requirementId": "ai.framework-validation",
+      "status": "completed",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "source": "command",
+          "locator": "npm run validate:framework",
+          "note": "Valida schema, ids, referencias e ausencia de ciclos."
+        }
+      ],
+      "verifiedBy": "manual_bootstrap",
+      "updatedAt": "2026-09-10T00:00:00.000Z"
+    }
+  ],
+  "updatedAt": "2026-09-10T00:00:00.000Z"
+}

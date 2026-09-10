@@ -1,0 +1,1850 @@
+{
+  "frameworkVersion": "0.1.0",
+  "weightsAreCalibrated": false,
+  "categories": [
+    {
+      "id": "product-scope",
+      "name": "Produto e escopo",
+      "simple": "Voce sabe o que esta construindo e para quem."
+    },
+    {
+      "id": "foundation",
+      "name": "Fundacao do projeto",
+      "simple": "O projeto tem base tecnica organizada para crescer."
+    },
+    {
+      "id": "data",
+      "name": "Dados",
+      "simple": "As informacoes do seu produto sao guardadas de forma confiavel."
+    },
+    {
+      "id": "identity-access",
+      "name": "Identidade e acesso",
+      "simple": "As pessoas conseguem entrar e so veem o que e delas."
+    },
+    {
+      "id": "core-functionality",
+      "name": "Nucleo funcional",
+      "simple": "A promessa principal do produto realmente funciona."
+    },
+    {
+      "id": "monetization",
+      "name": "Monetizacao",
+      "simple": "Voce consegue cobrar de verdade e entregar o que foi pago."
+    },
+    {
+      "id": "security",
+      "name": "Seguranca",
+      "simple": "Seu produto nao esta aberto para quem nao deveria entrar."
+    },
+    {
+      "id": "reliability-observability",
+      "name": "Confiabilidade e observabilidade",
+      "simple": "Voce fica sabendo quando algo quebra."
+    },
+    {
+      "id": "deploy-delivery",
+      "name": "Deploy e entrega",
+      "simple": "O produto esta no ar e voce consegue publicar mudancas."
+    },
+    {
+      "id": "legal-privacy",
+      "name": "Juridico e privacidade",
+      "simple": "Voce tem o minimo legal para receber usuarios e dinheiro."
+    },
+    {
+      "id": "launch",
+      "name": "Lancamento",
+      "simple": "Existe uma porta de entrada e alguem ja usou de verdade."
+    },
+    {
+      "id": "ai-build-readiness",
+      "name": "Prontidao para desenvolvimento com IA",
+      "simple": "Um agente de IA consegue continuar este projeto sem quebrar tudo."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "product.promise-defined",
+      "category": "product-scope",
+      "name": "Promessa principal definida",
+      "simple": "Esta escrito em algum lugar, em uma frase, o que seu produto promete entregar.",
+      "technical": "Documento de produto versionado contendo a value proposition e o core job to be done.",
+      "why": "Sem a promessa escrita nao existe criterio para dizer se o produto esta pronto: pronto para que?",
+      "weights": {
+        "mvp": 8,
+        "production": 3,
+        "aiBuild": 5
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Arquivo de produto (PRODUCT.md / docs/PRODUCT.md) com secao de promessa principal",
+          "not_sufficient_alone": "Arquivo existir nao basta; a secao precisa ter conteudo especifico e nao placeholder."
+        },
+        {
+          "method": "llm",
+          "look_for": "A promessa e especifica e verificavel, nao um slogan generico"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        "Existe uma frase unica descrevendo a promessa principal",
+        "A promessa esta versionada no repositorio",
+        "E possivel derivar dela um criterio de 'pronto'"
+      ],
+      "impact": "Sem isso, todo score de MVP e um chute, porque nao ha alvo.",
+      "severity": "high",
+      "owner": "founder",
+      "aiExecutable": false,
+      "recommendedAction": "Escrever a promessa principal em uma frase no PRODUCT.md.",
+      "verification": "Leitura do PRODUCT.md + confirmacao do fundador.",
+      "launchBlocking": false
+    },
+    {
+      "id": "product.target-user-defined",
+      "category": "product-scope",
+      "name": "Publico-alvo definido",
+      "simple": "Esta claro quem e a pessoa que vai pagar e usar o produto.",
+      "technical": "Definicao de persona/ICP documentada e versionada.",
+      "why": "Escopo, prioridade e preco dependem de saber para quem voce esta construindo.",
+      "weights": {
+        "mvp": 5,
+        "production": 2,
+        "aiBuild": 3
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Secao de publico-alvo no PRODUCT.md ou na Project Constitution"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        "Publico-alvo descrito de forma concreta",
+        "Documentado no repositorio"
+      ],
+      "impact": "Decisoes de escopo ficam arbitrarias sem publico definido.",
+      "severity": "medium",
+      "owner": "founder",
+      "aiExecutable": false,
+      "recommendedAction": "Descrever o publico-alvo no PRODUCT.md.",
+      "verification": "Leitura do PRODUCT.md.",
+      "launchBlocking": false
+    },
+    {
+      "id": "product.core-flow-defined",
+      "category": "product-scope",
+      "name": "Fluxo principal descrito ponta a ponta",
+      "simple": "Esta escrito o passo a passo que o usuario faz para receber o valor do produto.",
+      "technical": "Core user journey documentado, do primeiro contato ate a entrega do valor.",
+      "why": "E o fluxo principal que define o MVP Score; sem ele nao da para medir se o produto cumpre a promessa.",
+      "weights": {
+        "mvp": 8,
+        "production": 3,
+        "aiBuild": 5
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Secao de core flow / jornada principal em PRODUCT.md ou CONSTITUTION.md"
+        }
+      ],
+      "dependsOn": [
+        "product.promise-defined"
+      ],
+      "definitionOfDone": [
+        "Passos do fluxo principal listados em ordem",
+        "Cada passo tem um resultado observavel"
+      ],
+      "impact": "Sem o fluxo descrito, 'MVP pronto' vira opiniao.",
+      "severity": "high",
+      "owner": "founder_and_ai",
+      "aiExecutable": false,
+      "recommendedAction": "Listar os passos do fluxo principal no PRODUCT.md.",
+      "verification": "Leitura do PRODUCT.md.",
+      "launchBlocking": false
+    },
+    {
+      "id": "product.constitution",
+      "category": "product-scope",
+      "name": "Project Constitution existe",
+      "simple": "Existe um documento curto que diz o que o projeto e, o que esta dentro e o que esta fora do escopo.",
+      "technical": "CONSTITUTION.md versionado com produto, publico, promessa, escopo, nao-escopo, stack, restricoes e Definition of Done.",
+      "why": "E o contrato contra o qual qualquer mudanca (humana ou de IA) e comparada, e o que impede scope creep.",
+      "weights": {
+        "mvp": 4,
+        "production": 3,
+        "aiBuild": 9
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "docs/CONSTITUTION.md com as secoes obrigatorias preenchidas"
+        }
+      ],
+      "dependsOn": [
+        "product.promise-defined",
+        "product.target-user-defined"
+      ],
+      "definitionOfDone": [
+        "Documento existe e esta versionado",
+        "Contem escopo atual e fora de escopo explicitos",
+        "Contem restricoes e Definition of Done do projeto"
+      ],
+      "impact": "Sem constitution, agentes de IA ampliam escopo silenciosamente.",
+      "severity": "high",
+      "owner": "founder_and_ai",
+      "aiExecutable": true,
+      "recommendedAction": "Criar docs/CONSTITUTION.md e revisar com o fundador.",
+      "verification": "Leitura do arquivo + checagem de secoes obrigatorias.",
+      "launchBlocking": false
+    },
+    {
+      "id": "foundation.repo-structure",
+      "category": "foundation",
+      "name": "Estrutura de repositorio legivel",
+      "simple": "Os arquivos do projeto estao organizados de um jeito que da para entender onde cada coisa mora.",
+      "technical": "Separacao clara entre dominio, interface e dados; convencoes de nomes consistentes.",
+      "why": "Estrutura confusa e a principal causa de agentes de IA editarem o arquivo errado.",
+      "weights": {
+        "mvp": 2,
+        "production": 3,
+        "aiBuild": 8
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Diretorios de topo com responsabilidade unica e ausencia de arquivos soltos na raiz"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        "Diretorios de topo com responsabilidade declarada",
+        "Estrutura documentada no CLAUDE.md"
+      ],
+      "impact": "Aumenta o custo de cada alteracao e o risco de regressao.",
+      "severity": "medium",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Organizar diretorios por responsabilidade e documentar no CLAUDE.md.",
+      "verification": "Listagem da arvore + secao de estrutura no CLAUDE.md.",
+      "launchBlocking": false
+    },
+    {
+      "id": "foundation.typecheck-gate",
+      "category": "foundation",
+      "name": "Verificacao de tipos automatizada",
+      "simple": "Existe um comando que avisa se o codigo tem erros antes de voce publicar.",
+      "technical": "Comando de typecheck (tsc --noEmit ou equivalente) executavel e passando.",
+      "why": "E a rede de seguranca mais barata contra codigo gerado por IA que nao compila.",
+      "weights": {
+        "mvp": 2,
+        "production": 5,
+        "aiBuild": 9
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Script de typecheck no package.json e execucao com exit code 0",
+          "not_sufficient_alone": "Script existir nao prova que passa; e preciso executar."
+        }
+      ],
+      "dependsOn": [
+        "foundation.repo-structure"
+      ],
+      "definitionOfDone": [
+        "Comando de typecheck documentado",
+        "Comando executa e retorna sucesso"
+      ],
+      "impact": "Sem isso, erros de tipo chegam em producao.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Adicionar e rodar o script de typecheck.",
+      "verification": "Execucao do comando com exit code 0.",
+      "launchBlocking": false
+    },
+    {
+      "id": "foundation.test-gate",
+      "category": "foundation",
+      "name": "Testes automatizados executaveis",
+      "simple": "Existe um comando que testa sozinho se as partes importantes ainda funcionam.",
+      "technical": "Runner de testes configurado, com ao menos os caminhos criticos cobertos, executavel em um comando.",
+      "why": "Sem testes, cada alteracao feita por IA e uma aposta.",
+      "weights": {
+        "mvp": 2,
+        "production": 7,
+        "aiBuild": 9
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Script de teste no package.json + arquivos de teste + execucao com exit code 0",
+          "not_sufficient_alone": "Existir a dependencia de teste nao significa que existam testes reais."
+        }
+      ],
+      "dependsOn": [
+        "foundation.repo-structure"
+      ],
+      "definitionOfDone": [
+        "Runner de testes configurado",
+        "Existe ao menos um teste dos caminhos criticos",
+        "Comando de teste passa"
+      ],
+      "impact": "Regressoes silenciosas em cada mudanca.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Configurar o runner e cobrir o caminho critico.",
+      "verification": "Execucao do comando de teste com exit code 0.",
+      "launchBlocking": false
+    },
+    {
+      "id": "foundation.env-example",
+      "category": "foundation",
+      "name": "Variaveis de ambiente documentadas",
+      "simple": "Existe uma lista das configuracoes secretas que o projeto precisa para rodar.",
+      "technical": ".env.example versionado listando todas as variaveis exigidas, sem valores reais.",
+      "why": "Evita que segredos entrem no repositorio e evita que o deploy quebre por configuracao faltando.",
+      "weights": {
+        "mvp": 1,
+        "production": 5,
+        "aiBuild": 6
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": ".env.example presente e .env ignorado pelo git"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        ".env.example lista todas as variaveis necessarias",
+        "Nenhum valor real esta no arquivo",
+        ".env esta no .gitignore"
+      ],
+      "impact": "Deploy quebrado ou segredo vazado.",
+      "severity": "medium",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Criar .env.example e garantir .env no .gitignore.",
+      "verification": "Leitura de .env.example e .gitignore.",
+      "launchBlocking": false
+    },
+    {
+      "id": "data.persistence-chosen",
+      "category": "data",
+      "name": "Forma de guardar dados decidida",
+      "simple": "Esta decidido onde as informacoes do produto serao guardadas.",
+      "technical": "Decisao de persistencia registrada (banco gerenciado, arquivo, etc.) com justificativa.",
+      "why": "Trocar de banco depois de ter usuarios reais e caro e arriscado.",
+      "weights": {
+        "mvp": 5,
+        "production": 5,
+        "aiBuild": 4
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "ADR de persistencia em docs/adr/ ou secao em ARCHITECTURE.md"
+        }
+      ],
+      "dependsOn": [
+        "product.core-flow-defined"
+      ],
+      "definitionOfDone": [
+        "Decisao registrada com justificativa",
+        "Alternativas consideradas anotadas"
+      ],
+      "impact": "Retrabalho estrutural se mudar depois do lancamento.",
+      "severity": "high",
+      "owner": "founder_and_ai",
+      "aiExecutable": false,
+      "recommendedAction": "Registrar a decisao de persistencia como ADR.",
+      "verification": "Leitura do ADR.",
+      "launchBlocking": false
+    },
+    {
+      "id": "data.schema-defined",
+      "category": "data",
+      "name": "Formato dos dados definido",
+      "simple": "Esta definido quais informacoes o sistema guarda e como elas se relacionam.",
+      "technical": "Schema versionado (SQL, Prisma, zod ou equivalente) cobrindo as entidades do fluxo principal.",
+      "why": "Sem schema explicito, dados inconsistentes aparecem so quando ja ha usuarios.",
+      "weights": {
+        "mvp": 6,
+        "production": 6,
+        "aiBuild": 5
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Arquivos de schema/migracao versionados cobrindo as entidades do core flow"
+        }
+      ],
+      "dependsOn": [
+        "data.persistence-chosen"
+      ],
+      "definitionOfDone": [
+        "Entidades do fluxo principal modeladas",
+        "Schema versionado no repositorio",
+        "Validacao de entrada usa o mesmo contrato"
+      ],
+      "impact": "Corrupcao de dados dificil de reverter.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Definir e versionar o schema das entidades principais.",
+      "verification": "Leitura dos arquivos de schema.",
+      "launchBlocking": false
+    },
+    {
+      "id": "data.migrations",
+      "category": "data",
+      "name": "Mudancas de banco versionadas",
+      "simple": "Quando o formato dos dados muda, existe um historico e um caminho de volta.",
+      "technical": "Migrations versionadas e aplicaveis de forma reprodutivel em cada ambiente.",
+      "why": "Alterar banco na mao em producao e uma das formas mais rapidas de perder dados de clientes.",
+      "weights": {
+        "mvp": 1,
+        "production": 7,
+        "aiBuild": 5
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "uses_database"
+        ],
+        "notApplicableReason": "O projeto ainda nao usa banco de dados."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Diretorio de migrations versionado e comando de aplicacao documentado"
+        }
+      ],
+      "dependsOn": [
+        "data.schema-defined"
+      ],
+      "definitionOfDone": [
+        "Migrations versionadas",
+        "Comando de aplicacao documentado",
+        "Aplicadas com sucesso ao menos uma vez fora do ambiente local"
+      ],
+      "impact": "Perda ou corrupcao de dados reais.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Adotar migrations versionadas antes do primeiro usuario real.",
+      "verification": "Execucao das migrations em ambiente limpo.",
+      "launchBlocking": true
+    },
+    {
+      "id": "auth.method-decided",
+      "category": "identity-access",
+      "name": "Metodo de login decidido",
+      "simple": "Esta decidido como as pessoas vao entrar no seu produto (email e senha, Google, link magico...).",
+      "technical": "Decisao de estrategia de autenticacao registrada, com provedor e modelo de sessao.",
+      "why": "Essa decisao trava ou destrava quase toda a area logada do produto.",
+      "weights": {
+        "mvp": 6,
+        "production": 4,
+        "aiBuild": 3
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "has_user_accounts"
+        ],
+        "notApplicableReason": "O produto nao tem contas de usuario."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "ADR de autenticacao registrado em docs/adr/"
+        },
+        {
+          "method": "ask_user",
+          "look_for": "Confirmacao do fundador sobre o metodo escolhido"
+        }
+      ],
+      "dependsOn": [
+        "product.core-flow-defined"
+      ],
+      "definitionOfDone": [
+        "Metodo de login escolhido e registrado",
+        "Provedor definido",
+        "Modelo de sessao definido"
+      ],
+      "impact": "Bloqueia login, area logada, cobranca e entitlements.",
+      "severity": "blocker",
+      "owner": "founder",
+      "aiExecutable": false,
+      "recommendedAction": "Escolher o metodo de login e registrar como ADR.",
+      "verification": "Leitura do ADR + confirmacao do fundador.",
+      "launchBlocking": false
+    },
+    {
+      "id": "auth.login-works",
+      "category": "identity-access",
+      "name": "Cadastro e login funcionam de verdade",
+      "simple": "Uma pessoa real consegue criar conta, entrar e sair.",
+      "technical": "Fluxo de signup/login/logout implementado e coberto por teste automatizado end-to-end ou de integracao.",
+      "why": "Login que existe so na tela e uma das maiores fontes de falso 'pronto'.",
+      "weights": {
+        "mvp": 8,
+        "production": 7,
+        "aiBuild": 2
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "has_user_accounts"
+        ],
+        "notApplicableReason": "O produto nao tem contas de usuario."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Rotas/handlers de signup, login e logout implementados",
+          "not_sufficient_alone": "Existir a biblioteca de auth no package.json nao prova nada."
+        },
+        {
+          "method": "deterministic",
+          "look_for": "Teste automatizado cobrindo o fluxo de login"
+        }
+      ],
+      "dependsOn": [
+        "auth.method-decided",
+        "data.schema-defined"
+      ],
+      "definitionOfDone": [
+        "Signup, login e logout implementados",
+        "Sessao persiste entre requisicoes",
+        "Teste automatizado cobre o fluxo"
+      ],
+      "impact": "Sem isso nao existe area logada nem cobranca.",
+      "severity": "blocker",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Implementar o fluxo de autenticacao e cobrir com teste.",
+      "verification": "Execucao do teste de login.",
+      "launchBlocking": true
+    },
+    {
+      "id": "auth.session-protection",
+      "category": "identity-access",
+      "name": "Sessao protegida",
+      "simple": "O cracha de acesso da pessoa nao pode ser roubado ou copiado facilmente.",
+      "technical": "Cookies httpOnly/secure/sameSite, expiracao de sessao e invalidacao no logout.",
+      "why": "Sessao mal protegida permite que alguem entre na conta de outra pessoa.",
+      "weights": {
+        "mvp": 1,
+        "production": 8,
+        "aiBuild": 2
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "has_user_accounts"
+        ],
+        "notApplicableReason": "O produto nao tem contas de usuario."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Configuracao de cookie com httpOnly, secure e sameSite; expiracao definida"
+        }
+      ],
+      "dependsOn": [
+        "auth.login-works"
+      ],
+      "definitionOfDone": [
+        "Cookies de sessao com httpOnly, secure e sameSite",
+        "Sessao expira",
+        "Logout invalida a sessao no servidor"
+      ],
+      "impact": "Sequestro de conta de usuarios reais.",
+      "severity": "blocker",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Endurecer a configuracao de sessao.",
+      "verification": "Inspecao da configuracao + teste de expiracao.",
+      "launchBlocking": true
+    },
+    {
+      "id": "auth.authorization-checks",
+      "category": "identity-access",
+      "name": "Cada um so ve o que e seu",
+      "simple": "Um usuario nao consegue ver ou alterar os dados de outro usuario.",
+      "technical": "Checagem de propriedade/permissao no servidor em toda rota que le ou escreve dados de usuario.",
+      "why": "E a falha mais comum em produtos feitos com IA: a tela esconde, mas a API entrega.",
+      "weights": {
+        "mvp": 3,
+        "production": 10,
+        "aiBuild": 2
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "has_user_accounts"
+        ],
+        "notApplicableReason": "O produto nao tem contas de usuario."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Toda rota mutante ou de leitura de dados de usuario passa por um guard de propriedade no servidor",
+          "not_sufficient_alone": "Esconder o botao na interface nao e autorizacao."
+        },
+        {
+          "method": "deterministic",
+          "look_for": "Teste que prova que o usuario A nao acessa dados do usuario B"
+        }
+      ],
+      "dependsOn": [
+        "auth.login-works"
+      ],
+      "definitionOfDone": [
+        "Todas as rotas de dados verificam propriedade no servidor",
+        "Existe teste provando negacao de acesso cruzado",
+        "Padrao default e negar"
+      ],
+      "impact": "Vazamento de dados de clientes; incidente grave.",
+      "severity": "blocker",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Adicionar guard de propriedade e teste de acesso cruzado.",
+      "verification": "Execucao do teste de acesso cruzado.",
+      "launchBlocking": true
+    },
+    {
+      "id": "core.primary-flow-implemented",
+      "category": "core-functionality",
+      "name": "Fluxo principal implementado",
+      "simple": "O caminho que entrega o valor principal do produto funciona de ponta a ponta.",
+      "technical": "Todos os passos do core flow implementados e conectados, sem placeholders ou mocks no caminho critico.",
+      "why": "E isso que a promessa do produto diz que existe. Se nao funciona, nada mais importa.",
+      "weights": {
+        "mvp": 10,
+        "production": 6,
+        "aiBuild": 2
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Cada passo do core flow tem implementacao real referenciada por arquivo",
+          "not_sufficient_alone": "Tela renderizando dados fixos nao e implementacao."
+        },
+        {
+          "method": "llm",
+          "look_for": "Ausencia de TODO, mock ou dado estatico no caminho critico"
+        }
+      ],
+      "dependsOn": [
+        "product.core-flow-defined",
+        "data.schema-defined"
+      ],
+      "definitionOfDone": [
+        "Todos os passos do fluxo principal executam com dados reais",
+        "Nenhum passo critico depende de mock",
+        "Um usuario consegue completar o fluxo sem intervencao manual"
+      ],
+      "impact": "O produto nao cumpre a promessa: MVP inexistente.",
+      "severity": "blocker",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Implementar os passos faltantes do fluxo principal.",
+      "verification": "Execucao manual + teste do fluxo.",
+      "launchBlocking": true
+    },
+    {
+      "id": "core.primary-flow-tested",
+      "category": "core-functionality",
+      "name": "Fluxo principal coberto por teste",
+      "simple": "Existe um teste automatico que garante que o caminho principal continua funcionando.",
+      "technical": "Teste de integracao ou e2e cobrindo o core flow completo.",
+      "why": "Sem esse teste, qualquer alteracao feita por IA pode quebrar o produto sem ninguem perceber.",
+      "weights": {
+        "mvp": 4,
+        "production": 8,
+        "aiBuild": 8
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Teste que percorre o core flow completo e passa"
+        }
+      ],
+      "dependsOn": [
+        "core.primary-flow-implemented",
+        "foundation.test-gate"
+      ],
+      "definitionOfDone": [
+        "Teste cobre o fluxo principal ponta a ponta",
+        "Teste passa no comando padrao",
+        "Teste roda na CI"
+      ],
+      "impact": "Regressao no valor principal do produto.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Escrever o teste do fluxo principal.",
+      "verification": "Execucao do teste.",
+      "launchBlocking": false
+    },
+    {
+      "id": "core.error-and-empty-states",
+      "category": "core-functionality",
+      "name": "O produto se comporta quando algo da errado",
+      "simple": "Quando falta dado ou acontece um erro, o usuario ve uma mensagem util em vez de uma tela quebrada.",
+      "technical": "Estados de vazio, carregamento e erro tratados nas telas do fluxo principal; erros nao expoem stack trace.",
+      "why": "A primeira impressao de um usuario real costuma ser justamente um estado vazio ou um erro.",
+      "weights": {
+        "mvp": 4,
+        "production": 6,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Tratamento de erro e estado vazio nas telas do core flow"
+        },
+        {
+          "method": "deterministic",
+          "look_for": "Ausencia de stack trace exposto ao usuario final"
+        }
+      ],
+      "dependsOn": [
+        "core.primary-flow-implemented"
+      ],
+      "definitionOfDone": [
+        "Estados vazio, carregando e erro tratados no fluxo principal",
+        "Nenhum erro tecnico bruto chega ao usuario"
+      ],
+      "impact": "Usuario abandona ou perde confianca no primeiro obstaculo.",
+      "severity": "medium",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Tratar estados vazio e de erro no fluxo principal.",
+      "verification": "Revisao das telas do core flow.",
+      "launchBlocking": false
+    },
+    {
+      "id": "billing.pricing-decided",
+      "category": "monetization",
+      "name": "Preco e planos decididos",
+      "simple": "Voce ja decidiu quanto vai cobrar e quais sao os planos.",
+      "technical": "Modelo de precificacao definido: planos, limites por plano, ciclo de cobranca e moeda.",
+      "why": "Nada de cobranca pode ser construido antes disso; e a decisao que mais destrava tarefas de IA.",
+      "weights": {
+        "mvp": 0,
+        "production": 4,
+        "aiBuild": 2
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "charges_money"
+        ],
+        "notApplicableReason": "O produto ainda nao cobra dinheiro."
+      },
+      "detection": [
+        {
+          "method": "ask_user",
+          "look_for": "Confirmacao do fundador sobre planos e precos"
+        },
+        {
+          "method": "deterministic",
+          "look_for": "Documento de planos versionado"
+        }
+      ],
+      "dependsOn": [
+        "product.target-user-defined"
+      ],
+      "definitionOfDone": [
+        "Planos definidos com nome e preco",
+        "Limites de cada plano definidos",
+        "Ciclo de cobranca e moeda definidos"
+      ],
+      "impact": "Bloqueia toda a esteira de cobranca.",
+      "severity": "blocker",
+      "owner": "founder",
+      "aiExecutable": false,
+      "recommendedAction": "Definir planos, precos e limites.",
+      "verification": "Documento de planos + confirmacao do fundador.",
+      "launchBlocking": false
+    },
+    {
+      "id": "billing.gateway-configured",
+      "category": "monetization",
+      "name": "Meio de pagamento configurado",
+      "simple": "A conta no sistema de pagamento existe e esta ligada ao produto.",
+      "technical": "Conta no gateway criada, produtos/precos cadastrados, chaves de API configuradas por ambiente.",
+      "why": "E um passo que depende de voce e de terceiros; costuma demorar mais do que o esperado.",
+      "weights": {
+        "mvp": 0,
+        "production": 5,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "charges_money"
+        ],
+        "notApplicableReason": "O produto ainda nao cobra dinheiro."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Variaveis do gateway declaradas em .env.example e usadas em codigo",
+          "not_sufficient_alone": "Encontrar a dependencia do gateway no package.json NAO significa cobranca configurada."
+        },
+        {
+          "method": "ask_user",
+          "look_for": "Confirmacao de que a conta do gateway esta ativa"
+        }
+      ],
+      "dependsOn": [
+        "billing.pricing-decided"
+      ],
+      "definitionOfDone": [
+        "Conta ativa no gateway",
+        "Planos cadastrados no gateway",
+        "Chaves configuradas separadamente para teste e producao"
+      ],
+      "impact": "Sem isso nao existe cobranca real.",
+      "severity": "blocker",
+      "owner": "integration",
+      "aiExecutable": false,
+      "recommendedAction": "Criar a conta no gateway e cadastrar os planos.",
+      "verification": "Confirmacao do fundador + presenca das variaveis.",
+      "launchBlocking": false
+    },
+    {
+      "id": "billing.checkout-implemented",
+      "category": "monetization",
+      "name": "Tela de pagamento funciona",
+      "simple": "O cliente consegue chegar ate a tela de pagamento e concluir a compra.",
+      "technical": "Fluxo de checkout implementado ligando usuario, plano e sessao de pagamento do gateway.",
+      "why": "E o ponto onde o produto vira negocio.",
+      "weights": {
+        "mvp": 0,
+        "production": 6,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "charges_money"
+        ],
+        "notApplicableReason": "O produto ainda nao cobra dinheiro."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Handler que cria a sessao de checkout associando usuario e plano"
+        }
+      ],
+      "dependsOn": [
+        "billing.gateway-configured",
+        "auth.login-works"
+      ],
+      "definitionOfDone": [
+        "Checkout criado a partir de um usuario autenticado",
+        "Plano correto associado a compra",
+        "Compra de teste concluida com sucesso"
+      ],
+      "impact": "Impossivel receber pagamento.",
+      "severity": "blocker",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Implementar o fluxo de checkout.",
+      "verification": "Compra de teste em ambiente de sandbox.",
+      "launchBlocking": false
+    },
+    {
+      "id": "billing.webhook-idempotency",
+      "category": "monetization",
+      "name": "Confirmacao de pagamento processada uma unica vez",
+      "simple": "Seu sistema pode processar a mesma confirmacao de pagamento mais de uma vez, e isso cobra ou libera coisas em duplicidade.",
+      "technical": "Handler de webhook com verificacao de assinatura e protecao de idempotencia por event id persistido.",
+      "why": "Gateways reenviam eventos por padrao. Sem protecao, o mesmo pagamento e contado duas vezes.",
+      "weights": {
+        "mvp": 0,
+        "production": 9,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "charges_money"
+        ],
+        "notApplicableReason": "O produto ainda nao cobra dinheiro."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Verificacao de assinatura do webhook antes de processar o evento"
+        },
+        {
+          "method": "deterministic",
+          "look_for": "Persistencia do id do evento e curto-circuito em evento repetido"
+        }
+      ],
+      "dependsOn": [
+        "billing.checkout-implemented"
+      ],
+      "definitionOfDone": [
+        "Assinatura do webhook verificada",
+        "Id do evento persistido",
+        "Evento repetido nao produz efeito duplicado",
+        "Teste cobre o reenvio do mesmo evento"
+      ],
+      "impact": "Critico para cobranca: cobranca ou liberacao duplicada, prejuizo financeiro e disputa com cliente.",
+      "severity": "blocker",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Adicionar verificacao de assinatura e protecao de idempotencia no webhook.",
+      "verification": "Teste que envia o mesmo evento duas vezes e verifica efeito unico.",
+      "launchBlocking": true
+    },
+    {
+      "id": "billing.entitlements",
+      "category": "monetization",
+      "name": "Quem pagou recebe o que pagou",
+      "simple": "Depois do pagamento, a pessoa realmente ganha acesso ao que comprou; e quem nao pagou, nao ganha.",
+      "technical": "Entitlements derivados do estado da assinatura e verificados no servidor em cada recurso pago.",
+      "why": "Cobrar sem entregar gera reembolso; entregar sem cobrar gera prejuizo.",
+      "weights": {
+        "mvp": 0,
+        "production": 9,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "charges_money"
+        ],
+        "notApplicableReason": "O produto ainda nao cobra dinheiro."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Checagem de entitlement no servidor nas rotas de recurso pago",
+          "not_sufficient_alone": "Esconder a funcionalidade na interface nao e entitlement."
+        }
+      ],
+      "dependsOn": [
+        "billing.webhook-idempotency"
+      ],
+      "definitionOfDone": [
+        "Estado de assinatura persistido",
+        "Acesso a recurso pago verificado no servidor",
+        "Teste prova que usuario sem plano e bloqueado"
+      ],
+      "impact": "Perda de receita ou cliente pagante sem acesso.",
+      "severity": "blocker",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Derivar entitlements da assinatura e verificar no servidor.",
+      "verification": "Teste de acesso com e sem plano ativo.",
+      "launchBlocking": true
+    },
+    {
+      "id": "billing.cancellation-flow",
+      "category": "monetization",
+      "name": "Cancelamento e reembolso tratados",
+      "simple": "Quando alguem cancela ou o pagamento falha, o acesso e ajustado sozinho.",
+      "technical": "Eventos de cancelamento, falha de pagamento e expiracao atualizam entitlements automaticamente.",
+      "why": "Acesso vitalicio acidental depois de cancelamento e um vazamento de receita silencioso.",
+      "weights": {
+        "mvp": 0,
+        "production": 7,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "charges_money"
+        ],
+        "notApplicableReason": "O produto ainda nao cobra dinheiro."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Handlers para eventos de cancelamento, falha de pagamento e expiracao"
+        }
+      ],
+      "dependsOn": [
+        "billing.entitlements"
+      ],
+      "definitionOfDone": [
+        "Cancelamento revoga acesso no fim do ciclo",
+        "Falha de pagamento tratada",
+        "Teste cobre o ciclo cancelar/revogar"
+      ],
+      "impact": "Receita vazando ou cliente irritado.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Tratar eventos de cancelamento e falha de pagamento.",
+      "verification": "Teste do ciclo de cancelamento.",
+      "launchBlocking": false
+    },
+    {
+      "id": "security.no-secrets-in-repo",
+      "category": "security",
+      "name": "Nenhuma senha ou chave dentro do codigo",
+      "simple": "Nao existe nenhuma senha, chave ou token escrito dentro dos arquivos do projeto.",
+      "technical": "Ausencia de credenciais em arquivos versionados e no historico do git; .env ignorado.",
+      "why": "Uma chave publicada por engano pode ser usada por qualquer pessoa em minutos.",
+      "weights": {
+        "mvp": 2,
+        "production": 10,
+        "aiBuild": 4
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "tool",
+          "look_for": "Scanner de segredos dedicado sobre arquivos versionados e historico do git"
+        },
+        {
+          "method": "deterministic",
+          "look_for": ".env presente no .gitignore"
+        }
+      ],
+      "dependsOn": [
+        "foundation.env-example"
+      ],
+      "definitionOfDone": [
+        "Scanner de segredos executa sem achados",
+        "Nenhum segredo no historico do git",
+        ".env ignorado pelo git"
+      ],
+      "impact": "Comprometimento total da conta de terceiros e dos dados de clientes.",
+      "severity": "blocker",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Rodar scanner de segredos e rotacionar qualquer chave exposta.",
+      "verification": "Execucao do scanner de segredos sem achados.",
+      "launchBlocking": true
+    },
+    {
+      "id": "security.input-validation",
+      "category": "security",
+      "name": "Entradas do usuario validadas no servidor",
+      "simple": "O sistema confere no servidor tudo que o usuario envia, em vez de confiar na tela.",
+      "technical": "Validacao de schema no servidor em toda rota que aceita entrada externa.",
+      "why": "Validacao apenas no navegador e facilmente contornavel por quem quer atacar.",
+      "weights": {
+        "mvp": 2,
+        "production": 8,
+        "aiBuild": 3
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "has_backend"
+        ],
+        "notApplicableReason": "O projeto nao expoe rotas de servidor."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Toda rota que recebe corpo ou parametro passa por validacao de schema no servidor",
+          "not_sufficient_alone": "Validacao no formulario do front nao conta."
+        }
+      ],
+      "dependsOn": [
+        "data.schema-defined"
+      ],
+      "definitionOfDone": [
+        "Todas as rotas externas validam entrada no servidor",
+        "Entrada invalida retorna erro controlado",
+        "Teste cobre ao menos uma entrada maliciosa"
+      ],
+      "impact": "Corrupcao de dados, injecao e comportamento imprevisivel.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Adicionar validacao de schema no servidor nas rotas externas.",
+      "verification": "Revisao das rotas + teste com entrada invalida.",
+      "launchBlocking": true
+    },
+    {
+      "id": "security.rate-limiting",
+      "category": "security",
+      "name": "Limite de tentativas em rotas sensiveis",
+      "simple": "Ninguem consegue tentar adivinhar senhas ou abusar do sistema milhares de vezes por minuto.",
+      "technical": "Rate limiting por IP e por conta em rotas de autenticacao, envio de email e operacoes caras.",
+      "why": "E o descuido mais comum em produtos feitos com IA e o mais barato de explorar.",
+      "weights": {
+        "mvp": 0,
+        "production": 8,
+        "aiBuild": 2
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "has_backend"
+        ],
+        "notApplicableReason": "O projeto nao expoe rotas de servidor."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Middleware ou contador de limite aplicado a rotas de auth e operacoes caras"
+        }
+      ],
+      "dependsOn": [
+        "security.input-validation"
+      ],
+      "definitionOfDone": [
+        "Rotas de autenticacao limitadas por IP e por conta",
+        "Operacoes caras limitadas",
+        "Excesso retorna 429"
+      ],
+      "impact": "Forca bruta, spam e custo descontrolado com terceiros.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Aplicar rate limiting nas rotas sensiveis.",
+      "verification": "Teste que excede o limite e espera 429.",
+      "launchBlocking": true
+    },
+    {
+      "id": "security.untrusted-content-boundary",
+      "category": "security",
+      "name": "Conteudo analisado tratado como nao confiavel",
+      "simple": "O conteudo dos projetos que o produto analisa nunca pode dar ordens ao sistema.",
+      "technical": "Fronteira de confianca explicita: conteudo de repositorio analisado entra como dado, nunca como instrucao ao modelo; sanitizacao e delimitacao obrigatorias.",
+      "why": "Um README dentro de um repositorio analisado nao pode sobrescrever nossas instrucoes; sem essa fronteira o produto e sequestravel.",
+      "weights": {
+        "mvp": 3,
+        "production": 10,
+        "aiBuild": 4
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "analyzes_external_content"
+        ],
+        "notApplicableReason": "O produto nao processa conteudo de terceiros."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Conteudo externo delimitado e marcado como dado nao confiavel antes de qualquer chamada a modelo"
+        },
+        {
+          "method": "deterministic",
+          "look_for": "Teste com conteudo de injecao provando que instrucoes embutidas sao ignoradas"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        "Conteudo externo sempre delimitado como dado",
+        "Nenhuma instrucao de conteudo externo altera decisao, score ou acao",
+        "Teste de prompt injection passa"
+      ],
+      "impact": "Sequestro do produto por conteudo de terceiros; resultados falsificados.",
+      "severity": "blocker",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Implementar a fronteira de confianca e o teste de injecao.",
+      "verification": "Execucao do teste de prompt injection.",
+      "launchBlocking": true
+    },
+    {
+      "id": "security.least-privilege-access",
+      "category": "security",
+      "name": "Acesso minimo a sistemas de terceiros",
+      "simple": "O produto so pede a permissao que realmente precisa nos sistemas que conecta.",
+      "technical": "Integracoes com escopo minimo, leitura por padrao, acesso por repositorio e politica de retencao explicita.",
+      "why": "Conceder acesso amplo transforma um bug pequeno em um incidente grande.",
+      "weights": {
+        "mvp": 1,
+        "production": 8,
+        "aiBuild": 2
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "connects_external_accounts"
+        ],
+        "notApplicableReason": "O produto nao conecta contas de terceiros."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Escopos solicitados documentados e limitados a leitura quando suficiente"
+        },
+        {
+          "method": "ask_user",
+          "look_for": "Confirmacao da politica de retencao de dados"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        "Escopos minimos documentados",
+        "Leitura por padrao",
+        "Politica de retencao definida"
+      ],
+      "impact": "Ampliacao do dano em caso de incidente.",
+      "severity": "high",
+      "owner": "founder_and_ai",
+      "aiExecutable": false,
+      "recommendedAction": "Documentar e reduzir escopos das integracoes.",
+      "verification": "Revisao dos escopos solicitados.",
+      "launchBlocking": true
+    },
+    {
+      "id": "reliability.error-tracking",
+      "category": "reliability-observability",
+      "name": "Voce fica sabendo quando quebra",
+      "simple": "Se o produto der erro para um cliente, voce e avisado em vez de descobrir por reclamacao.",
+      "technical": "Servico de error tracking configurado em producao, capturando excecoes com contexto.",
+      "why": "Sem isso, o tempo entre quebrar e descobrir e o tempo ate o cliente desistir.",
+      "weights": {
+        "mvp": 0,
+        "production": 7,
+        "aiBuild": 2
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "is_deployed"
+        ],
+        "notApplicableReason": "O produto ainda nao esta publicado."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "SDK de error tracking inicializado no bootstrap da aplicacao com DSN por ambiente",
+          "not_sufficient_alone": "A dependencia estar instalada nao prova que esta inicializada."
+        }
+      ],
+      "dependsOn": [
+        "deploy.production-deploy-works"
+      ],
+      "definitionOfDone": [
+        "Error tracking inicializado em producao",
+        "Um erro de teste chegou ao painel",
+        "Alerta configurado"
+      ],
+      "impact": "Falhas silenciosas afetando clientes pagantes.",
+      "severity": "high",
+      "owner": "integration",
+      "aiExecutable": true,
+      "recommendedAction": "Configurar error tracking e validar com um erro de teste.",
+      "verification": "Erro de teste visivel no painel do servico.",
+      "launchBlocking": true
+    },
+    {
+      "id": "reliability.health-check",
+      "category": "reliability-observability",
+      "name": "Verificacao de saude do sistema",
+      "simple": "Existe um jeito automatico de saber se o produto esta no ar.",
+      "technical": "Endpoint de health check verificando dependencias criticas, monitorado externamente.",
+      "why": "E o sinal mais barato para detectar queda antes do cliente.",
+      "weights": {
+        "mvp": 0,
+        "production": 5,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "is_deployed"
+        ],
+        "notApplicableReason": "O produto ainda nao esta publicado."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Rota de health check implementada verificando dependencias criticas"
+        }
+      ],
+      "dependsOn": [
+        "deploy.production-deploy-works"
+      ],
+      "definitionOfDone": [
+        "Endpoint de health check existe",
+        "Verifica dependencias criticas",
+        "Monitorado externamente"
+      ],
+      "impact": "Queda descoberta tarde demais.",
+      "severity": "medium",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Implementar health check e ligar a um monitor externo.",
+      "verification": "Requisicao ao endpoint em producao.",
+      "launchBlocking": false
+    },
+    {
+      "id": "deploy.hosting-decided",
+      "category": "deploy-delivery",
+      "name": "Onde o produto vai rodar esta decidido",
+      "simple": "Esta decidido em qual servico o produto ficara hospedado.",
+      "technical": "Alvo de deploy escolhido e registrado, com implicacoes de runtime e limites conhecidos.",
+      "why": "Essa escolha condiciona banco, jobs, limites e custo.",
+      "weights": {
+        "mvp": 3,
+        "production": 4,
+        "aiBuild": 3
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "ADR de hospedagem em docs/adr/"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        "Alvo de deploy escolhido e registrado",
+        "Limites relevantes anotados"
+      ],
+      "impact": "Retrabalho de infraestrutura perto do lancamento.",
+      "severity": "medium",
+      "owner": "founder_and_ai",
+      "aiExecutable": false,
+      "recommendedAction": "Registrar a decisao de hospedagem como ADR.",
+      "verification": "Leitura do ADR.",
+      "launchBlocking": false
+    },
+    {
+      "id": "deploy.ci-pipeline",
+      "category": "deploy-delivery",
+      "name": "Verificacao automatica a cada mudanca",
+      "simple": "Toda alteracao passa por uma checagem automatica antes de virar oficial.",
+      "technical": "Pipeline de CI executando typecheck, testes e validacoes do framework em cada push e pull request.",
+      "why": "E o que impede que uma mudanca de IA quebre o produto sem ninguem perceber.",
+      "weights": {
+        "mvp": 1,
+        "production": 6,
+        "aiBuild": 10
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Workflow de CI versionado executando os quality gates",
+          "not_sufficient_alone": "Arquivo de workflow existir nao prova que a execucao passa."
+        }
+      ],
+      "dependsOn": [
+        "foundation.typecheck-gate",
+        "foundation.test-gate"
+      ],
+      "definitionOfDone": [
+        "Pipeline roda em cada push e pull request",
+        "Executa typecheck, testes e validacao do framework",
+        "Falha bloqueia o merge"
+      ],
+      "impact": "Regressoes chegam a producao sem barreira.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Configurar o workflow de CI com os quality gates.",
+      "verification": "Execucao verde do pipeline em um pull request.",
+      "launchBlocking": false
+    },
+    {
+      "id": "deploy.production-deploy-works",
+      "category": "deploy-delivery",
+      "name": "O produto esta realmente no ar",
+      "simple": "Existe um endereco na internet onde o produto funciona de verdade.",
+      "technical": "Deploy de producao executado com sucesso, acessivel publicamente e reproduzivel.",
+      "why": "Enquanto roda so na sua maquina, nao existe produto para ninguem alem de voce.",
+      "weights": {
+        "mvp": 5,
+        "production": 8,
+        "aiBuild": 2
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "ask_user",
+          "look_for": "URL de producao informada e acessivel"
+        },
+        {
+          "method": "deterministic",
+          "look_for": "Configuracao de deploy versionada"
+        }
+      ],
+      "dependsOn": [
+        "deploy.hosting-decided",
+        "deploy.env-secrets-management"
+      ],
+      "definitionOfDone": [
+        "Deploy de producao concluido",
+        "URL publica acessivel",
+        "Processo de deploy reproduzivel"
+      ],
+      "impact": "Sem deploy nao ha usuarios reais.",
+      "severity": "blocker",
+      "owner": "founder_and_ai",
+      "aiExecutable": false,
+      "recommendedAction": "Executar o primeiro deploy de producao.",
+      "verification": "Acesso a URL publica.",
+      "launchBlocking": true
+    },
+    {
+      "id": "deploy.env-secrets-management",
+      "category": "deploy-delivery",
+      "name": "Segredos guardados no lugar certo",
+      "simple": "As chaves de producao ficam guardadas no servico de hospedagem, nao no seu computador nem no codigo.",
+      "technical": "Secrets gerenciados pelo provedor, separados por ambiente, sem duplicacao em arquivos versionados.",
+      "why": "Separar ambientes evita usar chave de producao em teste e vice-versa.",
+      "weights": {
+        "mvp": 1,
+        "production": 7,
+        "aiBuild": 3
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "ask_user",
+          "look_for": "Confirmacao de que os secrets estao no painel do provedor"
+        },
+        {
+          "method": "deterministic",
+          "look_for": "Ausencia de valores reais em arquivos versionados"
+        }
+      ],
+      "dependsOn": [
+        "foundation.env-example"
+      ],
+      "definitionOfDone": [
+        "Secrets de producao no gerenciador do provedor",
+        "Ambientes separados",
+        "Nenhum valor real versionado"
+      ],
+      "impact": "Vazamento de credenciais ou uso cruzado de ambientes.",
+      "severity": "high",
+      "owner": "founder_and_ai",
+      "aiExecutable": false,
+      "recommendedAction": "Mover os secrets para o gerenciador do provedor.",
+      "verification": "Confirmacao no painel + varredura do repositorio.",
+      "launchBlocking": true
+    },
+    {
+      "id": "legal.terms-and-privacy",
+      "category": "legal-privacy",
+      "name": "Termos de uso e politica de privacidade",
+      "simple": "Existem as duas paginas legais minimas para receber usuarios e dinheiro.",
+      "technical": "Termos de uso e politica de privacidade publicados e acessiveis, descrevendo dados coletados e retencao.",
+      "why": "Gateways de pagamento e lojas costumam exigir; alem disso e obrigacao legal em varios paises.",
+      "weights": {
+        "mvp": 0,
+        "production": 6,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "has_real_users"
+        ],
+        "notApplicableReason": "O produto ainda nao recebe usuarios reais."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Paginas de termos e privacidade publicadas e linkadas"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        "Termos de uso publicados",
+        "Politica de privacidade publicada",
+        "Ambas acessiveis a partir do produto"
+      ],
+      "impact": "Bloqueio de cobranca e exposicao legal.",
+      "severity": "high",
+      "owner": "founder_and_ai",
+      "aiExecutable": false,
+      "recommendedAction": "Publicar termos de uso e politica de privacidade.",
+      "verification": "Acesso as paginas publicadas.",
+      "launchBlocking": true
+    },
+    {
+      "id": "legal.data-retention-policy",
+      "category": "legal-privacy",
+      "name": "Politica de retencao de dados",
+      "simple": "Esta decidido por quanto tempo voce guarda os dados dos clientes e o que apaga.",
+      "technical": "Politica de retencao e exclusao documentada, coerente com o que o produto realmente armazena.",
+      "why": "Analisar repositorios de terceiros exige clareza sobre o que e guardado e por quanto tempo.",
+      "weights": {
+        "mvp": 0,
+        "production": 5,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "stores_user_data"
+        ],
+        "notApplicableReason": "O produto nao armazena dados de usuarios."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Politica de retencao documentada e coerente com o armazenamento real"
+        }
+      ],
+      "dependsOn": [
+        "legal.terms-and-privacy"
+      ],
+      "definitionOfDone": [
+        "Prazo de retencao definido por tipo de dado",
+        "Processo de exclusao definido",
+        "Documentado publicamente"
+      ],
+      "impact": "Risco regulatorio e perda de confianca.",
+      "severity": "medium",
+      "owner": "founder",
+      "aiExecutable": false,
+      "recommendedAction": "Definir e publicar a politica de retencao.",
+      "verification": "Leitura da politica publicada.",
+      "launchBlocking": false
+    },
+    {
+      "id": "launch.landing-page",
+      "category": "launch",
+      "name": "Porta de entrada publica",
+      "simple": "Existe uma pagina que explica o produto e permite que alguem comece a usar.",
+      "technical": "Landing page publicada com proposta de valor e chamada para acao funcional.",
+      "why": "Sem porta de entrada, o produto nao recebe o primeiro usuario.",
+      "weights": {
+        "mvp": 3,
+        "production": 3,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Pagina publica com proposta de valor e CTA ligado ao produto"
+        }
+      ],
+      "dependsOn": [
+        "deploy.production-deploy-works"
+      ],
+      "definitionOfDone": [
+        "Pagina publicada",
+        "Promessa principal comunicada",
+        "CTA leva ao produto real"
+      ],
+      "impact": "Nenhum usuario chega ao produto.",
+      "severity": "medium",
+      "owner": "founder_and_ai",
+      "aiExecutable": true,
+      "recommendedAction": "Publicar a landing page com CTA funcional.",
+      "verification": "Acesso a pagina publicada.",
+      "launchBlocking": false
+    },
+    {
+      "id": "launch.first-real-user-test",
+      "category": "launch",
+      "name": "Alguem de fora usou de verdade",
+      "simple": "Pelo menos uma pessoa que nao e voce percorreu o produto inteiro e conseguiu.",
+      "technical": "Teste com usuario externo percorrendo o core flow em producao, com resultado registrado.",
+      "why": "E a unica prova real de que o produto funciona fora da sua cabeca.",
+      "weights": {
+        "mvp": 6,
+        "production": 5,
+        "aiBuild": 1
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "ask_user",
+          "look_for": "Confirmacao de que um usuario externo completou o fluxo em producao"
+        }
+      ],
+      "dependsOn": [
+        "core.primary-flow-implemented",
+        "deploy.production-deploy-works"
+      ],
+      "definitionOfDone": [
+        "Usuario externo completou o fluxo principal em producao",
+        "Problemas encontrados registrados"
+      ],
+      "impact": "Lancamento as cegas.",
+      "severity": "high",
+      "owner": "founder",
+      "aiExecutable": false,
+      "recommendedAction": "Convidar uma pessoa externa para percorrer o fluxo em producao.",
+      "verification": "Registro do teste com usuario externo.",
+      "launchBlocking": false
+    },
+    {
+      "id": "ai.claude-md",
+      "category": "ai-build-readiness",
+      "name": "Manual do projeto para agentes",
+      "simple": "Existe um arquivo que explica o projeto para a IA em poucos minutos.",
+      "technical": "CLAUDE.md com missao, arquitetura, stack, comandos, estrutura, principios e proibicoes.",
+      "why": "Um agente sem contexto reescreve o que ja existe e quebra o que funcionava.",
+      "weights": {
+        "mvp": 1,
+        "production": 2,
+        "aiBuild": 10
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "CLAUDE.md na raiz com secoes de arquitetura, comandos e proibicoes"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        "CLAUDE.md existe na raiz",
+        "Descreve comandos executaveis reais",
+        "Lista o que e proibido fazer"
+      ],
+      "impact": "Cada sessao de IA recomeca do zero e diverge do projeto.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Criar e manter o CLAUDE.md.",
+      "verification": "Leitura do arquivo + conferencia dos comandos citados.",
+      "launchBlocking": false
+    },
+    {
+      "id": "ai.agents-md",
+      "category": "ai-build-readiness",
+      "name": "Regras de trabalho para agentes",
+      "simple": "Existe um documento com as regras que qualquer IA precisa seguir ao mexer no projeto.",
+      "technical": "AGENTS.md com padroes de implementacao, Definition of Done, testes obrigatorios e processo de mudanca do framework.",
+      "why": "Sem regras escritas, cada agente inventa o proprio padrao e o projeto vira colcha de retalhos.",
+      "weights": {
+        "mvp": 1,
+        "production": 2,
+        "aiBuild": 9
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "AGENTS.md na raiz com Definition of Done e regras de mudanca"
+        }
+      ],
+      "dependsOn": [
+        "ai.claude-md"
+      ],
+      "definitionOfDone": [
+        "AGENTS.md existe",
+        "Define Definition of Done",
+        "Define como alterar framework e scoring"
+      ],
+      "impact": "Inconsistencia e scope creep a cada sessao.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Criar e manter o AGENTS.md.",
+      "verification": "Leitura do arquivo.",
+      "launchBlocking": false
+    },
+    {
+      "id": "ai.quality-gates-runnable",
+      "category": "ai-build-readiness",
+      "name": "Verificacoes rodam com um comando",
+      "simple": "Existe um unico comando que confere se esta tudo certo antes de aceitar uma mudanca.",
+      "technical": "Comando agregador de quality gates (typecheck + validacao do framework + testes) executavel e passando.",
+      "why": "Um agente precisa de um botao objetivo para provar que nao quebrou nada.",
+      "weights": {
+        "mvp": 1,
+        "production": 4,
+        "aiBuild": 10
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Script agregador de gates no package.json executando com exit code 0"
+        }
+      ],
+      "dependsOn": [
+        "foundation.typecheck-gate",
+        "foundation.test-gate"
+      ],
+      "definitionOfDone": [
+        "Comando unico executa todos os gates",
+        "Retorna exit code 0 no estado atual",
+        "Documentado no CLAUDE.md"
+      ],
+      "impact": "Tarefa marcada como concluida sem verificacao.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Criar o comando agregador de gates.",
+      "verification": "Execucao do comando com exit code 0.",
+      "launchBlocking": false
+    },
+    {
+      "id": "ai.decision-log",
+      "category": "ai-build-readiness",
+      "name": "Historico de decisoes",
+      "simple": "As decisoes importantes ficam registradas com o motivo, para ninguem refazer a discussao.",
+      "technical": "Registro de ADRs versionado, com contexto, decisao, alternativas e consequencias.",
+      "why": "Sem historico, cada nova sessao de IA propoe desfazer decisoes ja tomadas.",
+      "weights": {
+        "mvp": 1,
+        "production": 2,
+        "aiBuild": 8
+      },
+      "applicability": {
+        "always": true,
+        "requiresSignals": []
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Diretorio docs/adr/ com ao menos um ADR seguindo o template"
+        }
+      ],
+      "dependsOn": [],
+      "definitionOfDone": [
+        "Diretorio de ADRs existe",
+        "Decisoes estruturais registradas",
+        "Cada ADR tem contexto, decisao e alternativas"
+      ],
+      "impact": "Decisoes revertidas por engano e retrabalho.",
+      "severity": "medium",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Registrar as decisoes estruturais como ADRs.",
+      "verification": "Listagem de docs/adr/.",
+      "launchBlocking": false
+    },
+    {
+      "id": "ai.framework-validation",
+      "category": "ai-build-readiness",
+      "name": "Framework validado automaticamente",
+      "simple": "Se alguem escrever um requisito errado, o sistema avisa antes de aceitar.",
+      "technical": "Validacao de schema do framework e do grafo de dependencias (ids unicos, referencias existentes, ausencia de ciclos) executada nos gates.",
+      "why": "O framework e nosso ativo principal; um erro nele contamina todos os scores.",
+      "weights": {
+        "mvp": 2,
+        "production": 3,
+        "aiBuild": 9
+      },
+      "applicability": {
+        "always": false,
+        "requiresSignals": [
+          "owns_a_framework"
+        ],
+        "notApplicableReason": "O projeto nao possui um framework de requisitos proprio."
+      },
+      "detection": [
+        {
+          "method": "deterministic",
+          "look_for": "Script de validacao do framework executando schema + checagem de grafo"
+        }
+      ],
+      "dependsOn": [
+        "ai.quality-gates-runnable"
+      ],
+      "definitionOfDone": [
+        "Schema do framework validado",
+        "Ids unicos e dependencias existentes verificados",
+        "Ausencia de ciclos verificada",
+        "Validacao roda nos gates e na CI"
+      ],
+      "impact": "Scores incorretos sem ninguem perceber.",
+      "severity": "high",
+      "owner": "ai",
+      "aiExecutable": true,
+      "recommendedAction": "Manter a validacao do framework nos quality gates.",
+      "verification": "Execucao de npm run validate:framework.",
+      "launchBlocking": false
+    }
+  ]
+}
